@@ -46,112 +46,179 @@
   margin: 0;
 }
 
-// 6-tile grid
-.mod-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 40px;
-}
-
-.tile-head {
+// ===== Tabs strip + spotlight as one unified card =====
+.mod-stack {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  filter: drop-shadow(0 30px 60px rgba(10, 14, 20, 0.08));
 }
 
-.tile-glyph {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+.mod-tabs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.mod-tab {
+  // Reset
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--reddoc-surface-soft);
+  border: 1px solid var(--reddoc-rule);
+  border-right: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  position: relative;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease;
+
+  &:last-child {
+    border-right: 1px solid var(--reddoc-rule);
+  }
+
+  &:hover:not(.is-active) {
+    background: var(--reddoc-surface-card);
+    color: var(--reddoc-ink);
+
+    .tab-glyph {
+      color: var(--reddoc-ink-soft);
+    }
+  }
+
+  &.is-active {
+    background: var(--reddoc-surface-card);
+    color: var(--reddoc-ink);
+    border-color: var(--reddoc-rule-strong);
+    border-bottom-color: var(--reddoc-surface-card);
+    z-index: 2;
+
+    .tab-glyph {
+      background: var(--reddoc-tint-live);
+      color: var(--reddoc-emerald-deep);
+      border-color: rgba(32, 170, 62, 0.32);
+    }
+    .tab-num {
+      color: var(--reddoc-emerald-deep);
+    }
+    .tab-name {
+      color: var(--reddoc-ink);
+    }
+
+    // Top accent bar
+    &::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      height: 2px;
+      background: var(--reddoc-emerald);
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+    // Cover the panel's top border so the merge looks seamless
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background: var(--reddoc-surface-card);
+    }
+  }
+}
+
+.tab-glyph {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--reddoc-surface-soft);
-  color: var(--reddoc-ink-soft);
+  background: var(--reddoc-surface-card);
+  color: var(--reddoc-muted);
   border: 1px solid var(--reddoc-rule);
+  flex: none;
   transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
 
   svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     stroke-linecap: round;
   }
 }
-.module-tile.is-active .tile-glyph {
-  background: var(--reddoc-tint-live);
-  color: var(--reddoc-emerald-deep);
-  border-color: rgba(32, 170, 62, 0.32);
+
+.tab-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  line-height: 1;
 }
 
-.tile-num {
+.tab-num {
   font-family: var(--reddoc-font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
   color: var(--reddoc-muted);
   font-weight: 500;
 }
-.module-tile.is-active .tile-num {
-  color: var(--reddoc-emerald-deep);
-}
 
-.tile-name {
+.tab-name {
   font-family: var(--reddoc-font-sans);
-  font-weight: 600;
-  font-size: 1.15rem;
-  letter-spacing: -0.015em;
-  margin: 0;
-  color: var(--reddoc-ink);
-}
-
-.tile-body {
   font-size: 0.88rem;
-  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.01em;
   color: var(--reddoc-ink-soft);
-  margin: 0;
-  flex: 1;
-}
-
-.tile-features {
-  list-style: none;
-  margin: 6px 0 0;
-  padding: 12px 0 0;
-  border-top: 1px solid var(--reddoc-rule);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--reddoc-font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.04em;
-    color: var(--reddoc-ink-soft);
-  }
-  .check {
-    color: var(--reddoc-emerald-deep);
-    font-weight: 700;
-    font-family: var(--reddoc-font-sans);
-  }
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // ===== Spotlight panel =====
 .mod-spotlight {
   background: var(--reddoc-surface-card);
   border: 1px solid var(--reddoc-rule-strong);
-  border-radius: 14px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 14px;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
   padding: 24px clamp(20px, 3vw, 36px) clamp(20px, 3vw, 36px);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 30px 60px -40px rgba(10, 14, 20, 0.18);
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: relative;
+  margin-top: -1px;
+  animation: spotlight-in 0.35s ease;
+}
+
+@keyframes spotlight-in {
+  from {
+    opacity: 0.4;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .spot-head {
@@ -264,7 +331,6 @@
 
 .spot-figure {
   margin: 0;
-  animation: reddoc-fade 0.5s ease both;
 
   .console-frame-bar {
     height: 30px;
@@ -305,10 +371,8 @@
   }
 }
 
+// ===== Responsive =====
 @media (max-width: 1080px) {
-  .mod-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .spot-grid {
     grid-template-columns: 1fr;
   }
@@ -319,10 +383,35 @@
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  .mod-grid {
-    grid-template-columns: 1fr;
-  }
   .mod-spotlight {
     padding: 18px;
+  }
+
+  // Tabs become horizontally scrollable with snap
+  .mod-tabs {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1px;
+  }
+  .mod-tab {
+    flex: 0 0 auto;
+    min-width: 200px;
+    scroll-snap-align: start;
+    border-right: 1px solid var(--reddoc-rule);
+
+    &.is-active {
+      // On mobile, all tabs share the same row, so the merge effect
+      // only applies to the active tab's bottom edge.
+      border-bottom-color: var(--reddoc-surface-card);
+    }
+  }
+  // Active scrolls to top-left of viewport on mobile, so the spotlight
+  // continues to sit visually below the strip
+  .mod-spotlight {
+    border-top-left-radius: 14px;
   }
 }

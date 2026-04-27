@@ -11,19 +11,19 @@
       </div>
     </header>
 
-    <!-- 6-tile module grid -->
-    <div class="mod-grid" role="tablist">
-      @for (m of t().modules.items; track m.key; let i = $index) {
-        <button
-          type="button"
-          role="tab"
-          class="module-tile"
-          [class.is-active]="activeIndex() === i"
-          [attr.aria-selected]="activeIndex() === i"
-          (click)="setIndex(i)"
-        >
-          <div class="tile-head">
-            <span class="tile-glyph" aria-hidden="true">
+    <!-- Tabs strip + spotlight panel as a unified card -->
+    <div class="mod-stack">
+      <div class="mod-tabs" role="tablist">
+        @for (m of t().modules.items; track m.key; let i = $index) {
+          <button
+            type="button"
+            role="tab"
+            class="mod-tab"
+            [class.is-active]="activeIndex() === i"
+            [attr.aria-selected]="activeIndex() === i"
+            (click)="setIndex(i)"
+          >
+            <span class="tab-glyph" aria-hidden="true">
               @switch (m.key) {
                 @case ('compraventa') {
                   <svg viewBox="0 0 24 24" fill="none">
@@ -133,88 +133,81 @@
                 }
               }
             </span>
-            <span class="tile-num tabular">MOD/{{ '0' + (i + 1) }}</span>
-          </div>
-          <h3 class="tile-name">{{ m.title }}</h3>
-          <p class="tile-body">{{ m.body }}</p>
-          <ul class="tile-features">
-            @for (b of m.bullets.slice(0, 2); track b) {
-              <li>
-                <span class="check" aria-hidden="true">✓</span>
-                {{ b }}
-              </li>
-            }
-          </ul>
-        </button>
-      }
-    </div>
-
-    <!-- Spotlight panel -->
-    <article class="mod-spotlight" [attr.data-key]="active().key">
-      <div class="spot-head">
-        <div class="spot-meta">
-          <span class="chip is-accent">{{ active().eyebrow }}</span>
-          <span class="chip"
-            >EN VIVO · {{ '0' + (activeIndex() + 1) }} / 0{{ t().modules.items.length }}</span
-          >
-        </div>
-        <a class="spot-link" href="#contact">
-          {{ t().modules.detailsCta }}
-          <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path
-              d="M2 7h10M8 3l4 4-4 4"
-              stroke="currentColor"
-              stroke-width="1.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </a>
+            <span class="tab-meta">
+              <span class="tab-num">MOD/{{ '0' + (i + 1) }}</span>
+              <span class="tab-name">{{ m.title }}</span>
+            </span>
+          </button>
+        }
       </div>
 
-      <div class="hairline"></div>
+      <!-- Spotlight panel -->
+      <article class="mod-spotlight" [attr.data-key]="active().key">
+        <div class="spot-head">
+          <div class="spot-meta">
+            <span class="chip is-accent">{{ active().eyebrow }}</span>
+            <span class="chip"
+              >EN VIVO · {{ '0' + (activeIndex() + 1) }} / 0{{ t().modules.items.length }}</span
+            >
+          </div>
+          <a class="spot-link" href="#contact">
+            {{ t().modules.detailsCta }}
+            <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path
+                d="M2 7h10M8 3l4 4-4 4"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
 
-      <div class="spot-grid">
-        <div class="spot-copy">
-          <h3 class="spot-title">{{ active().title }}</h3>
-          <p class="spot-body">{{ active().body }}</p>
-          <ul class="spot-bullets">
-            @for (b of active().bullets; track b) {
-              <li>
-                <span class="check" aria-hidden="true">
-                  <svg viewBox="0 0 14 14" fill="none">
-                    <path
-                      d="M2 7.5l3 3 7-7"
-                      stroke="currentColor"
-                      stroke-width="1.6"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
+        <div class="hairline"></div>
+
+        <div class="spot-grid">
+          <div class="spot-copy">
+            <h3 class="spot-title">{{ active().title }}</h3>
+            <p class="spot-body">{{ active().body }}</p>
+            <ul class="spot-bullets">
+              @for (b of active().bullets; track b) {
+                <li>
+                  <span class="check" aria-hidden="true">
+                    <svg viewBox="0 0 14 14" fill="none">
+                      <path
+                        d="M2 7.5l3 3 7-7"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <span>{{ b }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+
+          <figure class="spot-figure">
+            <div class="console-frame">
+              <div class="console-frame-bar">
+                <span class="console-frame-dots"> <span></span><span></span><span></span> </span>
+                <span class="spot-route">app.reddoc.co / {{ active().key }}</span>
+                <span class="console-spacer"></span>
+                <span class="status-pill is-live spot-status">
+                  <span class="dot"></span>
+                  LIVE
                 </span>
-                <span>{{ b }}</span>
-              </li>
-            }
-          </ul>
+              </div>
+              <div class="console-frame-body">
+                <img [src]="active().image" [alt]="active().title" loading="lazy" />
+              </div>
+            </div>
+          </figure>
         </div>
-
-        <figure class="spot-figure">
-          <div class="console-frame">
-            <div class="console-frame-bar">
-              <span class="console-frame-dots"> <span></span><span></span><span></span> </span>
-              <span class="spot-route">app.reddoc.co / {{ active().key }}</span>
-              <span class="console-spacer"></span>
-              <span class="status-pill is-live spot-status">
-                <span class="dot"></span>
-                LIVE
-              </span>
-            </div>
-            <div class="console-frame-body">
-              <img [src]="active().image" [alt]="active().title" loading="lazy" />
-            </div>
-          </div>
-        </figure>
-      </div>
-    </article>
+      </article>
+    </div>
   </div>
 </section>

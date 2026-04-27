@@ -276,50 +276,6 @@
     border-color: rgba(30, 111, 255, 0.28);
   }
 
-  // Module tile (used in modules section)
-  .module-tile {
-    background: var(--reddoc-surface-card);
-    border: 1px solid var(--reddoc-rule);
-    border-radius: 10px;
-    padding: 22px 22px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    text-align: left;
-    cursor: pointer;
-    font: inherit;
-    color: inherit;
-    position: relative;
-    transition:
-      border-color 0.2s ease,
-      box-shadow 0.2s ease,
-      transform 0.2s ease,
-      background 0.2s ease;
-  }
-  .module-tile:hover {
-    border-color: var(--reddoc-rule-strong);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.7) inset,
-      0 12px 24px -16px rgba(10, 14, 20, 0.16);
-    transform: translateY(-2px);
-  }
-  .module-tile.is-active {
-    border-color: var(--reddoc-emerald);
-    box-shadow:
-      0 0 0 1px var(--reddoc-emerald),
-      0 12px 24px -16px rgba(32, 170, 62, 0.28);
-  }
-  .module-tile.is-active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--reddoc-emerald);
-    border-radius: 10px 0 0 10px;
-  }
-
   // Reveal animations
   @keyframes reddoc-rise {
     from {
