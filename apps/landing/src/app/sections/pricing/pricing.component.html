@@ -51,6 +51,7 @@
           <div class="plan-head">
             <span class="plan-num tabular">PLAN {{ '0' + (i + 1) }}</span>
             <h3 class="plan-name">{{ plan.name }}</h3>
+            <p class="plan-desc">{{ plan.description }}</p>
           </div>
 
           <div class="plan-price">
@@ -58,32 +59,34 @@
             <span class="plan-price-period">{{ t().pricing.perMonth }}</span>
           </div>
 
-          <dl class="plan-meta">
-            <div>
-              <dt>{{ t().pricing.users }}</dt>
-              <dd class="tabular">{{ plan.users }}</dd>
-            </div>
-            <div>
-              <dt>{{ t().pricing.cap }}</dt>
-              <dd class="tabular">{{ plan.cap }}</dd>
-            </div>
-          </dl>
-
-          <ul class="plan-perks">
-            @for (perk of plan.perks; track perk) {
-              <li>
-                <span class="check" aria-hidden="true">
-                  <svg viewBox="0 0 14 14" fill="none">
-                    <path
-                      d="M2 7.5l3 3 7-7"
-                      stroke="currentColor"
-                      stroke-width="1.6"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </span>
-                <span>{{ perk }}</span>
+          <ul class="plan-features">
+            @for (f of plan.features; track f.label) {
+              <li [class.is-excluded]="!f.included">
+                @if (f.included) {
+                  <span class="mark mark-yes" aria-label="incluido">
+                    <svg viewBox="0 0 14 14" fill="none">
+                      <path
+                        d="M2 7.5l3 3 7-7"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                } @else {
+                  <span class="mark mark-no" aria-label="no incluido">
+                    <svg viewBox="0 0 14 14" fill="none">
+                      <path
+                        d="M3 3l8 8M11 3l-8 8"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </span>
+                }
+                <span class="feat-label">{{ f.label }}</span>
               </li>
             }
           </ul>
