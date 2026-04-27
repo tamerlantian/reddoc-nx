@@ -1,0 +1,220 @@
+<section class="modules">
+  <div class="container-edit">
+    <header class="mod-head">
+      <span class="section-eyebrow">{{ t().modules.section }}</span>
+      <div class="mod-titlewrap">
+        <h2 class="mod-title">
+          {{ t().modules.title }}
+          <span class="mod-title-accent">{{ t().modules.italic }}</span>
+        </h2>
+        <p class="mod-lede">{{ t().modules.lede }}</p>
+      </div>
+    </header>
+
+    <!-- 6-tile module grid -->
+    <div class="mod-grid" role="tablist">
+      @for (m of t().modules.items; track m.key; let i = $index) {
+        <button
+          type="button"
+          role="tab"
+          class="module-tile"
+          [class.is-active]="activeIndex() === i"
+          [attr.aria-selected]="activeIndex() === i"
+          (click)="setIndex(i)"
+        >
+          <div class="tile-head">
+            <span class="tile-glyph" aria-hidden="true">
+              @switch (m.key) {
+                @case ('compraventa') {
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M5 3h12l2 4v13a1 1 0 01-1 1H6a1 1 0 01-1-1V3z"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                    />
+                    <path
+                      d="M5 7h14M9 12h6M9 16h4"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                }
+                @case ('tesoreria') {
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <rect
+                      x="3"
+                      y="6"
+                      width="18"
+                      height="13"
+                      rx="2"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                    />
+                    <path
+                      d="M3 10h18M16 14h2"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                }
+                @case ('inventario') {
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M3 8l9-4 9 4-9 4-9-4z"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M3 8v8l9 4M21 8v8l-9 4M12 12v8"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                }
+                @case ('pos') {
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <rect
+                      x="4"
+                      y="3"
+                      width="16"
+                      height="14"
+                      rx="2"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                    />
+                    <path
+                      d="M8 8h8M8 12h5M6 21h12"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                }
+                @case ('nomina') {
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <circle cx="9" cy="9" r="3" stroke="currentColor" stroke-width="1.4" />
+                    <path
+                      d="M3 20c0-3 3-5 6-5s6 2 6 5"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                    />
+                    <circle cx="17" cy="8" r="2.2" stroke="currentColor" stroke-width="1.4" />
+                    <path
+                      d="M14.5 14c1-.7 2-1 2.5-1 2 0 4 1.5 4 4"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                }
+                @case ('contabilidad') {
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <rect
+                      x="3"
+                      y="3"
+                      width="18"
+                      height="18"
+                      rx="2"
+                      stroke="currentColor"
+                      stroke-width="1.4"
+                    />
+                    <path
+                      d="M7 17V11M11 17V8M15 17v-4M19 17V6"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                }
+              }
+            </span>
+            <span class="tile-num tabular">MOD/{{ '0' + (i + 1) }}</span>
+          </div>
+          <h3 class="tile-name">{{ m.title }}</h3>
+          <p class="tile-body">{{ m.body }}</p>
+          <ul class="tile-features">
+            @for (b of m.bullets.slice(0, 2); track b) {
+              <li>
+                <span class="check" aria-hidden="true">✓</span>
+                {{ b }}
+              </li>
+            }
+          </ul>
+        </button>
+      }
+    </div>
+
+    <!-- Spotlight panel -->
+    <article class="mod-spotlight" [attr.data-key]="active().key">
+      <div class="spot-head">
+        <div class="spot-meta">
+          <span class="chip is-accent">{{ active().eyebrow }}</span>
+          <span class="chip"
+            >EN VIVO · {{ '0' + (activeIndex() + 1) }} / 0{{ t().modules.items.length }}</span
+          >
+        </div>
+        <a class="spot-link" href="#contact">
+          {{ t().modules.detailsCta }}
+          <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path
+              d="M2 7h10M8 3l4 4-4 4"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <div class="hairline"></div>
+
+      <div class="spot-grid">
+        <div class="spot-copy">
+          <h3 class="spot-title">{{ active().title }}</h3>
+          <p class="spot-body">{{ active().body }}</p>
+          <ul class="spot-bullets">
+            @for (b of active().bullets; track b) {
+              <li>
+                <span class="check" aria-hidden="true">
+                  <svg viewBox="0 0 14 14" fill="none">
+                    <path
+                      d="M2 7.5l3 3 7-7"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span>{{ b }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <figure class="spot-figure">
+          <div class="console-frame">
+            <div class="console-frame-bar">
+              <span class="console-frame-dots"> <span></span><span></span><span></span> </span>
+              <span class="spot-route">app.reddoc.co / {{ active().key }}</span>
+              <span class="console-spacer"></span>
+              <span class="status-pill is-live spot-status">
+                <span class="dot"></span>
+                LIVE
+              </span>
+            </div>
+            <div class="console-frame-body">
+              <img [src]="active().image" [alt]="active().title" loading="lazy" />
+            </div>
+          </div>
+        </figure>
+      </div>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,88 @@
+<header class="nav" [class.is-scrolled]="scrolled()">
+  <div class="topbar">
+    <div class="container-edit topbar-row">
+      <span class="topbar-cell">
+        <span class="signal-dot" aria-hidden="true"></span>
+        SISTEMA EN LÍNEA
+      </span>
+      <span class="topbar-cell topbar-center">
+        DIAN <span class="ok">OK</span> · BANCOS 12 · UPTIME 99.97%
+      </span>
+      <span class="topbar-cell topbar-end">{{ t().meta.edition }}</span>
+    </div>
+  </div>
+
+  <div class="container-edit nav-row">
+    <a class="brand" href="#top" (click)="closeMobile()">
+      <svg
+        viewBox="0 0 40 40"
+        class="brand-mark"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <rect x="2" y="2" width="36" height="36" rx="8" fill="currentColor" />
+        <path
+          d="M11 12h11.2c3.7 0 6.3 2.4 6.3 5.6 0 2.6-1.6 4.6-4.1 5.3l4.6 5.1h-4.7l-4.2-4.8h-4.7V28H11V12zm9.7 8.5c1.7 0 2.7-.9 2.7-2.5s-1-2.5-2.7-2.5h-5.5v5h5.5z"
+          fill="#ffffff"
+        />
+      </svg>
+      <span class="brand-word">
+        <span class="brand-name">reddoc</span>
+        <span class="brand-tag">ERP · CO</span>
+      </span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#how">{{ t().nav.how }}</a>
+      <a href="#product">{{ t().nav.product }}</a>
+      <a href="#pricing">{{ t().nav.pricing }}</a>
+      <a href="#contact">{{ t().nav.contact }}</a>
+    </nav>
+
+    <div class="nav-tools">
+      <div class="lang" role="group" [attr.aria-label]="t().nav.langLabel">
+        <button type="button" [class.active]="lang() === 'es'" (click)="setLang('es')">ES</button>
+        <span class="lang-sep">/</span>
+        <button type="button" [class.active]="lang() === 'en'" (click)="setLang('en')">EN</button>
+      </div>
+      <a class="btn btn-primary cta" href="#contact">
+        {{ t().nav.cta }}
+        <svg class="arrow" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path
+            d="M2 7h10M8 3l4 4-4 4"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+      <button
+        type="button"
+        class="burger"
+        (click)="toggleMobile()"
+        [attr.aria-expanded]="mobileOpen()"
+        aria-label="Menu"
+      >
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  @if (mobileOpen()) {
+    <div class="mobile-panel">
+      <a href="#how" (click)="closeMobile()">{{ t().nav.how }}</a>
+      <a href="#product" (click)="closeMobile()">{{ t().nav.product }}</a>
+      <a href="#pricing" (click)="closeMobile()">{{ t().nav.pricing }}</a>
+      <a href="#contact" (click)="closeMobile()">{{ t().nav.contact }}</a>
+      <div class="mobile-lang">
+        <button type="button" [class.active]="lang() === 'es'" (click)="setLang('es')">ES</button>
+        <button type="button" [class.active]="lang() === 'en'" (click)="setLang('en')">EN</button>
+      </div>
+      <a class="btn btn-primary mobile-cta" href="#contact" (click)="closeMobile()">
+        {{ t().nav.cta }}
+      </a>
+    </div>
+  }
+</header>

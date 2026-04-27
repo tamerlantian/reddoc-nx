@@ -1,0 +1,153 @@
+:host {
+  display: block;
+  background: var(--reddoc-surface-soft);
+  border-top: 1px solid var(--reddoc-rule);
+  padding: clamp(40px, 6vw, 72px) 0 28px;
+}
+
+.ft-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.9fr);
+  gap: clamp(28px, 5vw, 80px);
+  padding-bottom: 36px;
+}
+
+.ft-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ft-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--reddoc-ink);
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+}
+.ft-brand-word {
+  font-family: var(--reddoc-font-sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--reddoc-ink);
+}
+
+.ft-tagline {
+  font-family: var(--reddoc-font-sans);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--reddoc-ink-soft);
+  max-width: 38ch;
+  margin: 0;
+}
+
+.ft-pill {
+  align-self: flex-start;
+}
+
+.ft-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.ft-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ft-col-eyebrow {
+  font-family: var(--reddoc-font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--reddoc-muted);
+  font-weight: 500;
+}
+
+.ft-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  li {
+    font-size: 0.88rem;
+    color: var(--reddoc-ink-soft);
+    line-height: 1.4;
+  }
+  a {
+    color: var(--reddoc-ink-soft);
+    text-decoration: none;
+    transition: color 0.18s ease;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 1px;
+
+    &:hover {
+      color: var(--reddoc-emerald-deep);
+      border-bottom-color: var(--reddoc-emerald-deep);
+    }
+  }
+}
+
+.ft-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0 0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ft-rights {
+  font-size: 0.82rem;
+  color: var(--reddoc-muted);
+}
+
+.ft-build {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--reddoc-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--reddoc-muted);
+}
+.ft-status {
+  color: var(--reddoc-emerald-deep);
+  font-weight: 500;
+  margin: 0 4px 0 6px;
+}
+.ft-status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--reddoc-emerald);
+  box-shadow: 0 0 0 3px rgba(32, 170, 62, 0.22);
+  animation: reddoc-pulse 2.4s ease-in-out infinite;
+}
+
+@media (max-width: 880px) {
+  .ft-top {
+    grid-template-columns: 1fr;
+  }
+  .ft-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .ft-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

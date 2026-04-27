@@ -1,0 +1,111 @@
+:host {
+  display: block;
+  background: var(--reddoc-surface-soft);
+  border-top: 1px solid var(--reddoc-rule);
+  border-bottom: 1px solid var(--reddoc-rule);
+  color: var(--reddoc-ink-soft);
+  overflow: hidden;
+}
+
+.signal-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 28px;
+  align-items: center;
+  padding: 14px 0;
+}
+
+.signal-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--reddoc-font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--reddoc-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.signal-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--reddoc-emerald);
+  box-shadow: 0 0 0 3px rgba(32, 170, 62, 0.22);
+  flex: none;
+  animation: reddoc-pulse 2.4s ease-in-out infinite;
+}
+
+.signal-track {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 56px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  &::before {
+    left: 0;
+    background: linear-gradient(to right, var(--reddoc-surface-soft), transparent);
+  }
+  &::after {
+    right: 0;
+    background: linear-gradient(to left, var(--reddoc-surface-soft), transparent);
+  }
+}
+
+.track {
+  display: inline-flex;
+  align-items: center;
+  gap: 28px;
+  white-space: nowrap;
+  animation: signal-scroll 50s linear infinite;
+  font-family: var(--reddoc-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.cell {
+  color: var(--reddoc-ink);
+}
+
+.diamond {
+  color: var(--reddoc-emerald);
+  font-size: 0.55rem;
+  transform: translateY(-1px);
+}
+
+@keyframes signal-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .signal-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .signal-label {
+    font-size: 0.6rem;
+  }
+}

@@ -1,0 +1,357 @@
+:host {
+  display: block;
+  background: var(--reddoc-surface);
+  color: var(--reddoc-ink);
+  overflow-x: hidden;
+}
+
+.shell-main {
+  display: block;
+  scroll-behavior: smooth;
+}
+
+:host ::ng-deep {
+  // Layout container
+  .container-edit {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 64px);
+  }
+
+  // Hairlines
+  .hairline {
+    height: 1px;
+    background: var(--reddoc-rule);
+    width: 100%;
+  }
+  .hairline-strong {
+    height: 1px;
+    background: var(--reddoc-rule-strong);
+    width: 100%;
+  }
+
+  // Section heading helpers (now mono uppercase eyebrow + sans bold title)
+  .section-eyebrow {
+    font-family: var(--reddoc-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--reddoc-muted);
+    font-weight: 500;
+  }
+
+  .section-title {
+    font-family: var(--reddoc-font-sans);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--reddoc-ink);
+  }
+
+  // Buttons — sharper, more "tool"-like
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--reddoc-font-sans);
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: 0;
+    padding: 11px 18px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition:
+      transform 0.18s ease,
+      background 0.18s ease,
+      color 0.18s ease,
+      border-color 0.18s ease,
+      box-shadow 0.18s ease;
+    text-decoration: none;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--reddoc-emerald);
+    color: #ffffff;
+    border-color: var(--reddoc-emerald);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.18) inset,
+      0 1px 2px rgba(10, 14, 20, 0.1);
+  }
+  .btn-primary:hover {
+    background: var(--reddoc-emerald-deep);
+    border-color: var(--reddoc-emerald-deep);
+    transform: translateY(-1px);
+  }
+  .btn-ghost {
+    background: var(--reddoc-surface-card);
+    color: var(--reddoc-ink);
+    border-color: var(--reddoc-rule-strong);
+  }
+  .btn-ghost:hover {
+    border-color: var(--reddoc-ink);
+    background: var(--reddoc-surface-soft);
+  }
+  .btn-emerald {
+    background: var(--reddoc-emerald);
+    color: #ffffff;
+    border-color: var(--reddoc-emerald);
+  }
+  .btn-emerald:hover {
+    background: var(--reddoc-emerald-deep);
+    border-color: var(--reddoc-emerald-deep);
+  }
+  .btn-dark {
+    background: var(--reddoc-ink);
+    color: #ffffff;
+    border-color: var(--reddoc-ink);
+  }
+  .btn-dark:hover {
+    background: var(--reddoc-ink-deep);
+    border-color: var(--reddoc-ink-deep);
+  }
+
+  .arrow {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+  .btn:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  // Console frame — reusable wrapper for product screenshots / mock UIs
+  .console-frame {
+    background: var(--reddoc-surface-card);
+    border: 1px solid var(--reddoc-rule-strong);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.6) inset,
+      0 1px 2px rgba(10, 14, 20, 0.04),
+      0 24px 48px -28px rgba(10, 14, 20, 0.18);
+    display: flex;
+    flex-direction: column;
+  }
+  .console-frame-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 28px;
+    padding: 0 12px;
+    background: var(--reddoc-surface-soft);
+    border-bottom: 1px solid var(--reddoc-rule);
+    font-family: var(--reddoc-font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--reddoc-muted);
+  }
+  .console-frame-dots {
+    display: inline-flex;
+    gap: 5px;
+    margin-right: 4px;
+    span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--reddoc-rule-bold);
+      display: inline-block;
+    }
+  }
+  .console-frame-body {
+    flex: 1;
+    background: var(--reddoc-surface-card);
+    position: relative;
+  }
+
+  // Status pill — "● DIAN OK", "● live", etc.
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--reddoc-surface-card);
+    border: 1px solid var(--reddoc-rule-strong);
+    font-family: var(--reddoc-font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--reddoc-ink-soft);
+    font-weight: 500;
+    line-height: 1;
+  }
+  .status-pill .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--reddoc-status-live);
+    box-shadow: 0 0 0 3px rgba(32, 170, 62, 0.18);
+    flex: none;
+  }
+  .status-pill.is-live {
+    color: var(--reddoc-emerald-deep);
+  }
+  .status-pill.is-info .dot {
+    background: var(--reddoc-status-info);
+    box-shadow: 0 0 0 3px rgba(30, 111, 255, 0.18);
+  }
+  .status-pill.is-warn .dot {
+    background: var(--reddoc-status-warn);
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18);
+  }
+  .status-pill.is-neutral .dot {
+    background: transparent;
+    border: 1px solid var(--reddoc-muted-soft);
+    box-shadow: none;
+  }
+
+  // KPI tile — number + label
+  .kpi-tile {
+    background: var(--reddoc-surface-card);
+    border: 1px solid var(--reddoc-rule);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 0 1px 2px rgba(10, 14, 20, 0.03);
+  }
+  .kpi-tile-label {
+    font-family: var(--reddoc-font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--reddoc-muted);
+  }
+  .kpi-tile-value {
+    font-family: var(--reddoc-font-sans);
+    font-size: 1.45rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--reddoc-ink);
+    font-feature-settings:
+      'tnum' on,
+      'lnum' on;
+    line-height: 1;
+  }
+  .kpi-tile-delta {
+    font-family: var(--reddoc-font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    color: var(--reddoc-emerald-deep);
+    font-weight: 500;
+  }
+  .kpi-tile-delta.is-down {
+    color: var(--reddoc-status-danger);
+  }
+
+  // Chip — small mono tag
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: var(--reddoc-font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--reddoc-muted);
+    background: var(--reddoc-surface-soft);
+    border: 1px solid var(--reddoc-rule);
+    line-height: 1;
+  }
+  .chip.is-accent {
+    color: var(--reddoc-emerald-deep);
+    background: var(--reddoc-tint-live);
+    border-color: rgba(32, 170, 62, 0.32);
+  }
+  .chip.is-info {
+    color: #1a4fb3;
+    background: var(--reddoc-tint-info);
+    border-color: rgba(30, 111, 255, 0.28);
+  }
+
+  // Module tile (used in modules section)
+  .module-tile {
+    background: var(--reddoc-surface-card);
+    border: 1px solid var(--reddoc-rule);
+    border-radius: 10px;
+    padding: 22px 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    position: relative;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease,
+      background 0.2s ease;
+  }
+  .module-tile:hover {
+    border-color: var(--reddoc-rule-strong);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.7) inset,
+      0 12px 24px -16px rgba(10, 14, 20, 0.16);
+    transform: translateY(-2px);
+  }
+  .module-tile.is-active {
+    border-color: var(--reddoc-emerald);
+    box-shadow:
+      0 0 0 1px var(--reddoc-emerald),
+      0 12px 24px -16px rgba(32, 170, 62, 0.28);
+  }
+  .module-tile.is-active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--reddoc-emerald);
+    border-radius: 10px 0 0 10px;
+  }
+
+  // Reveal animations
+  @keyframes reddoc-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes reddoc-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes reddoc-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 3px rgba(32, 170, 62, 0.22);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(32, 170, 62, 0.04);
+    }
+  }
+  .rise {
+    animation: reddoc-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .fade {
+    animation: reddoc-fade 0.9s ease both;
+  }
+}

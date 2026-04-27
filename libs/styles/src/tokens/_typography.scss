@@ -1,0 +1,81 @@
+// Reddoc design tokens — Operations Console typography (IBM Plex)
+:root {
+  --reddoc-font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --reddoc-font-display: var(--reddoc-font-sans);
+  --reddoc-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  // Compatibility tokens
+  --reddoc-font: var(--reddoc-font-sans);
+}
+
+html,
+body {
+  font-family: var(--reddoc-font-sans);
+  color: var(--reddoc-ink);
+  background: var(--reddoc-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings:
+    'ss03' on,
+    'ss04' on;
+}
+
+// Mono uppercase eyebrow — used for module labels, status, section markers
+.eyebrow {
+  font-family: var(--reddoc-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--reddoc-muted);
+}
+
+// Display headline — sans bold, tight tracking
+.display {
+  font-family: var(--reddoc-font-sans);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+}
+
+// Tabular numerals for prices, KPIs, stats
+.tabular {
+  font-feature-settings:
+    'tnum' on,
+    'lnum' on;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+// Hairline rules
+.rule,
+.hairline {
+  height: 1px;
+  background: var(--reddoc-rule);
+  border: 0;
+  width: 100%;
+  display: block;
+}
+.rule-strong,
+.hairline-strong {
+  height: 1px;
+  background: var(--reddoc-rule-strong);
+  border: 0;
+  width: 100%;
+  display: block;
+}
+
+// Backwards-compat shim for any leftover .display-italic — render as plain
+// emphasis (mono caps small) so legacy template strings still read sensibly
+// while we transition all sections.
+.display-italic {
+  font-family: inherit;
+  font-style: normal;
+  font-weight: inherit;
+  color: var(--reddoc-emerald-deep);
+}
+
+::selection {
+  background: var(--reddoc-emerald);
+  color: #ffffff;
+}

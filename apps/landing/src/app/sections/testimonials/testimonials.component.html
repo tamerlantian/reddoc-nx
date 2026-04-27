@@ -1,0 +1,43 @@
+<section class="tm">
+  <div class="container-edit">
+    <header class="tm-head">
+      <span class="section-eyebrow">{{ t().testimonials.section }}</span>
+      <h2 class="tm-title">
+        {{ t().testimonials.title }}
+        <span class="tm-title-accent">{{ t().testimonials.italic }}</span>
+      </h2>
+    </header>
+
+    <!-- Client logos strip -->
+    <div class="tm-logos">
+      <div class="tm-logos-frame">
+        <img
+          src="/landing/logos-clientes.png"
+          alt="Empresas que operan con Reddoc"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <!-- Quote cards -->
+    <div class="tm-grid">
+      @for (q of t().testimonials.quotes; track q.author; let i = $index) {
+        <figure class="tm-card">
+          <span class="tm-num tabular"
+            >{{ '0' + (i + 1) }} / 0{{ t().testimonials.quotes.length }}</span
+          >
+
+          <blockquote class="tm-quote">{{ q.body }}</blockquote>
+
+          <figcaption class="tm-attrib">
+            <span class="tm-avatar" aria-hidden="true">{{ initials(q.author) }}</span>
+            <span class="tm-byline">
+              <span class="tm-author">{{ q.author }}</span>
+              <span class="tm-role">{{ q.role }}</span>
+            </span>
+          </figcaption>
+        </figure>
+      }
+    </div>
+  </div>
+</section>

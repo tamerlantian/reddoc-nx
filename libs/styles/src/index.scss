@@ -1,0 +1,6 @@
+// RedDoc design system — SCSS entry
+// Tailwind se importa por separado en cada app (apps/<app>/src/tailwind.css)
+// porque Sass no procesa bien el @import "tailwindcss" de Tailwind v4.
+
+@use './tokens/colors';
+@use './tokens/typography';

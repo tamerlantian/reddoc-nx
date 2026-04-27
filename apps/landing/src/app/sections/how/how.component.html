@@ -1,0 +1,86 @@
+<section class="how">
+  <div class="container-edit">
+    <header class="how-head">
+      <span class="section-eyebrow">{{ t().how.section }}</span>
+      <div class="how-titlewrap">
+        <h2 class="how-title">
+          {{ t().how.title }}
+          <span class="how-title-accent">{{ t().how.italic }}</span>
+        </h2>
+        <p class="how-lede">{{ t().how.lede }}</p>
+      </div>
+    </header>
+
+    <ol class="steps">
+      @for (step of t().how.steps; track step.index; let i = $index) {
+        <li class="step">
+          <div class="step-head">
+            <span class="step-index tabular">{{ step.index }}</span>
+            <span class="step-tag">PASO {{ step.index }}</span>
+          </div>
+          <h3 class="step-title">{{ step.title }}</h3>
+          <p class="step-body">{{ step.body }}</p>
+
+          <div class="step-mock console-frame" aria-hidden="true">
+            <div class="console-frame-bar">
+              <span class="console-frame-dots"> <span></span><span></span><span></span> </span>
+              <span class="mock-tab">paso {{ step.index }}</span>
+            </div>
+            <div class="console-frame-body">
+              @switch (i) {
+                @case (0) {
+                  <div class="mock mock-form">
+                    <div class="mock-row">
+                      <span class="mock-label">CORREO</span
+                      ><span class="mock-input">tu@empresa.co</span>
+                    </div>
+                    <div class="mock-row">
+                      <span class="mock-label">EMPRESA</span
+                      ><span class="mock-input">Mi Empresa S.A.S</span>
+                    </div>
+                    <div class="mock-cta">Crear cuenta →</div>
+                  </div>
+                }
+                @case (1) {
+                  <div class="mock mock-plans">
+                    <div class="mock-plan">
+                      <span class="mock-pname">Impulso</span>
+                      <span class="mock-pprice tabular">$16.900</span>
+                    </div>
+                    <div class="mock-plan is-active">
+                      <span class="mock-pname">Crecimiento</span>
+                      <span class="mock-pprice tabular">$49.900</span>
+                      <span class="mock-pcheck">✓</span>
+                    </div>
+                    <div class="mock-plan">
+                      <span class="mock-pname">Expansión</span>
+                      <span class="mock-pprice tabular">$95.900</span>
+                    </div>
+                  </div>
+                }
+                @case (2) {
+                  <div class="mock mock-dash">
+                    <div class="mock-tile">
+                      <span class="mock-tile-l">FACTURAS</span>
+                      <span class="mock-tile-v tabular">127</span>
+                    </div>
+                    <div class="mock-tile">
+                      <span class="mock-tile-l">INGRESOS</span>
+                      <span class="mock-tile-v tabular">$42.3M</span>
+                    </div>
+                    <div class="mock-tile mock-tile-wide">
+                      <span class="mock-tile-l">DIAN</span>
+                      <span class="mock-tile-v">
+                        <span class="mock-ok">✓ OK</span>
+                      </span>
+                    </div>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        </li>
+      }
+    </ol>
+  </div>
+</section>

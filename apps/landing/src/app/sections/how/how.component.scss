@@ -1,0 +1,279 @@
+:host {
+  display: block;
+  background: var(--reddoc-surface);
+  padding: clamp(64px, 9vw, 110px) 0;
+}
+
+.how-head {
+  display: grid;
+  grid-template-columns: minmax(0, 0.5fr) minmax(0, 1.5fr);
+  gap: clamp(24px, 4vw, 80px);
+  align-items: end;
+  margin-bottom: 44px;
+}
+
+.section-eyebrow {
+  align-self: start;
+  padding-top: 8px;
+}
+
+.how-titlewrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.how-title {
+  font-family: var(--reddoc-font-sans);
+  font-weight: 600;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+  color: var(--reddoc-ink);
+}
+.how-title-accent {
+  color: var(--reddoc-muted);
+  font-weight: 400;
+}
+
+.how-lede {
+  font-size: clamp(0.98rem, 1.05vw, 1.08rem);
+  line-height: 1.55;
+  color: var(--reddoc-ink-soft);
+  max-width: 56ch;
+  margin: 0;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--reddoc-surface-card);
+  border: 1px solid var(--reddoc-rule);
+  border-radius: 12px;
+  padding: 22px 22px 22px;
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    border-color: var(--reddoc-rule-strong);
+    box-shadow: 0 16px 32px -22px rgba(10, 14, 20, 0.18);
+    transform: translateY(-2px);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--reddoc-emerald), transparent 70%);
+  }
+}
+
+.step-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.step-index {
+  font-family: var(--reddoc-font-sans);
+  font-weight: 600;
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--reddoc-ink);
+}
+
+.step-tag {
+  font-family: var(--reddoc-font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--reddoc-muted);
+  padding: 4px 8px;
+  background: var(--reddoc-surface-soft);
+  border-radius: 4px;
+}
+
+.step-title {
+  font-family: var(--reddoc-font-sans);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.015em;
+  margin: 4px 0 0;
+  color: var(--reddoc-ink);
+}
+
+.step-body {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--reddoc-ink-soft);
+  margin: 0;
+}
+
+// Mini console mockups inside each step
+.step-mock {
+  margin-top: 12px;
+  border-radius: 8px;
+
+  .console-frame-bar {
+    height: 24px;
+    padding: 0 10px;
+    font-size: 0.55rem;
+  }
+  .console-frame-dots span {
+    width: 6px;
+    height: 6px;
+  }
+  .mock-tab {
+    color: var(--reddoc-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+  .console-frame-body {
+    padding: 14px;
+    background: var(--reddoc-surface-sunken);
+    min-height: 120px;
+  }
+}
+
+.mock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--reddoc-font-mono);
+  font-size: 0.7rem;
+  color: var(--reddoc-ink);
+}
+
+.mock-form {
+  .mock-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--reddoc-rule-strong);
+  }
+  .mock-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--reddoc-muted);
+    width: 64px;
+    flex: none;
+  }
+  .mock-input {
+    font-family: var(--reddoc-font-sans);
+    font-size: 0.85rem;
+    color: var(--reddoc-ink);
+  }
+  .mock-cta {
+    align-self: flex-start;
+    margin-top: 6px;
+    padding: 6px 12px;
+    background: var(--reddoc-emerald);
+    color: #fff;
+    border-radius: 4px;
+    font-family: var(--reddoc-font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+}
+
+.mock-plans {
+  .mock-plan {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--reddoc-surface-card);
+    border: 1px solid var(--reddoc-rule);
+    border-radius: 6px;
+    font-family: var(--reddoc-font-sans);
+    font-size: 0.78rem;
+    color: var(--reddoc-ink);
+
+    &.is-active {
+      border-color: var(--reddoc-emerald);
+      box-shadow: 0 0 0 1px var(--reddoc-emerald);
+      background: var(--reddoc-tint-live);
+    }
+  }
+  .mock-pname {
+    flex: 1;
+    font-weight: 500;
+  }
+  .mock-pprice {
+    color: var(--reddoc-ink);
+    font-weight: 500;
+  }
+  .mock-pcheck {
+    color: var(--reddoc-emerald-deep);
+    font-weight: 700;
+  }
+}
+
+.mock-dash {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-family: var(--reddoc-font-sans);
+
+  .mock-tile {
+    background: var(--reddoc-surface-card);
+    border: 1px solid var(--reddoc-rule);
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mock-tile-wide {
+    grid-column: span 2;
+  }
+  .mock-tile-l {
+    font-family: var(--reddoc-font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--reddoc-muted);
+  }
+  .mock-tile-v {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--reddoc-ink);
+    letter-spacing: -0.01em;
+  }
+  .mock-ok {
+    color: var(--reddoc-emerald-deep);
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 920px) {
+  .how-head {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .steps {
+    grid-template-columns: 1fr;
+  }
+}

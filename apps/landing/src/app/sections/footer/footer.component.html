@@ -1,0 +1,84 @@
+<footer class="ft">
+  <div class="container-edit">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <div class="ft-brand-mark">
+          <svg
+            viewBox="0 0 40 40"
+            class="brand-mark"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <rect x="2" y="2" width="36" height="36" rx="8" fill="currentColor" />
+            <path
+              d="M11 12h11.2c3.7 0 6.3 2.4 6.3 5.6 0 2.6-1.6 4.6-4.1 5.3l4.6 5.1h-4.7l-4.2-4.8h-4.7V28H11V12zm9.7 8.5c1.7 0 2.7-.9 2.7-2.5s-1-2.5-2.7-2.5h-5.5v5h5.5z"
+              fill="#ffffff"
+            />
+          </svg>
+          <span class="ft-brand-word">reddoc</span>
+        </div>
+        <p class="ft-tagline">{{ t().footer.tagline }}</p>
+        <span class="ft-pill status-pill is-live">
+          <span class="dot"></span>
+          SISTEMA OPERATIVO
+        </span>
+      </div>
+
+      <nav class="ft-nav" aria-label="Footer">
+        <div class="ft-col">
+          <span class="ft-col-eyebrow">{{ t().footer.docs }}</span>
+          <ul>
+            @for (l of t().footer.docs_links; track l) {
+              <li>
+                <a href="#">{{ l }}</a>
+              </li>
+            }
+          </ul>
+        </div>
+        <div class="ft-col">
+          <span class="ft-col-eyebrow">{{ t().footer.company }}</span>
+          <ul>
+            @for (l of t().footer.company_links; track l) {
+              <li>
+                <a href="#">{{ l }}</a>
+              </li>
+            }
+          </ul>
+        </div>
+        <div class="ft-col">
+          <span class="ft-col-eyebrow">{{ t().footer.legal }}</span>
+          <ul>
+            @for (l of t().footer.legal_links; track l) {
+              <li>
+                <a href="#">{{ l }}</a>
+              </li>
+            }
+          </ul>
+        </div>
+        <div class="ft-col">
+          <span class="ft-col-eyebrow">CONTACTO</span>
+          <ul>
+            <li>
+              <a [href]="'mailto:' + t().contact.email">{{ t().contact.email }}</a>
+            </li>
+            <li>
+              <a [href]="'tel:' + t().contact.phone" class="tabular">{{ t().contact.phone }}</a>
+            </li>
+            <li>{{ t().footer.masthead }}</li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <div class="hairline"></div>
+
+    <div class="ft-bottom">
+      <span class="ft-rights">{{ t().footer.rights }}</span>
+      <span class="ft-build tabular">
+        v.2026.04 · build {{ build }} · status: <span class="ft-status">operativo</span>
+        <span class="ft-status-dot" aria-hidden="true"></span>
+      </span>
+    </div>
+  </div>
+</footer>

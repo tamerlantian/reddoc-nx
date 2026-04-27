@@ -1,0 +1,18 @@
+<section class="signal" aria-label="Integraciones y cumplimiento">
+  <div class="container-edit signal-row">
+    <span class="signal-label">
+      <span class="signal-dot" aria-hidden="true"></span>
+      INTEGRACIONES &amp; CUMPLIMIENTO
+    </span>
+    <div class="signal-track">
+      <div class="track">
+        @for (n of [0, 1]; track n) {
+          @for (i of items(); track $index) {
+            <span class="cell">{{ i }}</span>
+            <span class="diamond" aria-hidden="true">◆</span>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</section>

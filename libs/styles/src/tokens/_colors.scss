@@ -1,0 +1,59 @@
+// Reddoc design tokens — Operations Console palette
+:root {
+  // Brand
+  --reddoc-emerald: #20aa3e;
+  --reddoc-emerald-deep: #178a32;
+  --reddoc-emerald-soft: rgba(32, 170, 62, 0.12);
+
+  // Neutral surface system (light operations console)
+  --reddoc-surface: #fafaf7; // page background
+  --reddoc-surface-soft: #f3f3ef; // alternating section
+  --reddoc-surface-card: #ffffff; // tiles, console frames
+  --reddoc-surface-sunken: #f6f6f3;
+
+  // Ink
+  --reddoc-ink: #0a0e14; // dark mode band, text
+  --reddoc-ink-soft: #2a2f38;
+  --reddoc-ink-deep: #050709;
+  --reddoc-muted: #5a6470;
+  --reddoc-muted-soft: #8b96a1;
+
+  // Lines / chrome
+  --reddoc-rule: rgba(10, 14, 20, 0.08);
+  --reddoc-rule-strong: rgba(10, 14, 20, 0.18);
+  --reddoc-rule-bold: rgba(10, 14, 20, 0.32);
+
+  // Status
+  --reddoc-status-live: #20aa3e;
+  --reddoc-status-info: #1e6fff;
+  --reddoc-status-warn: #d97706;
+  --reddoc-status-danger: #dc2626;
+  --reddoc-status-neutral: #8b96a1;
+
+  // Soft tints for status pills
+  --reddoc-tint-live: rgba(32, 170, 62, 0.12);
+  --reddoc-tint-info: rgba(30, 111, 255, 0.12);
+  --reddoc-tint-warn: rgba(217, 119, 6, 0.14);
+  --reddoc-tint-danger: rgba(220, 38, 38, 0.12);
+
+  // Gradients (rare, used in CTA decoration)
+  --reddoc-grad-ink: linear-gradient(180deg, #0a0e14 0%, #11151c 100%);
+  --reddoc-grad-emerald: linear-gradient(96deg, #20aa3e 0%, #03a588 100%);
+
+  // Compatibility tokens (legacy consumers)
+  --reddoc-paper: var(--reddoc-surface);
+  --reddoc-paper-warm: var(--reddoc-surface-soft);
+  --reddoc-paper-deep: var(--reddoc-surface-sunken);
+  --reddoc-bone: var(--reddoc-surface-card);
+  --reddoc-navy: var(--reddoc-ink);
+  --reddoc-teal: #03a588;
+  --reddoc-teal-deep: #028870;
+  --reddoc-ochre: #b88a2c;
+  --reddoc-ink-on-emerald: #052511;
+  --reddoc-primary: var(--reddoc-emerald);
+  --reddoc-primary-hover: var(--reddoc-emerald-deep);
+  --reddoc-text: var(--reddoc-ink);
+  --reddoc-text-muted: var(--reddoc-muted);
+  --reddoc-border: var(--reddoc-rule);
+  --reddoc-grad-brand: var(--reddoc-grad-emerald);
+}

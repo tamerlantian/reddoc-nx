@@ -1,0 +1,328 @@
+:host {
+  display: block;
+  background: var(--reddoc-surface-soft);
+  padding: clamp(64px, 9vw, 110px) 0;
+  position: relative;
+}
+
+.mod-head {
+  display: grid;
+  grid-template-columns: minmax(0, 0.5fr) minmax(0, 1.5fr);
+  gap: clamp(24px, 4vw, 80px);
+  align-items: end;
+  margin-bottom: 36px;
+}
+
+.section-eyebrow {
+  align-self: start;
+  padding-top: 8px;
+}
+
+.mod-titlewrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mod-title {
+  font-family: var(--reddoc-font-sans);
+  font-weight: 600;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  margin: 0;
+  color: var(--reddoc-ink);
+}
+.mod-title-accent {
+  color: var(--reddoc-muted);
+  font-weight: 400;
+}
+
+.mod-lede {
+  font-size: clamp(0.98rem, 1.05vw, 1.08rem);
+  line-height: 1.55;
+  color: var(--reddoc-ink-soft);
+  max-width: 56ch;
+  margin: 0;
+}
+
+// 6-tile grid
+.mod-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.tile-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tile-glyph {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--reddoc-surface-soft);
+  color: var(--reddoc-ink-soft);
+  border: 1px solid var(--reddoc-rule);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    stroke-linecap: round;
+  }
+}
+.module-tile.is-active .tile-glyph {
+  background: var(--reddoc-tint-live);
+  color: var(--reddoc-emerald-deep);
+  border-color: rgba(32, 170, 62, 0.32);
+}
+
+.tile-num {
+  font-family: var(--reddoc-font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--reddoc-muted);
+  font-weight: 500;
+}
+.module-tile.is-active .tile-num {
+  color: var(--reddoc-emerald-deep);
+}
+
+.tile-name {
+  font-family: var(--reddoc-font-sans);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--reddoc-ink);
+}
+
+.tile-body {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--reddoc-ink-soft);
+  margin: 0;
+  flex: 1;
+}
+
+.tile-features {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--reddoc-rule);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--reddoc-font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--reddoc-ink-soft);
+  }
+  .check {
+    color: var(--reddoc-emerald-deep);
+    font-weight: 700;
+    font-family: var(--reddoc-font-sans);
+  }
+}
+
+// ===== Spotlight panel =====
+.mod-spotlight {
+  background: var(--reddoc-surface-card);
+  border: 1px solid var(--reddoc-rule-strong);
+  border-radius: 14px;
+  padding: 24px clamp(20px, 3vw, 36px) clamp(20px, 3vw, 36px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 30px 60px -40px rgba(10, 14, 20, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.spot-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.spot-meta {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.spot-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--reddoc-font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--reddoc-ink);
+  text-decoration: none;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--reddoc-ink);
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease;
+
+  svg {
+    width: 12px;
+    height: 12px;
+    transition: transform 0.18s ease;
+  }
+  &:hover {
+    color: var(--reddoc-emerald-deep);
+    border-color: var(--reddoc-emerald-deep);
+  }
+  &:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+.spot-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+
+.spot-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 48ch;
+}
+
+.spot-title {
+  font-family: var(--reddoc-font-sans);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0;
+  color: var(--reddoc-ink);
+}
+
+.spot-body {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--reddoc-ink-soft);
+  margin: 0;
+}
+
+.spot-bullets {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--reddoc-rule);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  li {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 0.92rem;
+    color: var(--reddoc-ink);
+  }
+  .check {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--reddoc-tint-live);
+    color: var(--reddoc-emerald-deep);
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}
+
+.spot-figure {
+  margin: 0;
+  animation: reddoc-fade 0.5s ease both;
+
+  .console-frame-bar {
+    height: 30px;
+    padding: 0 12px;
+    gap: 10px;
+  }
+  .spot-route {
+    font-family: var(--reddoc-font-mono);
+    font-size: 0.68rem;
+    color: var(--reddoc-muted);
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+  }
+  .console-spacer {
+    flex: 1;
+  }
+  .spot-status {
+    padding: 3px 8px;
+    font-size: 0.6rem;
+
+    .dot {
+      width: 6px;
+      height: 6px;
+    }
+  }
+  .console-frame-body {
+    aspect-ratio: 16 / 10;
+    background: var(--reddoc-surface-sunken);
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+  }
+}
+
+@media (max-width: 1080px) {
+  .mod-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .spot-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .mod-head {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .mod-grid {
+    grid-template-columns: 1fr;
+  }
+  .mod-spotlight {
+    padding: 18px;
+  }
+}

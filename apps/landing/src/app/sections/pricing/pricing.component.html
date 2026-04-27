@@ -1,0 +1,117 @@
+<section class="pricing">
+  <div class="container-edit">
+    <header class="price-head">
+      <span class="section-eyebrow">{{ t().pricing.section }}</span>
+      <div class="price-titlewrap">
+        <h2 class="price-title">
+          {{ t().pricing.title }}
+          <span class="price-title-accent">{{ t().pricing.italic }}</span>
+        </h2>
+        <p class="price-lede">{{ t().pricing.lede }}</p>
+      </div>
+    </header>
+
+    <div class="price-controls">
+      <div class="track-toggle" role="tablist" [attr.aria-label]="'Modalidad'">
+        <button
+          type="button"
+          role="tab"
+          class="track-btn"
+          [class.active]="track() === 'billing'"
+          [attr.aria-selected]="track() === 'billing'"
+          (click)="setTrack('billing')"
+        >
+          {{ t().pricing.track_billing }}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          class="track-btn"
+          [class.active]="track() === 'erp'"
+          [attr.aria-selected]="track() === 'erp'"
+          (click)="setTrack('erp')"
+        >
+          {{ t().pricing.track_erp }}
+        </button>
+      </div>
+
+      <div class="price-meta">
+        <span class="chip">{{ t().pricing.timestamp }}</span>
+        <span class="price-meta-note">{{ t().pricing.note }}</span>
+      </div>
+    </div>
+
+    <div class="price-grid">
+      @for (plan of plans(); track plan.id; let i = $index) {
+        <article class="plan" [class.is-highlight]="plan.highlight" [attr.data-id]="plan.id">
+          @if (plan.highlight) {
+            <span class="plan-flag">RECOMENDADO</span>
+          }
+
+          <div class="plan-head">
+            <span class="plan-num tabular">PLAN {{ '0' + (i + 1) }}</span>
+            <h3 class="plan-name">{{ plan.name }}</h3>
+          </div>
+
+          <div class="plan-price">
+            <span class="plan-price-amount tabular">{{ plan.price }}</span>
+            <span class="plan-price-period">{{ t().pricing.perMonth }}</span>
+          </div>
+
+          <dl class="plan-meta">
+            <div>
+              <dt>{{ t().pricing.users }}</dt>
+              <dd class="tabular">{{ plan.users }}</dd>
+            </div>
+            <div>
+              <dt>{{ t().pricing.cap }}</dt>
+              <dd class="tabular">{{ plan.cap }}</dd>
+            </div>
+          </dl>
+
+          <ul class="plan-perks">
+            @for (perk of plan.perks; track perk) {
+              <li>
+                <span class="check" aria-hidden="true">
+                  <svg viewBox="0 0 14 14" fill="none">
+                    <path
+                      d="M2 7.5l3 3 7-7"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span>{{ perk }}</span>
+              </li>
+            }
+          </ul>
+
+          <a
+            class="btn plan-cta"
+            [class.btn-emerald]="plan.highlight"
+            [class.btn-ghost]="!plan.highlight"
+            href="#contact"
+          >
+            {{ t().pricing.cta }}
+            <svg class="arrow" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path
+                d="M2 7h10M8 3l4 4-4 4"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+        </article>
+      }
+    </div>
+
+    <p class="price-foot">
+      <span class="bullet" aria-hidden="true">●</span>
+      {{ t().pricing.footnote }}
+    </p>
+  </div>
+</section>
