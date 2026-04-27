@@ -84,30 +84,22 @@
   text-decoration: none;
   color: var(--reddoc-ink);
 }
-.brand-mark {
-  width: 32px;
-  height: 32px;
-  color: var(--reddoc-ink);
-  border-radius: 8px;
-}
-.brand-word {
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-}
-.brand-name {
-  font-family: var(--reddoc-font-sans);
-  font-size: 1.15rem;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  color: var(--reddoc-ink);
+.brand-logo {
+  display: block;
+  height: 28px;
+  width: auto;
 }
 .brand-tag {
-  margin-top: 5px;
+  display: inline-block;
+  padding: 3px 7px;
   font-family: var(--reddoc-font-mono);
-  font-size: 0.625rem;
+  font-size: 0.6rem;
   letter-spacing: 0.22em;
   color: var(--reddoc-muted);
+  background: var(--reddoc-surface-soft);
+  border: 1px solid var(--reddoc-rule);
+  border-radius: 4px;
+  line-height: 1;
 }
 
 .nav-links {

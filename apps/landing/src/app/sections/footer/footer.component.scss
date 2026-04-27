@@ -18,24 +18,15 @@
   gap: 16px;
 }
 
-.ft-brand-mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--reddoc-ink);
-
-  .brand-mark {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-  }
+.ft-brand-link {
+  display: inline-block;
+  text-decoration: none;
+  align-self: flex-start;
 }
-.ft-brand-word {
-  font-family: var(--reddoc-font-sans);
-  font-size: 1.15rem;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  color: var(--reddoc-ink);
+.ft-brand-logo {
+  display: block;
+  height: 32px;
+  width: auto;
 }
 
 .ft-tagline {
