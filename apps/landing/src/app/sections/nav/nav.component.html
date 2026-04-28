@@ -31,18 +31,8 @@
         <span class="lang-sep">/</span>
         <button type="button" [class.active]="lang() === 'en'" (click)="setLang('en')">EN</button>
       </div>
-      <a class="btn btn-primary cta" href="#contact">
-        {{ t().nav.cta }}
-        <svg class="arrow" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-          <path
-            d="M2 7h10M8 3l4 4-4 4"
-            stroke="currentColor"
-            stroke-width="1.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </a>
+      <a class="btn btn-ghost" [href]="appUrl + '/login'">{{ t().nav.login }}</a>
+      <a class="btn btn-primary" [href]="appUrl + '/register'">{{ t().nav.register }}</a>
       <button
         type="button"
         class="burger"
@@ -65,9 +55,14 @@
         <button type="button" [class.active]="lang() === 'es'" (click)="setLang('es')">ES</button>
         <button type="button" [class.active]="lang() === 'en'" (click)="setLang('en')">EN</button>
       </div>
-      <a class="btn btn-primary mobile-cta" href="#contact" (click)="closeMobile()">
-        {{ t().nav.cta }}
-      </a>
+      <div class="mobile-auth">
+        <a class="btn btn-ghost" [href]="appUrl + '/login'" (click)="closeMobile()">{{
+          t().nav.login
+        }}</a>
+        <a class="btn btn-primary" [href]="appUrl + '/register'" (click)="closeMobile()">{{
+          t().nav.register
+        }}</a>
+      </div>
     </div>
   }
 </header>

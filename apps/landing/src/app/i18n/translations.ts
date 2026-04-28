@@ -50,7 +50,8 @@ export interface Dict {
     product: string;
     pricing: string;
     contact: string;
-    cta: string;
+    login: string;
+    register: string;
     langLabel: string;
   };
   hero: {
@@ -175,7 +176,8 @@ const es: Dict = {
     product: 'Módulos',
     pricing: 'Precios',
     contact: 'Contacto',
-    cta: 'Hablar con asesor',
+    login: 'Iniciar sesión',
+    register: 'Registrarse',
     langLabel: 'Idioma',
   },
   hero: {
@@ -559,7 +561,8 @@ const en: Dict = {
     product: 'Modules',
     pricing: 'Pricing',
     contact: 'Contact',
-    cta: 'Talk to an advisor',
+    login: 'Sign in',
+    register: 'Sign up',
     langLabel: 'Language',
   },
   hero: {

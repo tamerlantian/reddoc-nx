@@ -238,8 +238,10 @@
     }
   }
 }
-.mobile-cta {
-  align-self: flex-start;
+.mobile-auth {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 880px) {
@@ -254,7 +256,8 @@
   }
   .nav-links,
   .lang,
-  .cta {
+  .btn-ghost,
+  .btn-primary {
     display: none;
   }
   .nav-tools {

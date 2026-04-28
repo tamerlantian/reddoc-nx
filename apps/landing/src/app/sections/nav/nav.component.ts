@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject, signal } from '@angular/core';
 import { I18nService } from '../../i18n/i18n.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-nav',
@@ -13,6 +14,7 @@ export class NavComponent {
   readonly t = this.i18n.t;
   readonly lang = this.i18n.lang;
 
+  readonly appUrl = environment.appUrl;
   readonly scrolled = signal(false);
   readonly mobileOpen = signal(false);
 
