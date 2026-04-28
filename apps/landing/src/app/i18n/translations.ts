@@ -67,12 +67,25 @@ export interface Dict {
     stat_2_label: string;
     stat_3_value: string;
     stat_3_label: string;
-    dataCardTitle: string;
-    dataCardSubtitle: string;
-    dataLine1: string;
-    dataLine2: string;
-    dataLine3: string;
-    dataFooter: string;
+    invoice: {
+      title: string;
+      number: string;
+      fromLabel: string;
+      from: string;
+      toLabel: string;
+      to: string;
+      items: { label: string; amount: string }[];
+      subtotalLabel: string;
+      subtotalAmount: string;
+      taxLabel: string;
+      taxAmount: string;
+      totalLabel: string;
+      totalAmount: string;
+      stamp: string;
+      statusNote: string;
+      cufeLabel: string;
+      cufeValue: string;
+    };
   };
   marquee: string[];
   how: {
@@ -179,12 +192,29 @@ const es: Dict = {
     stat_2_label: 'cloud · sin instalación',
     stat_3_value: '+1.200',
     stat_3_label: 'empresas operando',
-    dataCardTitle: 'Vista del producto',
-    dataCardSubtitle: 'Resumen operativo',
-    dataLine1: 'Documentos electrónicos · ilimitados',
-    dataLine2: 'Cumplimiento DIAN · al día',
-    dataLine3: 'Soporte humano · LUN–VIE',
-    dataFooter: 'Snapshot al cierre de jornada',
+    invoice: {
+      title: 'Factura electrónica',
+      number: 'FE-2841',
+      fromLabel: 'De',
+      from: 'Mi Empresa S.A.S',
+      toLabel: 'Para',
+      to: 'Distribuidora Andina',
+      items: [
+        { label: 'Asesoría mensual', amount: '890.000' },
+        { label: 'Plan de inventario', amount: '620.000' },
+        { label: 'Soporte técnico', amount: '410.000' },
+      ],
+      subtotalLabel: 'Subtotal',
+      subtotalAmount: '1.920.000',
+      taxLabel: 'IVA 19%',
+      taxAmount: '364.800',
+      totalLabel: 'Total',
+      totalAmount: '2.284.800',
+      stamp: 'DIAN',
+      statusNote: 'firmada y enviada · hace 14s',
+      cufeLabel: 'CUFE',
+      cufeValue: '8a2f9c41…e9f2',
+    },
   },
   marquee: [
     'DIAN · FACTURACIÓN ELECTRÓNICA',
@@ -546,12 +576,29 @@ const en: Dict = {
     stat_2_label: 'cloud · no install',
     stat_3_value: '+1,200',
     stat_3_label: 'companies running',
-    dataCardTitle: 'Product snapshot',
-    dataCardSubtitle: 'Operating summary',
-    dataLine1: 'E-documents · unlimited',
-    dataLine2: 'DIAN compliance · live',
-    dataLine3: 'Human support · MON–FRI',
-    dataFooter: 'End-of-day snapshot',
+    invoice: {
+      title: 'Electronic invoice',
+      number: 'FE-2841',
+      fromLabel: 'From',
+      from: 'My Company LLC',
+      toLabel: 'To',
+      to: 'Andina Distributors',
+      items: [
+        { label: 'Monthly retainer', amount: '890,000' },
+        { label: 'Inventory plan', amount: '620,000' },
+        { label: 'Technical support', amount: '410,000' },
+      ],
+      subtotalLabel: 'Subtotal',
+      subtotalAmount: '1,920,000',
+      taxLabel: 'VAT 19%',
+      taxAmount: '364,800',
+      totalLabel: 'Total',
+      totalAmount: '2,284,800',
+      stamp: 'DIAN',
+      statusNote: 'signed & sent · 14s ago',
+      cufeLabel: 'CUFE',
+      cufeValue: '8a2f9c41…e9f2',
+    },
   },
   marquee: [
     'DIAN · E-INVOICING',

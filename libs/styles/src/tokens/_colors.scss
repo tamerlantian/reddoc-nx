@@ -1,9 +1,10 @@
 // Reddoc design tokens — Operations Console palette
 :root {
-  // Brand
-  --reddoc-emerald: #20aa3e;
-  --reddoc-emerald-deep: #178a32;
-  --reddoc-emerald-soft: rgba(32, 170, 62, 0.12);
+  // Brand — Reddoc blue
+  --reddoc-brand: #009ef7;
+  --reddoc-brand-deep: #007ec4;
+  --reddoc-brand-soft: rgba(0, 158, 247, 0.12);
+  --reddoc-brand-tint: rgba(0, 158, 247, 0.18);
 
   // Neutral surface system (light operations console)
   --reddoc-surface: #fafaf7; // page background
@@ -11,49 +12,52 @@
   --reddoc-surface-card: #ffffff; // tiles, console frames
   --reddoc-surface-sunken: #f6f6f3;
 
-  // Ink
-  --reddoc-ink: #0a0e14; // dark mode band, text
-  --reddoc-ink-soft: #2a2f38;
-  --reddoc-ink-deep: #050709;
-  --reddoc-muted: #5a6470;
-  --reddoc-muted-soft: #8b96a1;
+  // Ink — Reddoc navy
+  --reddoc-ink: #13263c; // dark mode band, text
+  --reddoc-ink-soft: #2a3a52;
+  --reddoc-ink-deep: #0b1a2c;
+  --reddoc-muted: #5a6878;
+  --reddoc-muted-soft: #8d97a4;
 
-  // Lines / chrome
-  --reddoc-rule: rgba(10, 14, 20, 0.08);
-  --reddoc-rule-strong: rgba(10, 14, 20, 0.18);
-  --reddoc-rule-bold: rgba(10, 14, 20, 0.32);
+  // Lines / chrome (tinted on the navy ink)
+  --reddoc-rule: rgba(19, 38, 60, 0.08);
+  --reddoc-rule-strong: rgba(19, 38, 60, 0.18);
+  --reddoc-rule-bold: rgba(19, 38, 60, 0.32);
 
-  // Status
+  // Status — success stays green, info aligns with brand
   --reddoc-status-live: #20aa3e;
-  --reddoc-status-info: #1e6fff;
+  --reddoc-status-info: var(--reddoc-brand);
   --reddoc-status-warn: #d97706;
   --reddoc-status-danger: #dc2626;
-  --reddoc-status-neutral: #8b96a1;
+  --reddoc-status-neutral: #8d97a4;
 
   // Soft tints for status pills
   --reddoc-tint-live: rgba(32, 170, 62, 0.12);
-  --reddoc-tint-info: rgba(30, 111, 255, 0.12);
+  --reddoc-tint-info: var(--reddoc-brand-soft);
   --reddoc-tint-warn: rgba(217, 119, 6, 0.14);
   --reddoc-tint-danger: rgba(220, 38, 38, 0.12);
 
   // Gradients (rare, used in CTA decoration)
-  --reddoc-grad-ink: linear-gradient(180deg, #0a0e14 0%, #11151c 100%);
-  --reddoc-grad-emerald: linear-gradient(96deg, #20aa3e 0%, #03a588 100%);
+  --reddoc-grad-ink: linear-gradient(180deg, #13263c 0%, #1a324d 100%);
+  --reddoc-grad-brand: linear-gradient(96deg, #009ef7 0%, #007ec4 100%);
 
-  // Compatibility tokens (legacy consumers)
+  // Compatibility tokens (legacy consumers — alias to the new brand)
+  --reddoc-emerald: var(--reddoc-brand);
+  --reddoc-emerald-deep: var(--reddoc-brand-deep);
+  --reddoc-emerald-soft: var(--reddoc-brand-soft);
   --reddoc-paper: var(--reddoc-surface);
   --reddoc-paper-warm: var(--reddoc-surface-soft);
   --reddoc-paper-deep: var(--reddoc-surface-sunken);
   --reddoc-bone: var(--reddoc-surface-card);
   --reddoc-navy: var(--reddoc-ink);
-  --reddoc-teal: #03a588;
-  --reddoc-teal-deep: #028870;
+  --reddoc-teal: var(--reddoc-brand-deep);
+  --reddoc-teal-deep: #006aa4;
   --reddoc-ochre: #b88a2c;
-  --reddoc-ink-on-emerald: #052511;
-  --reddoc-primary: var(--reddoc-emerald);
-  --reddoc-primary-hover: var(--reddoc-emerald-deep);
+  --reddoc-ink-on-emerald: #ffffff;
+  --reddoc-primary: var(--reddoc-brand);
+  --reddoc-primary-hover: var(--reddoc-brand-deep);
   --reddoc-text: var(--reddoc-ink);
   --reddoc-text-muted: var(--reddoc-muted);
   --reddoc-border: var(--reddoc-rule);
-  --reddoc-grad-brand: var(--reddoc-grad-emerald);
+  --reddoc-grad-emerald: var(--reddoc-grad-brand);
 }

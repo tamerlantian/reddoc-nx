@@ -63,271 +63,89 @@
       </ul>
     </div>
 
-    <aside class="hero-stage fade" aria-label="Vista del producto">
-      <!-- Floating top chip: status pill -->
-      <span class="float-chip chip-status">
-        <span class="status-pill is-live">
-          <span class="dot"></span>
-          DIAN · OK
-        </span>
-      </span>
+    <aside class="hero-stage" [attr.aria-label]="t().hero.invoice.title">
+      <figure class="invoice fade" style="animation-delay: 0.35s">
+        <header class="inv-head">
+          <img src="/logos/reddoc.svg" alt="Reddoc" class="inv-logo" width="80" height="16" />
+          <span class="inv-meta">
+            <span class="inv-title">{{ t().hero.invoice.title }}</span>
+            <span class="inv-num tabular">{{ t().hero.invoice.number }}</span>
+          </span>
+        </header>
 
-      <!-- Floating right KPI tile -->
-      <span class="float-chip chip-kpi">
-        <span class="kpi-tile">
-          <span class="kpi-tile-label">FACTURAS HOY</span>
-          <span class="kpi-tile-value tabular">127</span>
-          <span class="kpi-tile-delta">▲ 18% vs ayer</span>
-        </span>
-      </span>
-
-      <!-- Floating bottom KPI -->
-      <span class="float-chip chip-rev">
-        <span class="kpi-tile">
-          <span class="kpi-tile-label">INGRESOS · MES</span>
-          <span class="kpi-tile-value tabular">$42.310.000</span>
-          <span class="kpi-spark" aria-hidden="true">
-            <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+        <div class="inv-parties">
+          <div class="inv-party">
+            <span class="inv-party-label">{{ t().hero.invoice.fromLabel }}</span>
+            <span class="inv-party-value">{{ t().hero.invoice.from }}</span>
+          </div>
+          <span class="inv-arrow" aria-hidden="true">
+            <svg viewBox="0 0 14 14" fill="none">
               <path
-                d="M0 18 L10 16 L20 17 L30 13 L40 12 L50 8 L60 9 L70 5 L80 3"
-                fill="none"
-                stroke="#20aa3e"
-                stroke-width="1.6"
+                d="M2 7h10M8 3l4 4-4 4"
+                stroke="currentColor"
+                stroke-width="1.4"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
             </svg>
           </span>
-        </span>
-      </span>
-
-      <!-- Console frame containing a synthesized dashboard mockup -->
-      <figure class="hero-console console-frame" aria-label="Vista del dashboard de Reddoc">
-        <div class="console-frame-bar">
-          <span class="console-frame-dots" aria-hidden="true">
-            <span></span><span></span><span></span>
-          </span>
-          <span class="console-tab is-active">Compras y ventas</span>
-          <span class="console-tab">Tesorería</span>
-          <span class="console-tab">Inventario</span>
-          <span class="console-spacer"></span>
-          <span class="console-meta">app.reddoc.co</span>
-        </div>
-        <div class="console-frame-body">
-          <div class="dash" aria-hidden="true">
-            <!-- Mini sidebar -->
-            <nav class="dash-side">
-              <span class="dash-side-brand">
-                <span class="dash-side-square"></span>
-                reddoc
-              </span>
-              <ul>
-                <li class="is-active">
-                  <span class="dash-side-glyph">
-                    <svg viewBox="0 0 16 16" fill="none">
-                      <path d="M3 2h8l2 3v9H3V2z" stroke="currentColor" stroke-width="1.2" />
-                      <path
-                        d="M3 5h10M6 9h4M6 11h3"
-                        stroke="currentColor"
-                        stroke-width="1.2"
-                        stroke-linecap="round"
-                      />
-                    </svg>
-                  </span>
-                  Compras &amp; ventas
-                </li>
-                <li>
-                  <span class="dash-side-glyph">
-                    <svg viewBox="0 0 16 16" fill="none">
-                      <rect
-                        x="2"
-                        y="4"
-                        width="12"
-                        height="9"
-                        rx="1.5"
-                        stroke="currentColor"
-                        stroke-width="1.2"
-                      />
-                      <path d="M2 7h12" stroke="currentColor" stroke-width="1.2" />
-                    </svg>
-                  </span>
-                  Tesorería
-                </li>
-                <li>
-                  <span class="dash-side-glyph">
-                    <svg viewBox="0 0 16 16" fill="none">
-                      <path
-                        d="M2 5l6-3 6 3-6 3-6-3z"
-                        stroke="currentColor"
-                        stroke-width="1.2"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M2 5v6l6 3M14 5v6l-6 3M8 8v6"
-                        stroke="currentColor"
-                        stroke-width="1.2"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </span>
-                  Inventario
-                </li>
-                <li>
-                  <span class="dash-side-glyph">
-                    <svg viewBox="0 0 16 16" fill="none">
-                      <rect
-                        x="2"
-                        y="2"
-                        width="12"
-                        height="12"
-                        rx="1.5"
-                        stroke="currentColor"
-                        stroke-width="1.2"
-                      />
-                      <path
-                        d="M5 11V8M8 11V5M11 11V7"
-                        stroke="currentColor"
-                        stroke-width="1.4"
-                        stroke-linecap="round"
-                      />
-                    </svg>
-                  </span>
-                  Contabilidad
-                </li>
-              </ul>
-              <span class="dash-side-foot">v.2026.04</span>
-            </nav>
-
-            <!-- Main content -->
-            <div class="dash-main">
-              <header class="dash-head">
-                <div class="dash-title">
-                  <span class="dash-eyebrow">COMPRAS Y VENTAS · RESUMEN</span>
-                  <span class="dash-breadcrumb">
-                    <span>Operación</span>
-                    <span class="dash-sep">/</span>
-                    <span>Hoy · 27 abr</span>
-                  </span>
-                </div>
-                <div class="dash-filters">
-                  <span class="dash-chip">ÚLT. 30 DÍAS ▾</span>
-                  <span class="dash-chip is-icon" title="Exportar">↓</span>
-                </div>
-              </header>
-
-              <!-- KPI row -->
-              <div class="dash-kpis">
-                <div class="dash-kpi">
-                  <span class="dash-kpi-l">INGRESOS · MES</span>
-                  <span class="dash-kpi-v">$42.310.000</span>
-                  <span class="dash-kpi-d">▲ 12% vs mes anterior</span>
-                </div>
-                <div class="dash-kpi">
-                  <span class="dash-kpi-l">FACTURAS</span>
-                  <span class="dash-kpi-v">2.841</span>
-                  <span class="dash-kpi-d">▲ 6%</span>
-                </div>
-                <div class="dash-kpi">
-                  <span class="dash-kpi-l">POR COBRAR</span>
-                  <span class="dash-kpi-v">$8.420.000</span>
-                  <span class="dash-kpi-d is-down">▼ 3%</span>
-                </div>
-              </div>
-
-              <!-- Chart -->
-              <section class="dash-chart">
-                <div class="dash-chart-head">
-                  <span class="dash-chart-title">Flujo del mes</span>
-                  <span class="dash-chart-legend">
-                    <span class="leg-item"><i class="leg-dot"></i>Ingresos</span>
-                    <span class="leg-item"><i class="leg-dot is-alt"></i>Egresos</span>
-                  </span>
-                </div>
-                <svg class="dash-chart-svg" viewBox="0 0 480 130" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="dash-fill" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stop-color="#20aa3e" stop-opacity="0.32" />
-                      <stop offset="100%" stop-color="#20aa3e" stop-opacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <!-- Gridlines -->
-                  <g stroke="rgba(10,14,20,0.06)" stroke-width="1">
-                    <line x1="0" y1="32" x2="480" y2="32" />
-                    <line x1="0" y1="64" x2="480" y2="64" />
-                    <line x1="0" y1="96" x2="480" y2="96" />
-                  </g>
-                  <!-- Egresos (dashed gray line) -->
-                  <path
-                    d="M0 90 L40 86 L80 92 L120 88 L160 80 L200 84 L240 78 L280 82 L320 76 L360 78 L400 72 L440 74 L480 70"
-                    fill="none"
-                    stroke="rgba(10,14,20,0.32)"
-                    stroke-width="1.4"
-                    stroke-dasharray="3 3"
-                  />
-                  <!-- Ingresos (green line + filled area) -->
-                  <path
-                    d="M0 110 L40 100 L80 96 L120 88 L160 78 L200 70 L240 62 L280 60 L320 48 L360 44 L400 36 L440 28 L480 22 L480 130 L0 130 Z"
-                    fill="url(#dash-fill)"
-                  />
-                  <path
-                    d="M0 110 L40 100 L80 96 L120 88 L160 78 L200 70 L240 62 L280 60 L320 48 L360 44 L400 36 L440 28 L480 22"
-                    fill="none"
-                    stroke="#20aa3e"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <!-- Last point -->
-                  <circle cx="480" cy="22" r="3.5" fill="#20aa3e" />
-                  <circle cx="480" cy="22" r="6" fill="#20aa3e" fill-opacity="0.18" />
-                </svg>
-                <div class="dash-chart-axis">
-                  <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span
-                  ><span>25</span><span>30</span>
-                </div>
-              </section>
-
-              <!-- Transactions table -->
-              <section class="dash-table">
-                <div class="dash-table-head">
-                  <span>FACTURA</span>
-                  <span>CLIENTE</span>
-                  <span class="num">MONTO</span>
-                  <span class="dash-table-status">ESTADO</span>
-                </div>
-                <div class="dash-table-row">
-                  <span class="mono">FE-2841</span>
-                  <span>Distribuidora Andina</span>
-                  <span class="num">$2.410.000</span>
-                  <span class="dash-table-status">
-                    <span class="dash-pill is-live"><i></i>PAGADA</span>
-                  </span>
-                </div>
-                <div class="dash-table-row">
-                  <span class="mono">FE-2840</span>
-                  <span>Tienda Mariposa</span>
-                  <span class="num">$ 690.500</span>
-                  <span class="dash-table-status">
-                    <span class="dash-pill is-warn"><i></i>PENDIENTE</span>
-                  </span>
-                </div>
-                <div class="dash-table-row">
-                  <span class="mono">FE-2839</span>
-                  <span>Servicios Toro S.A.S</span>
-                  <span class="num">$1.180.000</span>
-                  <span class="dash-table-status">
-                    <span class="dash-pill is-info"><i></i>ENVIADA</span>
-                  </span>
-                </div>
-              </section>
-            </div>
+          <div class="inv-party">
+            <span class="inv-party-label">{{ t().hero.invoice.toLabel }}</span>
+            <span class="inv-party-value">{{ t().hero.invoice.to }}</span>
           </div>
         </div>
+
+        <ul class="inv-items">
+          @for (it of t().hero.invoice.items; track it.label; let i = $index) {
+            <li class="inv-item" [style.animation-delay]="0.55 + i * 0.08 + 's'">
+              <span class="inv-item-label">{{ it.label }}</span>
+              <span class="inv-item-amount tabular">{{ it.amount }}</span>
+            </li>
+          }
+        </ul>
+
+        <div class="inv-totals">
+          <div class="inv-row">
+            <span class="inv-row-label">{{ t().hero.invoice.subtotalLabel }}</span>
+            <span class="inv-row-amount tabular">{{ t().hero.invoice.subtotalAmount }}</span>
+          </div>
+          <div class="inv-row">
+            <span class="inv-row-label">{{ t().hero.invoice.taxLabel }}</span>
+            <span class="inv-row-amount tabular">{{ t().hero.invoice.taxAmount }}</span>
+          </div>
+        </div>
+
+        <div class="inv-grand">
+          <span class="inv-grand-label">{{ t().hero.invoice.totalLabel }}</span>
+          <span class="inv-grand-amount tabular">$ {{ t().hero.invoice.totalAmount }}</span>
+        </div>
+
+        <footer class="inv-foot">
+          <span class="inv-stamp">
+            <span class="inv-stamp-tick" aria-hidden="true">
+              <svg viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M2 7.5l3 3 7-7"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            {{ t().hero.invoice.stamp }}
+          </span>
+          <div class="inv-foot-meta">
+            <span class="inv-status">{{ t().hero.invoice.statusNote }}</span>
+            <span class="inv-cufe tabular">
+              {{ t().hero.invoice.cufeLabel }} · {{ t().hero.invoice.cufeValue }}
+            </span>
+          </div>
+        </footer>
       </figure>
     </aside>
   </div>
 
-  <!-- Bottom data band: replaces the editorial pronunciación / pág 01 footer -->
   <div class="hero-band container-edit">
     <div class="hairline"></div>
     <div class="band-row">
