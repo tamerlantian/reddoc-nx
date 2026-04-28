@@ -564,8 +564,8 @@ const en: Dict = {
   },
   hero: {
     eyebrow: 'MOD-06 · ERP COLOMBIA · 2026',
-    headline_1: 'The system that runs',
-    headline_italic: 'your company',
+    headline_1: 'The system that',
+    headline_italic: 'runs your company',
     headline_2: 'every day.',
     lede: 'Reddoc unifies purchases, sales, treasury, inventory, POS, payroll, and accounting — plus DIAN e-invoicing — in a single operating platform. Live data, one source of truth, zero lost spreadsheets.',
     primary: 'Get started',
