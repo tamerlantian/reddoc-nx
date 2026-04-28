@@ -32,6 +32,15 @@
         "outputMode": "static"
       },
       "configurations": {
+        "staging": {
+          "fileReplacements": [
+            {
+              "replace": "apps/landing/src/environments/environment.ts",
+              "with": "apps/landing/src/environments/environment.staging.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
         "production": {
           "fileReplacements": [
             {
