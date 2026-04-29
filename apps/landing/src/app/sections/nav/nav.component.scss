@@ -256,12 +256,17 @@
   }
   .nav-links,
   .lang,
-  .btn-ghost,
-  .btn-primary {
+  .btn-ghost {
     display: none;
   }
   .nav-tools {
     justify-content: flex-end;
+    gap: 10px;
+
+    .btn-primary {
+      font-size: 0.8rem;
+      padding: 7px 14px;
+    }
   }
   .burger {
     display: inline-flex;
