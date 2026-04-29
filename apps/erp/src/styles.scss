@@ -1,0 +1,33 @@
+@import 'primeicons/primeicons.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--p-surface-ground);
+  color: var(--p-text-color);
+  overflow-x: hidden;
+}
+
+:root {
+  // Brand palette
+  --brand-navy: #143049;
+  --brand-navy-deep: #0d2035;
+  --brand-blue: #77aad7;
+  --brand-white: #ffffff;
+
+  // Semantic
+  --brand-bg: #f4f7fb;
+  --brand-surface: #ffffff;
+  --brand-surface-2: #eaf0f7;
+  --brand-text: #143049;
+  --brand-muted: #4a6a85;
+  --brand-muted-2: #8aafc9;
+  --brand-border: rgba(20 48 73 / 0.1);
+  --brand-border-hover: rgba(20 48 73 / 0.2);
+}
