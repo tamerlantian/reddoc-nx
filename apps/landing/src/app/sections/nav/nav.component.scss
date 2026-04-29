@@ -203,7 +203,7 @@
 }
 
 .mobile-panel {
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 18px;
   padding: 24px clamp(20px, 4vw, 64px) 32px;
@@ -256,23 +256,15 @@
   }
   .nav-links,
   .lang,
-  .btn-ghost {
+  .btn-ghost,
+  .btn-primary {
     display: none;
   }
   .nav-tools {
     justify-content: flex-end;
-    gap: 10px;
-
-    .btn-primary {
-      font-size: 0.8rem;
-      padding: 7px 14px;
-    }
   }
   .burger {
     display: inline-flex;
-  }
-  .mobile-panel {
-    display: flex;
   }
 }
 
