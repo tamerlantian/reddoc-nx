@@ -20,9 +20,6 @@ npx nx lint landing
 npx nx lint erp
 npx nx run-many -t lint       # All projects
 
-# Test
-npx nx test erp               # Jest (only erp has unit tests)
-npx nx e2e erp-e2e            # Playwright e2e
 
 # Affected (CI-style, based on git diff vs main)
 npx nx affected -t build
