@@ -9,7 +9,6 @@ permissions:
 
 jobs:
   check-affected:
-    if: false
     runs-on: ubuntu-latest
     outputs:
       landing: ${{ steps.check.outputs.landing }}
@@ -42,7 +41,7 @@ jobs:
 
   deploy-landing:
     needs: check-affected
-    if: false
+    if: needs.check-affected.outputs.landing == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -111,7 +110,7 @@ jobs:
 
   deploy-erp:
     needs: check-affected
-    if: false
+    if: needs.check-affected.outputs.erp == 'true'
     runs-on: ubuntu-latest
 
     steps:
