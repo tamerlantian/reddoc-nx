@@ -43,6 +43,8 @@ interface CabeceraView {
   readonly comentario: string | null;
   /** Si ya está aprobado no se puede volver a aprobar (deshabilita la acción). */
   readonly estadoAprobado: boolean;
+  /** Gobierna qué ofrece el diálogo "Contabilidad": contabilizar o descontabilizar. */
+  readonly estadoContabilizado: boolean;
 }
 
 /**
@@ -213,6 +215,17 @@ export class PagoDetailComponent implements OnInit {
       });
   }
 
+  /**
+   * El diálogo "Contabilidad" cambió el estado del documento en el backend:
+   * se recarga la ficha para que la cabecera (y el propio diálogo, que lee de
+   * ella su estado) reflejen el estado nuevo.
+   */
+  protected onContabilizacionChanged(): void {
+    const id = this.id();
+    if (!id) return;
+    this.loadDocumento(Number(id));
+  }
+
   /** Descarga el PDF del documento. */
   protected onImprimir(): void {
     const id = this.id();
@@ -247,6 +260,7 @@ export class PagoDetailComponent implements OnInit {
             cuentaBanco: pv.cuenta_banco?.nombre ?? read.cuenta_banco_nombre ?? null,
             comentario: read.comentario ?? null,
             estadoAprobado: read.estado_aprobado,
+            estadoContabilizado: read.estado_contabilizado ?? false,
           });
           this.lines.set(lineas.map((line) => cuentaDetalleToFormValue(line)));
           this.isLoading.set(false);

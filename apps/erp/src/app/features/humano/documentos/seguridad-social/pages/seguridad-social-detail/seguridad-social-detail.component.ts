@@ -164,6 +164,17 @@ export class SeguridadSocialDetailComponent implements OnInit {
   }
 
   /**
+   * El diálogo "Contabilidad" cambió el estado del documento en el backend:
+   * se recarga la ficha para que la cabecera (y el propio diálogo, que lee de
+   * ella su estado) reflejen el estado nuevo.
+   */
+  protected onContabilizacionChanged(): void {
+    const id = this.id();
+    if (!id) return;
+    this.load(Number(id));
+  }
+
+  /**
    * Descarga el PDF. Va por el gateway, que manda **solo el id**: el ERP
    * anterior le suma `filtros`, `limite`, `desplazar`, `ordenamientos`,
    * `limite_conteo`, `modelo` y `tipo`, que el endpoint no usa.

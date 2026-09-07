@@ -26,8 +26,8 @@ import { ImportDialogComponent } from '@erp/core/components/import-dialog/import
 import { importState } from '@erp/core/components/import-dialog/import-state';
 import type { ExampleConfig } from '@erp/core/components/import-dialog/import-dialog.types';
 import type { AppDict } from '@erp/i18n';
-import { MovimientoService, MOVIMIENTO_SERIALIZADOR } from '../../movimiento.service';
-import type { Movimiento } from '../../movimiento.model';
+import { MOVIMIENTO_SERIALIZADOR, type Movimiento } from '@erp/core/contabilidad';
+import { MovimientoService } from '../../movimiento.service';
 import {
   MOVIMIENTO_COLUMNS,
   MOVIMIENTO_FILTER_FIELDS,

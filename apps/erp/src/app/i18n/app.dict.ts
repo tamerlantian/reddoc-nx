@@ -315,6 +315,7 @@ export interface AppDict
       imprimir: string;
       opciones: string;
       archivos: string;
+      contabilidad: string;
       anular: string;
       emitir: string;
       confirmAprobar: { message: string; header: string };
@@ -332,6 +333,24 @@ export interface AppDict
         emitirError: { title: string; desc: string };
         imprimirError: { title: string; desc: string };
         editBloqueado: { title: string; desc: string };
+      };
+    };
+    /** Diálogo "Contabilidad" de las fichas: el libro del documento y sus acciones. */
+    contabilidad: {
+      title: string;
+      subtitle: string;
+      contabilizar: string;
+      descontabilizar: string;
+      /** Alerta cuando débitos y créditos no coinciden. */
+      descuadre: string;
+      totales: { debitos: string; creditos: string };
+      empty: { title: string; desc: string };
+      toasts: {
+        loadError: { title: string; desc: string };
+        contabilizarSuccess: { title: string; desc: string };
+        contabilizarError: { title: string; desc: string };
+        descontabilizarSuccess: { title: string; desc: string };
+        descontabilizarError: { title: string; desc: string };
       };
     };
     estados: {

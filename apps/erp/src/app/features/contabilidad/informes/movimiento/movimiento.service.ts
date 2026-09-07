@@ -7,19 +7,7 @@ import {
   type ListQuery,
   type PaginatedResponse,
 } from '@reddoc/core';
-import type { Movimiento } from './movimiento.model';
-
-/** Endpoint del libro de movimientos contables. */
-export const MOVIMIENTO_ENDPOINT = '/contabilidad/movimiento/';
-
-/**
- * Serializador de la exportación a Excel. Lo declaraba igual el ERP legacy
- * (`serializador: 'informe_movimiento'` + `excel_informe: 'True'`).
- *
- * TODO(backend): confirmar que `/contabilidad/movimiento/excel/` lo acepte en el
- * body del POST (el legacy lo mandaba como query param de un GET).
- */
-export const MOVIMIENTO_SERIALIZADOR = 'informe_movimiento';
+import { MOVIMIENTO_ENDPOINT, type Movimiento } from '@erp/core/contabilidad';
 
 /**
  * Servicio HTTP de la consulta de **movimientos contables**.

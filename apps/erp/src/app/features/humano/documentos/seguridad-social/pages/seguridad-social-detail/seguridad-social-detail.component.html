@@ -18,9 +18,11 @@
       [documentoId]="id()"
       [canAprobar]="canAprobar()"
       [canDesaprobar]="canDesaprobar()"
+      [contabilizado]="!!estados().estado_contabilizado"
       (aprobar)="onAprobar()"
       (desaprobar)="onDesaprobar()"
       (imprimir)="onImprimir()"
+      (contabilizacionChanged)="onContabilizacionChanged()"
     />
     <div class="ml-auto">
       <app-document-estados [estados]="estados()" />

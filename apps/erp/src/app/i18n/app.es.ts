@@ -321,6 +321,7 @@ export const es: AppDict = {
       imprimir: 'Imprimir',
       opciones: 'Opciones',
       archivos: 'Archivos',
+      contabilidad: 'Contabilidad',
       anular: 'Anular',
       emitir: 'Emitir',
       confirmAprobar: {
@@ -379,6 +380,40 @@ export const es: AppDict = {
         editBloqueado: {
           title: 'Documento aprobado',
           desc: 'No se puede editar un documento ya aprobado.',
+        },
+      },
+    },
+    contabilidad: {
+      title: 'Contabilidad',
+      subtitle: 'Movimientos contables que generó este documento.',
+      contabilizar: 'Contabilizar',
+      descontabilizar: 'Descontabilizar',
+      descuadre: 'El registro contable está descuadrado.',
+      totales: { debitos: 'Débitos', creditos: 'Créditos' },
+      empty: {
+        title: 'Sin movimientos contables',
+        desc: 'El documento todavía no está contabilizado o no generó movimientos.',
+      },
+      toasts: {
+        loadError: {
+          title: 'No se pudo cargar la contabilidad',
+          desc: 'Ocurrió un error al consultar los movimientos del documento.',
+        },
+        contabilizarSuccess: {
+          title: 'Documento contabilizado',
+          desc: 'El documento se contabilizó correctamente.',
+        },
+        contabilizarError: {
+          title: 'No se pudo contabilizar',
+          desc: 'Ocurrió un error al contabilizar el documento.',
+        },
+        descontabilizarSuccess: {
+          title: 'Documento descontabilizado',
+          desc: 'El documento se descontabilizó correctamente.',
+        },
+        descontabilizarError: {
+          title: 'No se pudo descontabilizar',
+          desc: 'Ocurrió un error al descontabilizar el documento.',
         },
       },
     },

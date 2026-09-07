@@ -247,6 +247,17 @@ export class PosDocumentoDetailComponent implements OnInit {
       });
   }
 
+  /**
+   * El diálogo "Contabilidad" cambió el estado del documento en el backend:
+   * se recarga la ficha para que la cabecera (y el propio diálogo, que lee de
+   * ella su estado) reflejen el estado nuevo.
+   */
+  protected onContabilizacionChanged(): void {
+    const id = this.id();
+    if (!id) return;
+    this.loadDocumento(Number(id));
+  }
+
   /** Descarga el PDF del documento. */
   protected onImprimir(): void {
     const id = this.id();

@@ -26,9 +26,11 @@
       [documentoId]="id()"
       [canAprobar]="!cabecera()?.estadoAprobado"
       [canDesaprobar]="!!cabecera()?.estadoAprobado"
+      [contabilizado]="!!cabecera()?.estadoContabilizado"
       (aprobar)="onAprobar()"
       (desaprobar)="onDesaprobar()"
       (imprimir)="onImprimir()"
+      (contabilizacionChanged)="onContabilizacionChanged()"
     />
   }
 </header>

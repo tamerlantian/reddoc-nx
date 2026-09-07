@@ -8,7 +8,7 @@ sentada. Al confirmar uno, **bórralo de esta lista** y quita el `TODO(backend)`
 
 Las secciones §1–§5 cubren los **informes**; §6–§8, los documentos transaccionales (**asiento
 contable**, **depreciación** y **cierre**); §9, la consulta de **movimientos**; §10, la
-**conciliación bancaria**.
+**conciliación bancaria**; §11, el diálogo **Contabilidad** de las fichas de detalle.
 
 Estado (2026-07-28): portados **balance de prueba** (`35754f9`), **auxiliar de cuenta** (`baaa670`)
 **balance de prueba por contacto** (`d531a2f`), **auxiliar general** (`da80fd3`) y **auxiliar por
@@ -686,3 +686,49 @@ exponga uno. Al confirmarlo, es cambiar `exampleConfig` a `{ mode: 'enabled', en
 | 9   | **No** se porta la selección múltiple de las dos tablas internas                 | Está comentada entera en el legacy —checkboxes, `toggleSelectAll`, `eliminarRegistros`— junto con el `eliminarSoporte(id)` del servicio, que ya no llama nadie |
 | 10  | **No** se porta el estado de nómina del componente de detalle                    | `cargandoEmpleados$`, `busquedaContrato` y un `localStorage.removeItem('documento_programacion')` en el `ngOnDestroy`: copy-paste de la programación de nómina |
 | 11  | Las etiquetas heredadas mal se corrigen                                          | La lista declaraba `[modelo]="'NOMINA'"` y el importador de extractos `modelo: 'HumAdicional'`                                                                 |
+
+---
+
+## 11. Diálogo "Contabilidad" de las fichas de detalle
+
+Portado desde el botón **Contabilidad** del `documento-opciones` legacy (dropdown "Opciones" de
+las 25 fichas de detalle). Vive en `core/components/contabilidad-dialog/` y lo abre el menú
+"Opciones → Contabilidad" de `DocumentDetailActionsComponent`, igual que "Archivos".
+
+Qué hace: lista el libro contable del documento (paginado), suma débitos y créditos cuando todas
+las líneas están a la vista y avisa si no cuadran, exporta el libro a Excel y ofrece
+**contabilizar** o **descontabilizar** según `estado_contabilizado` de la cabecera. Tras la acción
+recarga el libro y avisa a la ficha (`contabilizacionChanged`) para que recargue su cabecera.
+
+Estado (2026-09-07): mecanismo listo y **cableado en las 19 fichas que se contabilizan** —cada una
+pasa `[contabilizado]` desde su cabecera y escucha `(contabilizacionChanged)` para recargarla—. Lo
+apagan con `[showContabilidad]="false"` las fichas de **inventario** (el legacy hacía lo mismo con
+`permiteContabilizar=false`) y las dos **plantillas recurrentes**, que no se contabilizan: de ellas
+nacen las facturas, que sí.
+
+### 11.1 Por confirmar con backend
+
+| Acción | Supuesto                                                   | Nota                                                                                                                                                                                    |
+| ------ | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Excel  | `serializador: 'informe_movimiento'` en el body del `POST` | Mismo supuesto que la consulta del libro (§9): el legacy lo mandaba como query param de un `GET`                                                                                        |
+| Libro  | Los nombres de campo de la respuesta llevan **doble** `_`  | El legacy lee este mismo recurso con uno solo (`contacto_nombre_corto`, `cuenta_codigo`…), pero por `GET`, no por `lista/`. Si salieran vacías, se renombran en `Movimiento` (un lugar) |
+
+**Confirmado:**
+
+- El filtro del libro es `documento` —la FK—, no `documento_id` (lo confirmó el equipo de backend):
+  `POST /contabilidad/movimiento/lista/` con `{"propiedad": "documento", "operador": "=", "valor": <id>}`.
+- `POST /general/documento/contabilizar/` y `descontabilizar/` reciben `{ ids }` — así los llama el ERP
+  anterior, que consume este mismo backend (`comun/services/documento/documento.service.ts`), tanto en
+  masa como para una sola ficha. Ambas acciones pasan por `DocumentoContabilizacionService`
+  (`core/contabilidad/`), compartido con la utilidad **Contabilizar**.
+
+### 11.2 Decisiones tomadas
+
+| #   | Decisión                                                                | Por qué                                                                                                                |
+| --- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 1   | El diálogo **hace su HTTP** (vive en `core/`)                           | Mismos endpoints para todo documento, como "Archivos". Emitirlo obligaba a repetir estado y handlers en 23 fichas      |
+| 2   | `Movimiento` y `MOVIMIENTO_ENDPOINT` se movieron a `core/contabilidad/` | Los leen dos pantallas que no se conocen (la consulta del libro y este diálogo), y `core` no importa features en eager |
+| 3   | Totales solo cuando **todas** las líneas están cargadas                 | Con el libro paginado, sumar la página se leería como el total. El legacy cortaba en 50 filas con el mismo criterio    |
+| 4   | **Sin confirmación** antes de (des)contabilizar                         | El legacy no la pedía y ambas son reversibles entre sí                                                                 |
+| 5   | No se deshabilita "Contabilizar" por documento **no aprobado**          | El legacy tampoco lo hacía; el backend valida y el toast muestra su mensaje                                            |
+| 6   | Sin columna **número** en el libro del diálogo                          | Todas las filas pertenecen al documento abierto: repetir su consecutivo no informa                                     |

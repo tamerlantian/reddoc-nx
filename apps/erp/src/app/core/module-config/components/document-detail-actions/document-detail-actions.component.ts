@@ -4,6 +4,7 @@ import { Menu, MenuModule } from 'primeng/menu';
 import type { MenuItem } from 'primeng/api';
 import { I18nService } from '@reddoc/core';
 import { ArchivosDialogComponent } from '@erp/core/components/archivos-dialog/archivos-dialog.component';
+import { ContabilidadDialogComponent } from '@erp/core/components/contabilidad-dialog/contabilidad-dialog.component';
 import { MODELO } from '@erp/core/permissions';
 import type { ArchivoOwner } from '@erp/core/components/archivos-dialog/archivo.types';
 import type { AppDict } from '@erp/i18n';
@@ -11,20 +12,26 @@ import type { AppDict } from '@erp/i18n';
 /**
  * Botonera de acciones de un documento en su **vista de detalle**: Aprobar,
  * Imprimir, un dropdown "Acciones" (Desaprobar y, opcionalmente, Anular) y un
- * dropdown "Opciones" (hoy con "Archivos"). Compartida por todas las fichas de
- * detalle (servicio, factura de venta y futuras).
+ * dropdown "Opciones" (Archivos y Contabilidad). Compartida por todas las
+ * fichas de detalle (servicio, factura de venta y futuras).
  *
- * Es **presentacional** salvo por una acción: renderiza los botones y emite
+ * Es **presentacional** salvo por dos acciones: renderiza los botones y emite
  * eventos, y cada ficha decide qué hacer. Los botones se deshabilitan según el
  * estado del documento vía los inputs `can*` (todos habilitados por default; las
  * fichas los cablearán a su estado).
  *
- * La excepción es **Archivos**, que trae su propio diálogo. Es la única acción
- * cuyo comportamiento es idéntico en las 22 fichas —el mismo recurso
- * `general/archivo/`, discriminado solo por el id del documento—, así que
- * emitirla hacia afuera obligaba a repetir el mismo estado y el mismo handler en
- * cada una. Las demás (aprobar, imprimir, anular) sí cambian de endpoint según el
- * documento y siguen siendo del host.
+ * Las excepciones son **Archivos** y **Contabilidad**, que traen su propio
+ * diálogo. Son las acciones cuyo comportamiento es idéntico en las 22 fichas
+ * —los mismos recursos `general/archivo/` y `contabilidad/movimiento/` +
+ * `general/documento/(des)contabilizar/`, discriminados solo por el id del
+ * documento—, así que emitirlas hacia afuera obligaba a repetir el mismo estado
+ * y el mismo handler en cada una. Las demás (aprobar, imprimir, anular) sí
+ * cambian de endpoint según el documento y siguen siendo del host.
+ *
+ * Contabilidad necesita dos cosas del host que Archivos no: el **estado**
+ * `contabilizado` (decide si el diálogo ofrece contabilizar o descontabilizar) y
+ * un canal de vuelta, `contabilizacionChanged`, para que la ficha recargue su
+ * cabecera cuando ese estado cambia en el backend.
  *
  * Dos acciones son **opt-in** vía `showAnular` / `showEmitir`, apagadas por
  * default: no todo documento se anula ni se emite a la DIAN, y esta botonera la
@@ -37,7 +44,7 @@ import type { AppDict } from '@erp/i18n';
 @Component({
   selector: 'app-document-detail-actions',
   standalone: true,
-  imports: [ButtonModule, MenuModule, ArchivosDialogComponent],
+  imports: [ButtonModule, MenuModule, ArchivosDialogComponent, ContabilidadDialogComponent],
   templateUrl: './document-detail-actions.component.html',
   styleUrl: './document-detail-actions.component.scss',
 })
@@ -63,10 +70,25 @@ export class DocumentDetailActionsComponent {
   readonly canArchivos = input<boolean>(true);
   readonly canAnular = input<boolean>(true);
   readonly canEmitir = input<boolean>(true);
+  readonly canContabilizar = input<boolean>(true);
+
+  /**
+   * Estado de contabilización del documento, para el diálogo "Contabilidad".
+   * La ficha lo pasa desde su cabecera (`estado_contabilizado` del read).
+   */
+  readonly contabilizado = input<boolean>(false);
 
   /** Presencia de las acciones opt-in. Apagadas salvo que la ficha las pida. */
   readonly showAnular = input<boolean>(false);
   readonly showEmitir = input<boolean>(false);
+
+  /**
+   * Presencia de "Contabilidad" en el dropdown "Opciones". Encendida por
+   * default —casi todo documento se contabiliza—, se apaga en los que no
+   * generan movimiento contable, como los de inventario (entrada, salida,
+   * traslado), igual que hacía el ERP anterior.
+   */
+  readonly showContabilidad = input<boolean>(true);
 
   /**
    * Presencia del eje de aprobación (botón "Aprobar" + "Desaprobar" del
@@ -88,11 +110,14 @@ export class DocumentDetailActionsComponent {
   readonly imprimir = output<void>();
   readonly anular = output<void>();
   readonly emitir = output<void>();
+  /** El diálogo "Contabilidad" (des)contabilizó el documento: la ficha debe recargar. */
+  readonly contabilizacionChanged = output<void>();
 
   private readonly accionesMenu = viewChild.required<Menu>('accionesMenu');
   private readonly opcionesMenu = viewChild.required<Menu>('opcionesMenu');
 
   protected readonly archivosVisible = signal(false);
+  protected readonly contabilidadVisible = signal(false);
 
   /** Dueño de los archivos: el documento abierto. `null` mientras no hay id válido. */
   protected readonly archivosOwner = computed<ArchivoOwner | null>(() => {
@@ -132,17 +157,34 @@ export class DocumentDetailActionsComponent {
 
   /**
    * Entradas del dropdown "Opciones". `computed` (ref estable salvo cambio real de
-   * idioma o de `canArchivos`) para no recrear el array en cada CD — eso provoca
-   * que `p-menu` pierda el primer click.
+   * idioma o de los `can*`/`show*`) para no recrear el array en cada CD — eso
+   * provoca que `p-menu` pierda el primer click.
+   *
+   * "Contabilidad" solo abre el diálogo: el permiso de (des)contabilizar lo
+   * aplica el diálogo sobre sus botones, para que el libro se pueda consultar
+   * aunque la acción esté vedada.
    */
-  protected readonly opcionesItems = computed<MenuItem[]>(() => [
-    {
-      label: this.t().documentActions.detail.archivos,
-      icon: 'pi pi-folder',
-      disabled: !this.canArchivos() || this.archivosOwner() === null,
-      command: () => this.archivosVisible.set(true),
-    },
-  ]);
+  protected readonly opcionesItems = computed<MenuItem[]>(() => {
+    const a = this.t().documentActions.detail;
+    const sinDocumento = this.documentoId() === null;
+    const items: MenuItem[] = [
+      {
+        label: a.archivos,
+        icon: 'pi pi-folder',
+        disabled: !this.canArchivos() || sinDocumento,
+        command: () => this.archivosVisible.set(true),
+      },
+    ];
+    if (this.showContabilidad()) {
+      items.push({
+        label: a.contabilidad,
+        icon: 'pi pi-book',
+        disabled: sinDocumento,
+        command: () => this.contabilidadVisible.set(true),
+      });
+    }
+    return items;
+  });
 
   protected toggleAcciones(event: Event): void {
     this.accionesMenu().toggle(event);
