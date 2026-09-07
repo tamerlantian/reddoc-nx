@@ -7,11 +7,8 @@ import {
   I18nService,
   TenantService,
   ToastService,
-  buildFiltros,
-  buildOrdenamientos,
   type FilterCondition,
   type ListQuery,
-  type SortSpec,
 } from '@reddoc/core';
 import {
   DataFilterModalComponent,
@@ -23,7 +20,7 @@ import {
 } from '@reddoc/feature-base';
 import { ActiveModuleStore, currentModuleId, resolveModuleName } from '@erp/core/erp-modules';
 import type { AppDict } from '@erp/i18n';
-import { ExistenciaService, EXISTENCIA_SERIALIZADOR } from '../../existencia.service';
+import { ExistenciaService } from '../../existencia.service';
 import type { Existencia } from '../../existencia.model';
 import {
   EXISTENCIA_COLUMNS,
@@ -67,7 +64,6 @@ export class ExistenciaListComponent {
   protected readonly isLoading = signal(false);
   protected readonly currentPage = signal(0);
   protected readonly pageSize = signal(25);
-  protected readonly sort = signal<readonly SortSpec[]>([]);
   protected readonly activeFilters = signal<readonly FilterCondition[]>(
     this.filterStorage.read(EXISTENCIA_FILTERS_STORAGE_KEY),
   );
@@ -107,12 +103,6 @@ export class ExistenciaListComponent {
     this.loadList();
   }
 
-  protected onSortChange(sort: readonly SortSpec[]): void {
-    this.sort.set(sort);
-    this.currentPage.set(0);
-    this.loadList();
-  }
-
   protected openFilters(): void {
     this.filtersVisible.set(true);
   }
@@ -143,13 +133,9 @@ export class ExistenciaListComponent {
     this.fileDownload
       .download(this.service.exportUrl, {
         method: 'POST',
-        body: {
-          // Los filtros implícitos van también en la descarga: si no, el Excel
-          // traería ítems que la tabla nunca mostró.
-          filtros: buildFiltros([...this.service.baseFilters, ...this.activeFilters()]),
-          ordenamientos: buildOrdenamientos(this.sort()),
-          serializador: EXISTENCIA_SERIALIZADOR,
-        },
+        // `excel/` no acepta `ordenamientos`: el archivo sale con el orden
+        // que fije el backend. El body lo arma el servicio.
+        body: this.service.buildExcelBody(this.activeFilters()),
         fallbackFilename: 'existencias.xlsx',
       })
       .pipe(
@@ -168,7 +154,9 @@ export class ExistenciaListComponent {
   private loadList(): void {
     const query: ListQuery = {
       filters: this.activeFilters(),
-      sort: this.sort(),
+      // El informe no se ordena desde la tabla: `excel/` no acepta
+      // `ordenamientos`, así que pantalla y archivo saldrían distintos.
+      sort: [],
       page: this.currentPage(),
       pageSize: this.pageSize(),
     };

@@ -1,41 +1,47 @@
 <!--
   Informe "Balance de prueba por contacto".
-  Misma forma que el balance de prueba, con dos diferencias: el panel de
-  parámetros suma el selector de contacto (proyectado en su ng-content) y la
-  tabla muestra las columnas del tercero sin fila de totales.
+  Misma forma que el balance de prueba —comparte panel, botonera y tabla— con
+  las columnas del tercero encendidas y el selector de contacto proyectado en la
+  banda "documento". Sin botón de PDF: la familia de endpoints nueva no lo sirve.
 -->
 @let d = t().entities.informeCuentas;
 
 <lib-list-shell [breadcrumb]="breadcrumbItems()" [title]="nombre">
-  <div toolbar class="informe-toolbar">
-    <app-informe-cuentas-params [form]="form" idPrefix="bpc">
-      <div class="flex flex-col gap-1.5">
-        <label for="bpc-contacto" class="informe-params__label">{{ d.params.contacto }}</label>
-        <lib-contacto-select
-          inputId="bpc-contacto"
-          [formControl]="contacto"
-          [placeholder]="d.params.contactoPlaceholder"
-        />
-      </div>
-    </app-informe-cuentas-params>
+  <app-movimiento-informe-params toolbar [form]="form" idPrefix="bpc" [showDetalle]="true">
+    <div class="mi-params__field">
+      <label for="bpc-contacto" class="mi-params__label">{{ d.params.contacto }}</label>
+      <lib-contacto-select
+        inputId="bpc-contacto"
+        [formControl]="contacto"
+        [placeholder]="d.params.contactoPlaceholder"
+      />
+    </div>
 
-    <app-informe-cuentas-actions
+    <app-movimiento-informe-actions
+      acciones
       [loading]="isLoading()"
       [exportingExcel]="isExportingExcel()"
-      [exportingPdf]="isExportingPdf()"
       [busy]="isBusy()"
       [canExport]="canExport()"
+      [showPdf]="false"
+      [hint]="hint()"
       (generar)="generar()"
       (excel)="exportExcel()"
-      (pdf)="exportPdf()"
     />
-  </div>
+  </app-movimiento-informe-params>
 
-  <app-saldos-cuenta-table
+  <app-movimiento-informe-table
     table
     [rows]="rows()"
+    [amounts]="montos()"
+    [empty]="empty"
+    [totales]="totales()"
+    [loading]="isLoading()"
     [generated]="generated()"
     [showContacto]="true"
-    [showTotals]="false"
+    [totalCount]="totalCount()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)"
   />
 </lib-list-shell>

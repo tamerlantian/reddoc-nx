@@ -18,24 +18,6 @@ export const CONTABILIDAD_MODULE: ErpModuleDescriptor = {
     { kind: 'item', labelKey: 'layout.nav.home', iconClass: 'pi pi-home', path: 'inicio' },
     {
       kind: 'accordion',
-      id: 'contabilidad-movimientos',
-      labelKey: 'layout.nav.sections.movement',
-      iconClass: 'pi pi-arrow-right-arrow-left',
-      defaultExpanded: false,
-      groups: [
-        {
-          items: [
-            {
-              labelKey: 'entities.movimientoContable.name',
-              path: 'movimientos',
-              activeMatch: 'movimientos',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      kind: 'accordion',
       id: 'contabilidad-documentos',
       labelKey: 'layout.nav.sections.document',
       iconClass: 'pi pi-file',
@@ -122,6 +104,13 @@ export const CONTABILIDAD_MODULE: ErpModuleDescriptor = {
       groups: [
         {
           items: [
+            // Encabeza la sección: es el movimiento crudo, y los nueve informes
+            // de abajo son agregaciones de estas mismas líneas.
+            {
+              labelKey: 'entities.movimientoContable.name',
+              path: 'informes/movimientos',
+              activeMatch: 'informes/movimientos',
+            },
             { labelKey: 'entities.balancePrueba.name', path: 'informes/balance-prueba' },
             {
               labelKey: 'entities.balancePruebaContacto.name',

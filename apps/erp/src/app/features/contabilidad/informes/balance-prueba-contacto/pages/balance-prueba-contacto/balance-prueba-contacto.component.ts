@@ -1,38 +1,33 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule, type ValidatorFn } from '@angular/forms';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { ListShellComponent } from '@reddoc/feature-base';
 import { ErpContactoSelectComponent } from '@reddoc/ui';
-import type { ErpSelectOption } from '@reddoc/core';
-import { InformeCuentasPageBase } from '../../../../shared/informe-cuentas-page.base';
-import { rangoFechasMismoAnio } from '../../../../shared/informe-cuentas.validators';
-import type {
-  InformeCuentasContactoParams,
-  SaldoCuentaContactoRow,
-} from '../../../../shared/informe-cuentas.types';
-import { InformeCuentasActionsComponent } from '../../../../shared/components/informe-cuentas-actions/informe-cuentas-actions.component';
-import { InformeCuentasParamsComponent } from '../../../../shared/components/informe-cuentas-params/informe-cuentas-params.component';
-import { SaldosCuentaTableComponent } from '../../../../shared/components/saldos-cuenta-table/saldos-cuenta-table.component';
+import type { ErpSelectOption, FilterCondition } from '@reddoc/core';
+import { MovimientoInformePageBase } from '../../../../shared/movimiento-informe-page.base';
+import type { InformeContactoRow } from '../../../../shared/movimiento-informe.types';
+import { buildFiltrosDetalle } from '../../../../shared/movimiento-informe.utils';
+import { MovimientoInformeActionsComponent } from '../../../../shared/components/movimiento-informe-actions/movimiento-informe-actions.component';
+import { MovimientoInformeParamsComponent } from '../../../../shared/components/movimiento-informe-params/movimiento-informe-params.component';
+import { MovimientoInformeTableComponent } from '../../../../shared/components/movimiento-informe-table/movimiento-informe-table.component';
 import { BalancePruebaContactoService } from '../../balance-prueba-contacto.service';
 
 /**
  * Informe **Balance de prueba por contacto** del módulo Contabilidad.
  *
- * El balance de prueba abierto **por tercero**: la misma cuenta aparece una vez
- * por cada contacto con movimiento en ella, con su identificación y su nombre.
- * Sirve para responder "¿de quién es este saldo?", que el balance plano no
- * contesta.
+ * El balance de prueba abierto **por tercero**: bajo cada auxiliar del plan
+ * cuelga una fila por cada contacto con movimiento en esa cuenta, con su
+ * identificación y su nombre. Responde "¿de quién es este saldo?", que el
+ * balance plano no contesta. No baja hasta el asiento — eso es el auxiliar
+ * general.
  *
- * Dos particularidades frente a sus hermanos:
+ * Acota opcionalmente por un tercero. Es el único parámetro propio: número y
+ * comprobante identifican un asiento, y este informe no llega a ese nivel.
  *
- * - Suma un parámetro opcional, **contacto**, para acotar a un solo tercero.
- *   Va como control aparte del formulario compartido y se proyecta dentro del
- *   panel de parámetros.
- * - **No lleva fila de totales.** El ERP anterior la quitó a propósito (su
- *   plantilla la deja comentada con la referencia a la tarea 1517) y tiene
- *   sentido: al repetirse la cuenta por contacto, sumar la columna no da el
- *   movimiento del periodo sino un número sin significado contable.
- *
- * Como el balance de prueba, exige que ambas fechas caigan en el mismo año.
+ * **Recupera la fila de totales**, que el ERP anterior había quitado. Allá la
+ * suma se hacía en el front sobre las filas recibidas, y con la cuenta repetida
+ * por contacto daba un número sin significado contable. Acá los totales vienen
+ * de la acción `totales/`, que suma **solo las filas de tipo `AUXILIAR`** — el
+ * desglose por tercero no entra en la cuenta, así que el cuadre es el real.
  */
 @Component({
   selector: 'app-balance-prueba-contacto',
@@ -41,35 +36,37 @@ import { BalancePruebaContactoService } from '../../balance-prueba-contacto.serv
     ReactiveFormsModule,
     ListShellComponent,
     ErpContactoSelectComponent,
-    InformeCuentasParamsComponent,
-    InformeCuentasActionsComponent,
-    SaldosCuentaTableComponent,
+    MovimientoInformeParamsComponent,
+    MovimientoInformeActionsComponent,
+    MovimientoInformeTableComponent,
   ],
   templateUrl: './balance-prueba-contacto.component.html',
   styleUrl: './balance-prueba-contacto.component.scss',
 })
-export class BalancePruebaContactoComponent extends InformeCuentasPageBase<
-  SaldoCuentaContactoRow,
-  InformeCuentasContactoParams
-> {
+export class BalancePruebaContactoComponent extends MovimientoInformePageBase<InformeContactoRow> {
   protected readonly service = inject(BalancePruebaContactoService);
   protected readonly archivo = 'balance-prueba-contacto';
 
-  /**
-   * Tercero por el que acotar (opcional). Va fuera del `FormGroup` compartido
-   * —que solo declara los parámetros comunes— y se suma en `buildParams()`.
-   */
+  /** Tercero por el que acotar (opcional). Viaja como filtro `contacto_id`. */
   protected readonly contacto = new FormControl<ErpSelectOption | null>(null);
+
+  constructor() {
+    super();
+    // También deja viejo el informe ya generado. Va acá y no en la base porque
+    // los campos de la subclase recién existen a esta altura.
+    this.watchParam(this.contacto);
+  }
 
   protected get nombre(): string {
     return this.t().entities.balancePruebaContacto.name;
   }
 
-  protected override rangeValidator(): ValidatorFn {
-    return rangoFechasMismoAnio('fecha_desde', 'fecha_hasta');
+  /** Los dos textos del estado vacío, propios de este informe. */
+  protected get empty() {
+    return this.t().entities.balancePruebaContacto.empty;
   }
 
-  protected override buildParams(): InformeCuentasContactoParams {
-    return { ...super.buildParams(), contacto: this.contacto.value?.id ?? null };
+  protected override extraFilters(): readonly FilterCondition[] {
+    return buildFiltrosDetalle({ contacto: this.contacto.value, numero: null, comprobante: null });
   }
 }

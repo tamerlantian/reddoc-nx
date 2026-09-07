@@ -1,29 +1,43 @@
 <!--
   Informe "Estado de situación financiera".
-  Misma pantalla que el estado de resultados con otro endpoint: el panel de
-  parámetros solo muestra el periodo y la tabla es la compartida. Sin PDF.
+  Gemelo del estado de resultados: el panel solo muestra el periodo y la tabla va
+  plana, con clase y grupo al frente. Sin PDF.
 -->
 <lib-list-shell [breadcrumb]="breadcrumbItems()" [title]="nombre">
-  <div toolbar class="informe-toolbar">
-    <app-informe-cuentas-params
-      [form]="form"
-      idPrefix="esf"
-      [showCuentas]="false"
-      [showFlags]="false"
-    />
-
-    <app-informe-cuentas-actions
+  <app-movimiento-informe-params
+    toolbar
+    [form]="form"
+    idPrefix="esf"
+    [showCuentas]="false"
+    [showSoloConSaldo]="false"
+  >
+    <app-movimiento-informe-actions
+      acciones
       [loading]="isLoading()"
       [exportingExcel]="isExportingExcel()"
-      [exportingPdf]="isExportingPdf()"
       [busy]="isBusy()"
       [canExport]="canExport()"
       [showPdf]="false"
+      [hint]="hint()"
       (generar)="generar()"
       (excel)="exportExcel()"
-      (pdf)="exportPdf()"
     />
-  </div>
+  </app-movimiento-informe-params>
 
-  <app-estado-financiero-table table [rows]="rows()" [generated]="generated()" />
+  <app-movimiento-informe-table
+    table
+    [rows]="rows()"
+    [amounts]="montos()"
+    [empty]="empty"
+    [totales]="totales()"
+    [loading]="isLoading()"
+    [generated]="generated()"
+    [showUbicacion]="true"
+    [jerarquia]="false"
+    [descuadre]="false"
+    [totalCount]="totalCount()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)"
+  />
 </lib-list-shell>

@@ -22,10 +22,12 @@
       [disabled]="!isEditable()"
       (onClick)="onEdit()"
     />
+    <!-- Los documentos de inventario no generan movimiento contable: sin "Contabilidad". -->
     <app-document-detail-actions
       [documentoId]="id()"
       [canAprobar]="!cabecera()?.estadoAprobado"
       [canDesaprobar]="!!cabecera()?.estadoAprobado"
+      [showContabilidad]="false"
       (aprobar)="onAprobar()"
       (desaprobar)="onDesaprobar()"
       (imprimir)="onImprimir()"

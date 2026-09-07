@@ -253,7 +253,6 @@ export const es: AppDict = {
         master: 'Administrador',
         document: 'Documentos',
         process: 'Proceso',
-        movement: 'Movimientos',
         utility: 'Utilidades',
         report: 'Informes',
       },
@@ -322,6 +321,7 @@ export const es: AppDict = {
       imprimir: 'Imprimir',
       opciones: 'Opciones',
       archivos: 'Archivos',
+      contabilidad: 'Contabilidad',
       anular: 'Anular',
       emitir: 'Emitir',
       confirmAprobar: {
@@ -380,6 +380,40 @@ export const es: AppDict = {
         editBloqueado: {
           title: 'Documento aprobado',
           desc: 'No se puede editar un documento ya aprobado.',
+        },
+      },
+    },
+    contabilidad: {
+      title: 'Contabilidad',
+      subtitle: 'Movimientos contables que generó este documento.',
+      contabilizar: 'Contabilizar',
+      descontabilizar: 'Descontabilizar',
+      descuadre: 'El registro contable está descuadrado.',
+      totales: { debitos: 'Débitos', creditos: 'Créditos' },
+      empty: {
+        title: 'Sin movimientos contables',
+        desc: 'El documento todavía no está contabilizado o no generó movimientos.',
+      },
+      toasts: {
+        loadError: {
+          title: 'No se pudo cargar la contabilidad',
+          desc: 'Ocurrió un error al consultar los movimientos del documento.',
+        },
+        contabilizarSuccess: {
+          title: 'Documento contabilizado',
+          desc: 'El documento se contabilizó correctamente.',
+        },
+        contabilizarError: {
+          title: 'No se pudo contabilizar',
+          desc: 'Ocurrió un error al contabilizar el documento.',
+        },
+        descontabilizarSuccess: {
+          title: 'Documento descontabilizado',
+          desc: 'El documento se descontabilizó correctamente.',
+        },
+        descontabilizarError: {
+          title: 'No se pudo descontabilizar',
+          desc: 'Ocurrió un error al descontabilizar el documento.',
         },
       },
     },
@@ -4866,6 +4900,12 @@ export const es: AppDict = {
     informeCuentas: {
       generar: 'Generar',
       descuadre: 'El informe no cuadra',
+      groups: {
+        periodo: 'Periodo',
+        cuentas: 'Plan de cuentas',
+        documento: 'Documento',
+      },
+      paramsStale: 'Cambiaste los parámetros — generá de nuevo',
       params: {
         fechaDesde: 'Fecha desde',
         fechaHasta: 'Fecha hasta',
@@ -4875,9 +4915,14 @@ export const es: AppDict = {
         contacto: 'Contacto',
         contactoPlaceholder: 'Todos los contactos',
         numero: 'Número',
+        numeroPlaceholder: 'Todos los números',
         comprobante: 'Comprobante',
+        comprobantePlaceholder: 'Todos los comprobantes',
+        centroCosto: 'Centro de costo',
+        centroCostoPlaceholder: 'Todos los centros de costo',
         incluirCierre: 'Incluir cierre',
         soloConMovimiento: 'Solo cuentas con movimiento',
+        soloConSaldo: 'Solo cuentas con saldo',
       },
       validation: {
         rangoInvertido: 'La fecha desde no puede ser mayor a la fecha hasta.',
@@ -4891,10 +4936,19 @@ export const es: AppDict = {
         comprobante: 'Comprobante',
         numero: 'Número',
         fecha: 'Fecha',
+        movimiento: 'Asiento',
+        detalle: 'Detalle',
+        base: 'Base',
+        baseRetenido: 'Base retenida',
+        retenido: 'Retenido',
+        clase: 'Clase',
+        grupo: 'Grupo',
+        saldo: 'Saldo',
         saldoAnterior: 'Saldo anterior',
         debito: 'Débito',
         credito: 'Crédito',
         saldoActual: 'Saldo actual',
+        saldoFinal: 'Saldo final',
         total: 'Total',
       },
       empty: {
@@ -4902,11 +4956,71 @@ export const es: AppDict = {
         noData: 'No hay movimientos para los parámetros seleccionados.',
       },
     },
-    balancePrueba: { name: 'Balance de prueba' },
-    balancePruebaContacto: { name: 'Balance de prueba por contacto' },
-    auxiliarCuenta: { name: 'Auxiliar cuenta' },
-    auxiliarGeneral: { name: 'Auxiliar general' },
-    auxiliarContacto: { name: 'Auxiliar contacto' },
+    balancePrueba: {
+      name: 'Balance de prueba',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver los saldos.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta del rango movió entre esas fechas. Probá ampliar el periodo o desmarcar «solo cuentas con saldo».',
+        },
+      },
+    },
+    balancePruebaContacto: {
+      name: 'Balance de prueba por contacto',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver los saldos por tercero.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta del rango movió entre esas fechas. Probá ampliar el periodo o desmarcar «solo cuentas con saldo».',
+        },
+      },
+    },
+    auxiliarCuenta: {
+      name: 'Auxiliar cuenta',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver los asientos de cada cuenta.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta del rango movió entre esas fechas. Probá ampliar el periodo o desmarcar «solo cuentas con saldo».',
+        },
+      },
+    },
+    auxiliarGeneral: {
+      name: 'Auxiliar general',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver el detalle.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta del rango movió entre esas fechas. Probá ampliar el periodo o desmarcar «solo cuentas con saldo».',
+        },
+      },
+    },
+    auxiliarContacto: {
+      name: 'Auxiliar contacto',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver los asientos de cada tercero.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta del rango movió entre esas fechas. Probá ampliar el periodo o desmarcar «solo cuentas con saldo».',
+        },
+      },
+    },
     conciliacion: {
       name: 'Conciliación',
       columns: {
@@ -5093,34 +5207,56 @@ export const es: AppDict = {
         saldo: 'Saldo',
       },
     },
-    estadoResultados: { name: 'Estado resultados' },
-    estadoSituacionFinanciera: { name: 'Estado situación financiera' },
+    estadoResultados: {
+      name: 'Estado de resultados',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y generá para ver el resultado.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta de resultado movió entre esas fechas. Probá ampliar el periodo.',
+        },
+      },
+    },
+    estadoSituacionFinanciera: {
+      name: 'Estado de situación financiera',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y generá para ver la situación financiera.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta movió entre esas fechas. Probá ampliar el periodo.',
+        },
+      },
+    },
     certificadoRetencion: {
       name: 'Certificado retención',
-      columns: {
-        identificacion: 'Identificación',
-        contacto: 'Contacto',
-        cuenta: 'Cuenta',
-        cuentaNombre: 'Nombre de la cuenta',
-        baseRetenido: 'Base retenida',
-        retenido: 'Retenido',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y el tercero, y generá para ver lo retenido.',
+        },
+        noData: {
+          title: 'Sin retenciones en el periodo',
+          sub: 'No se retuvo nada entre esas fechas para esos parámetros. Probá ampliar el periodo o quitar el tercero.',
+        },
       },
     },
     informeBase: {
       name: 'Base',
-      columns: {
-        id: 'ID',
-        comprobante: 'Comprobante',
-        numero: 'Número',
-        fecha: 'Fecha',
-        cuenta: 'Cuenta',
-        cuentaNombre: 'Nombre de la cuenta',
-        identificacion: 'Identificación',
-        contacto: 'Contacto',
-        debito: 'Débito',
-        credito: 'Crédito',
-        base: 'Base',
-        detalle: 'Detalle',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver las bases gravables.',
+        },
+        noData: {
+          title: 'Sin bases en el periodo',
+          sub: 'Ninguna línea con base gravable entre esas fechas. Probá ampliar el periodo o el rango de cuentas.',
+        },
       },
     },
     nominaInforme: {
@@ -5309,6 +5445,8 @@ export const es: AppDict = {
         existencia: 'Existencia',
         remision: 'Remisión',
         disponible: 'Disponible',
+        negativo: 'Negativo',
+        inactivo: 'Inactivo',
       },
     },
     existenciaAlmacen: {
@@ -5344,11 +5482,13 @@ export const es: AppDict = {
         documentoTipo: 'Tipo',
         fecha: 'Fecha',
         contacto: 'Contacto',
+        almacen: 'Almacén',
+        itemCodigo: 'Código',
+        detalle: 'Detalle',
         item: 'Ítem',
         cantidad: 'Cantidad',
         costo: 'Costo',
         precio: 'Precio',
-        subtotal: 'Subtotal',
       },
     },
     ventaItem: {
@@ -5379,6 +5519,7 @@ export const es: AppDict = {
         fechaVence: 'Vence',
         identificacion: 'Identificación',
         contacto: 'Contacto',
+        contactoId: 'ID contacto',
         subtotal: 'Subtotal',
         impuesto: 'Impuesto',
         total: 'Total',
@@ -5418,6 +5559,7 @@ export const es: AppDict = {
         fechaVence: 'Vence',
         identificacion: 'Identificación',
         contacto: 'Contacto',
+        contactoId: 'ID contacto',
         subtotal: 'Subtotal',
         impuesto: 'Impuesto',
         total: 'Total',

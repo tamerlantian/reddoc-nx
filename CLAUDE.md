@@ -262,6 +262,7 @@ Olvidar marcar un servicio global → el backend resuelve contra el schema del t
 ## Tener en cuenta
 
 - Para los textos no crees por ejemplo "Nueva Empresa" esta mal para nosotros, debe ser "Nueva empresa" no uses mayusculas al inicio de las palabras despues de la primera palabra
+- No comitees sin que yo te lo pida explicitamente
 - siempre procura usar clases de tailwind
 
 ## Documentación de arquitectura

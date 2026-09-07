@@ -1,15 +1,18 @@
 /**
  * Fila del informe **Inventario valorizado**
- * (`POST /general/item/lista/`, `serializador: 'informe_inventario_valorizado'`).
+ * (`POST /inventario/informe/lista/`, `informe: 'inventario_valorizado'`).
  *
  * Es la fila de `Existencia` más la valorización: el costo promedio ponderado
  * de la unidad y el costo total de las existencias. El grano sigue siendo el
  * ítem (saldo consolidado, sin desglose por almacén).
  *
- * **Supuesto pendiente de confirmar con backend**: que el serializador
- * `informe_inventario_valorizado` exista en el API nuevo y devuelva
- * `costo_promedio` y `costo_total` junto a los saldos. En el ERP legacy el
- * serializador viajaba como query param del `GET general/item/`.
+ * Backend lo describe como «lo mismo que existencia, con costo promedio y costo
+ * total», y esta fila ya usa los mismos nombres **planos** que
+ * `InvExistenciaInforme` —el único serializer de la familia que el schema
+ * declara—, así que es la menos arriesgada de las tres sin confirmar.
+ *
+ * Si el informe replica `existencia`, le faltarían acá `negativo` e `inactivo`.
+ * Pendiente de confirmar la lista de campos con backend.
  */
 export interface InventarioValorizado {
   readonly id: number;

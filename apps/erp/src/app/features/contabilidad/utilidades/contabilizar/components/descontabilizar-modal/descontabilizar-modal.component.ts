@@ -17,7 +17,7 @@ import { ErpApiSelectComponent } from '@reddoc/ui';
 import type { AppDict } from '@erp/i18n';
 import { ContabilizarService } from '../../contabilizar.service';
 import { DESCONTABILIZAR_LIMITE } from '../../contabilizar.constants';
-import { rangoFechas } from '../../../../shared/informe-cuentas.validators';
+import { rangoFechas } from '../../../../shared/rango-fechas.validators';
 
 /** Catálogo de tipos de documento que van a contabilidad. */
 const DOCUMENTO_TIPO_ENDPOINT = '/general/documento-tipo/seleccionar/';

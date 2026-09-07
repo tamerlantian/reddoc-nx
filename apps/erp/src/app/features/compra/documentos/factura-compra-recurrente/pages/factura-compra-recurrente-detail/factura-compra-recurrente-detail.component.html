@@ -22,10 +22,12 @@
       [disabled]="!isEditable()"
       (onClick)="onEdit()"
     />
+    <!-- La plantilla recurrente no se contabiliza: de ella nacen las facturas, que sí. -->
     <app-document-detail-actions
       [documentoId]="id()"
       [showAprobacion]="false"
       [showImprimir]="false"
+      [showContabilidad]="false"
     />
   }
 </header>

@@ -6,8 +6,9 @@ export const EXISTENCIA_ALMACEN_FILTERS_STORAGE_KEY = 'existencia-almacen:filter
 /**
  * Columnas del informe: identificación del par ítem/almacén y sus saldos.
  *
- * Los saldos son campos calculados por el backend: se muestran pero **no** son
- * ordenables (igual que en el legacy).
+ * **La tabla no ordena.** `excel/` no acepta `ordenamientos`, así que dejar la
+ * cabecera ordenable haría que la pantalla y el archivo descargado salieran en
+ * órdenes distintos sin que nadie lo avise.
  */
 export const EXISTENCIA_ALMACEN_COLUMNS: readonly ColumnDef[] = [
   {
@@ -16,19 +17,16 @@ export const EXISTENCIA_ALMACEN_COLUMNS: readonly ColumnDef[] = [
     type: 'number',
     width: '70px',
     align: 'right',
-    sortable: true,
   },
   {
     field: 'item__nombre',
     headerKey: 'entities.existenciaAlmacen.columns.item',
     type: 'text',
-    sortable: true,
   },
   {
     field: 'almacen__nombre',
     headerKey: 'entities.existenciaAlmacen.columns.almacen',
     type: 'text',
-    sortable: true,
   },
   {
     field: 'existencia',

@@ -266,7 +266,6 @@ export interface AppDict
         master: string;
         document: string;
         process: string;
-        movement: string;
         utility: string;
         report: string;
       };
@@ -316,6 +315,7 @@ export interface AppDict
       imprimir: string;
       opciones: string;
       archivos: string;
+      contabilidad: string;
       anular: string;
       emitir: string;
       confirmAprobar: { message: string; header: string };
@@ -333,6 +333,24 @@ export interface AppDict
         emitirError: { title: string; desc: string };
         imprimirError: { title: string; desc: string };
         editBloqueado: { title: string; desc: string };
+      };
+    };
+    /** Diálogo "Contabilidad" de las fichas: el libro del documento y sus acciones. */
+    contabilidad: {
+      title: string;
+      subtitle: string;
+      contabilizar: string;
+      descontabilizar: string;
+      /** Alerta cuando débitos y créditos no coinciden. */
+      descuadre: string;
+      totales: { debitos: string; creditos: string };
+      empty: { title: string; desc: string };
+      toasts: {
+        loadError: { title: string; desc: string };
+        contabilizarSuccess: { title: string; desc: string };
+        contabilizarError: { title: string; desc: string };
+        descontabilizarSuccess: { title: string; desc: string };
+        descontabilizarError: { title: string; desc: string };
       };
     };
     estados: {
@@ -3693,6 +3711,14 @@ export interface AppDict
     informeCuentas: {
       generar: string;
       descuadre: string;
+      /** Micro-encabezados de las bandas del panel de parámetros. */
+      groups: {
+        periodo: string;
+        cuentas: string;
+        documento: string;
+      };
+      /** Aviso: los parámetros cambiaron y lo que se ve quedó viejo. */
+      paramsStale: string;
       params: {
         fechaDesde: string;
         fechaHasta: string;
@@ -3702,9 +3728,16 @@ export interface AppDict
         contacto: string;
         contactoPlaceholder: string;
         numero: string;
+        numeroPlaceholder: string;
         comprobante: string;
+        comprobantePlaceholder: string;
+        /** Dimensión del movimiento — no confundir con el `grupo` del plan de cuentas. */
+        centroCosto: string;
+        centroCostoPlaceholder: string;
         incluirCierre: string;
         soloConMovimiento: string;
+        /** Familia nueva: el contrato renombró `cuenta_con_movimiento`. */
+        soloConSaldo: string;
       };
       validation: {
         rangoInvertido: string;
@@ -3718,10 +3751,25 @@ export interface AppDict
         comprobante: string;
         numero: string;
         fecha: string;
+        /** Id del asiento — solo el auxiliar de cuenta, que no trae comprobante. */
+        movimiento: string;
+        /** Texto escrito al contabilizar — solo el informe base. */
+        detalle: string;
+        /** Base gravable de la línea — solo el informe base. */
+        base: string;
+        /** Los dos importes del certificado de retención. */
+        baseRetenido: string;
+        retenido: string;
+        /** Ubicación en el plan e importe único — solo los estados financieros. */
+        clase: string;
+        grupo: string;
+        saldo: string;
         saldoAnterior: string;
         debito: string;
         credito: string;
         saldoActual: string;
+        /** Solo el balance de prueba: su contrato nuevo lo llama `saldo_final`. */
+        saldoFinal: string;
         total: string;
       };
       empty: {
@@ -3729,11 +3777,48 @@ export interface AppDict
         noData: string;
       };
     };
-    balancePrueba: { name: string };
-    balancePruebaContacto: { name: string };
-    auxiliarCuenta: { name: string };
-    auxiliarGeneral: { name: string };
-    auxiliarContacto: { name: string };
+    balancePrueba: {
+      name: string;
+      /**
+       * Empty state propio (título + pista), que es la forma canónica del ERP.
+       * Los otros 8 informes siguen con las dos líneas sueltas de
+       * `informeCuentas.empty`, que su tabla pinta en una sola celda.
+       */
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
+    balancePruebaContacto: {
+      name: string;
+      /** Empty state propio, igual que el resto de la familia nueva. */
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
+    auxiliarCuenta: {
+      name: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
+    auxiliarGeneral: {
+      name: string;
+      /** Empty state propio, igual que el balance de prueba (misma tabla). */
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
+    auxiliarContacto: {
+      name: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
     conciliacion: {
       name: string;
       columns: { id: string; fechaDesde: string; fechaHasta: string; cuentaBanco: string };
@@ -3872,34 +3957,32 @@ export interface AppDict
         saldo: string;
       };
     };
-    estadoResultados: { name: string };
-    estadoSituacionFinanciera: { name: string };
+    estadoResultados: {
+      name: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
+    estadoSituacionFinanciera: {
+      name: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
     certificadoRetencion: {
       name: string;
-      columns: {
-        identificacion: string;
-        contacto: string;
-        cuenta: string;
-        cuentaNombre: string;
-        baseRetenido: string;
-        retenido: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
       };
     };
     informeBase: {
       name: string;
-      columns: {
-        id: string;
-        comprobante: string;
-        numero: string;
-        fecha: string;
-        cuenta: string;
-        cuentaNombre: string;
-        identificacion: string;
-        contacto: string;
-        debito: string;
-        credito: string;
-        base: string;
-        detalle: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
       };
     };
     nominaInforme: {
@@ -4071,6 +4154,8 @@ export interface AppDict
         existencia: string;
         remision: string;
         disponible: string;
+        negativo: string;
+        inactivo: string;
       };
     };
     existenciaAlmacen: {
@@ -4106,11 +4191,13 @@ export interface AppDict
         documentoTipo: string;
         fecha: string;
         contacto: string;
+        almacen: string;
+        itemCodigo: string;
+        detalle: string;
         item: string;
         cantidad: string;
         costo: string;
         precio: string;
-        subtotal: string;
       };
     };
     ventaItem: {
@@ -4141,6 +4228,7 @@ export interface AppDict
         fechaVence: string;
         identificacion: string;
         contacto: string;
+        contactoId: string;
         subtotal: string;
         impuesto: string;
         total: string;
@@ -4177,6 +4265,7 @@ export interface AppDict
         fechaVence: string;
         identificacion: string;
         contacto: string;
+        contactoId: string;
         subtotal: string;
         impuesto: string;
         total: string;

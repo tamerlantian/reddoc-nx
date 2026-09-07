@@ -7,8 +7,9 @@ export const INVENTARIO_VALORIZADO_FILTERS_STORAGE_KEY = 'inventario-valorizado:
  * Columnas del informe: las de existencias más la valorización (costo promedio
  * de la unidad y costo total de las existencias).
  *
- * Los saldos y los costos son campos calculados por el backend: se muestran
- * pero **no** son ordenables (igual que en el legacy).
+ * **La tabla no ordena.** `excel/` no acepta `ordenamientos`, así que dejar la
+ * cabecera ordenable haría que la pantalla y el archivo descargado salieran en
+ * órdenes distintos sin que nadie lo avise.
  */
 export const INVENTARIO_VALORIZADO_COLUMNS: readonly ColumnDef[] = [
   {
@@ -17,20 +18,17 @@ export const INVENTARIO_VALORIZADO_COLUMNS: readonly ColumnDef[] = [
     type: 'number',
     width: '70px',
     align: 'right',
-    sortable: true,
   },
   {
     field: 'codigo',
     headerKey: 'entities.inventarioValorizado.columns.codigo',
     type: 'text',
     width: '140px',
-    sortable: true,
   },
   {
     field: 'nombre',
     headerKey: 'entities.inventarioValorizado.columns.nombre',
     type: 'text',
-    sortable: true,
   },
   {
     field: 'referencia',

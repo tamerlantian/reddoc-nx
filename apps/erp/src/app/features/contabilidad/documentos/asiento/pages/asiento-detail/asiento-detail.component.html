@@ -26,9 +26,11 @@
       [documentoId]="id()"
       [canAprobar]="!cabecera()?.estadoAprobado"
       [canDesaprobar]="!!cabecera()?.estadoAprobado"
+      [contabilizado]="!!cabecera()?.estadoContabilizado"
       (aprobar)="onAprobar()"
       (desaprobar)="onDesaprobar()"
       (imprimir)="onImprimir()"
+      (contabilizacionChanged)="onContabilizacionChanged()"
     />
 
     <p-button
@@ -44,23 +46,6 @@
     <p-menu #utilidadesMenu [popup]="true" [model]="utilidadesItems()" appendTo="body" />
   }
 </header>
-
-<app-import-dialog
-  [visible]="importar.visible()"
-  (visibleChange)="importar.setVisible($event)"
-  [title]="t().entities.asiento.import.title"
-  [subtitle]="t().entities.asiento.import.subtitle"
-  [notice]="t().entities.asiento.import.notice"
-  [importing]="importar.loading()"
-  [errors]="importar.errors()"
-  [errorSummary]="importar.errorSummary()"
-  [errorTotal]="importar.errorTotal()"
-  [masters]="importar.masters"
-  [exampleConfig]="exampleConfig()"
-  (importRequested)="importar.submit($event)"
-/>
-
-<p-confirmDialog />
 
 @if (isLoading()) {
   <!-- ── Estado de carga ─────────────────────────────────────────────────────── -->
@@ -164,3 +149,20 @@
     </div>
   </section>
 }
+
+<app-import-dialog
+  [visible]="importar.visible()"
+  (visibleChange)="importar.setVisible($event)"
+  [title]="t().entities.asiento.import.title"
+  [subtitle]="t().entities.asiento.import.subtitle"
+  [notice]="t().entities.asiento.import.notice"
+  [importing]="importar.loading()"
+  [errors]="importar.errors()"
+  [errorSummary]="importar.errorSummary()"
+  [errorTotal]="importar.errorTotal()"
+  [masters]="importar.masters"
+  [exampleConfig]="exampleConfig()"
+  (importRequested)="importar.submit($event)"
+/>
+
+<p-confirmDialog />

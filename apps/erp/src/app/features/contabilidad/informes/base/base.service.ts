@@ -1,27 +1,19 @@
 import { Injectable } from '@angular/core';
-import { InformeCuentasService } from '../../shared/informe-cuentas.service';
-import type { BaseMovimientoRow, InformeBaseParams } from './base.model';
-
-/**
- * Endpoint del informe. Sirve la consulta y el Excel, discriminados por una
- * bandera en el body. **No sirve PDF**: el ERP anterior ni siquiera ponía el
- * botón en esta pantalla.
- */
-export const INFORME_BASE_ENDPOINT = '/contabilidad/movimiento/informe-base/';
+import { MovimientoInformeService } from '../../shared/movimiento-informe.service';
+import type { InformeBasesRow, InformeId } from '../../shared/movimiento-informe.types';
 
 /**
  * Servicio HTTP del informe **Base**.
  *
- * Toda la mecánica (POST con `{ parametros }`, respuesta `{ registros }` sin
- * paginar) vive en `InformeCuentasService`; acá solo se declara el endpoint.
+ * Toda la mecánica —las tres acciones sobre `/contabilidad/movimiento-informe/`,
+ * el body común, la paginación por query params— vive en
+ * `MovimientoInformeService`; acá solo se declara el discriminador.
  *
- * **Supuestos pendientes de confirmar con backend**: el path y que acepte
- * `contacto_id`.
+ * El primero de los **planos**: no recorre el plan de cuentas sino lo que pasó
+ * en el rango, así que no trae jerarquía, subtotales ni saldo anterior/final, y
+ * `totales/` suma todas sus filas en vez de solo las de tipo `AUXILIAR`.
  */
 @Injectable({ providedIn: 'root' })
-export class InformeBaseService extends InformeCuentasService<
-  BaseMovimientoRow,
-  InformeBaseParams
-> {
-  protected readonly endpoint = INFORME_BASE_ENDPOINT;
+export class InformeBaseService extends MovimientoInformeService<InformeBasesRow> {
+  protected readonly informe: InformeId = 'bases';
 }

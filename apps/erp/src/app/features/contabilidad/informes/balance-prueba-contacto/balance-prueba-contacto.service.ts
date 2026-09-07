@@ -1,33 +1,19 @@
 import { Injectable } from '@angular/core';
-import { InformeCuentasService } from '../../shared/informe-cuentas.service';
-import type {
-  InformeCuentasContactoParams,
-  SaldoCuentaContactoRow,
-} from '../../shared/informe-cuentas.types';
-
-/**
- * Endpoint del informe. El mismo path sirve las tres operaciones —consultar,
- * Excel y PDF— discriminadas por una bandera en el body.
- *
- * Ojo con el nombre: la pantalla del ERP anterior se llamaba "balance de prueba
- * por contacto" pero su endpoint dice `tercero`. Es el mismo concepto.
- */
-export const BALANCE_PRUEBA_CONTACTO_ENDPOINT =
-  '/contabilidad/movimiento/informe-balance-prueba-tercero/';
+import { MovimientoInformeService } from '../../shared/movimiento-informe.service';
+import type { InformeContactoRow, InformeId } from '../../shared/movimiento-informe.types';
 
 /**
  * Servicio HTTP del informe **Balance de prueba por contacto**.
  *
- * Toda la mecánica (POST con `{ parametros }`, respuesta `{ registros }` sin
- * paginar) vive en `InformeCuentasService`; acá solo se declara el endpoint.
+ * Toda la mecánica —las tres acciones sobre `/contabilidad/movimiento-informe/`,
+ * el body común, la paginación por query params— vive en
+ * `MovimientoInformeService`; acá solo se declara el discriminador.
  *
- * **Supuesto pendiente de confirmar con backend**: el path y que acepte el
- * parámetro `contacto`.
+ * Bajo cada auxiliar del plan cuelga una fila `TERCERO` por contacto con
+ * movimiento en esa cuenta; no baja hasta el asiento. Por eso sus filas son
+ * `InformeContactoRow` y no la del auxiliar general.
  */
 @Injectable({ providedIn: 'root' })
-export class BalancePruebaContactoService extends InformeCuentasService<
-  SaldoCuentaContactoRow,
-  InformeCuentasContactoParams
-> {
-  protected readonly endpoint = BALANCE_PRUEBA_CONTACTO_ENDPOINT;
+export class BalancePruebaContactoService extends MovimientoInformeService<InformeContactoRow> {
+  protected readonly informe: InformeId = 'balance_prueba_contacto';
 }

@@ -8,9 +8,8 @@ export const CUENTA_PAGAR_FILTERS_STORAGE_KEY = 'cuenta-pagar:filters:v1';
  * documento (tipo, número, fecha, vencimiento), del contacto y los montos
  * (subtotal, impuesto, total, afectado, pendiente).
  *
- * Se replica el mismo set que el informe hermano de cuentas por cobrar. El
- * informe viejo de pagar además exponía `contacto_id` e identificación como
- * columnas visibles; se omiten aquí para mantener la pareja consistente.
+ * La identificación del tercero va **antes** que su nombre, como en el resto de
+ * los informes del ERP: es el dato por el que se lo busca.
  */
 export const CUENTA_PAGAR_COLUMNS: readonly ColumnDef[] = [
   {
@@ -45,7 +44,15 @@ export const CUENTA_PAGAR_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'contacto_nombre_corto',
+    field: 'contacto_numero_identificacion',
+    headerKey: 'entities.cuentaPagar.columns.identificacion',
+    type: 'text',
+    width: '130px',
+  },
+  {
+    // `contacto_nombre`, no `contacto_nombre_corto`: es lo que devuelve el
+    // informe. Con el nombre viejo la columna salía vacía.
+    field: 'contacto_nombre',
     headerKey: 'entities.cuentaPagar.columns.contacto',
     type: 'text',
   },
@@ -86,30 +93,25 @@ export const CUENTA_PAGAR_COLUMNS: readonly ColumnDef[] = [
   },
 ];
 
-/** Campos por los que se puede filtrar (columnas descriptivas; no los montos calculados). */
+/**
+ * Campos por los que se puede filtrar.
+ *
+ * Tres y nada más: el documento se busca por su **id** o su **número**, y el
+ * tercero por su **id**. Se dejaron fuera fecha, tipo de documento y las
+ * búsquedas por texto del contacto — quien usa este informe llega con el
+ * documento o el tercero en la mano, no explorando.
+ *
+ * El tercero va por `contacto_id` y no por nombre: es la convención confirmada
+ * para las FK en los filtros de informes, y evita depender de cómo esté escrito
+ * el nombre.
+ */
 export const CUENTA_PAGAR_FILTER_FIELDS: readonly FilterField[] = [
   { name: 'id', displayNameKey: 'entities.cuentaPagar.columns.id', type: 'number' },
-  { name: 'numero', displayNameKey: 'entities.cuentaPagar.columns.numero', type: 'string' },
-  { name: 'fecha', displayNameKey: 'entities.cuentaPagar.columns.fecha', type: 'date' },
+  { name: 'numero', displayNameKey: 'entities.cuentaPagar.columns.numero', type: 'number' },
   {
-    name: 'documento_tipo_id',
-    displayNameKey: 'entities.cuentaPagar.columns.documentoTipo',
+    name: 'contacto_id',
+    displayNameKey: 'entities.cuentaPagar.columns.contactoId',
     type: 'number',
-  },
-  {
-    name: 'documento_tipo_nombre',
-    displayNameKey: 'entities.cuentaPagar.columns.documentoTipo',
-    type: 'string',
-  },
-  {
-    name: 'contacto_nombre_corto',
-    displayNameKey: 'entities.cuentaPagar.columns.contacto',
-    type: 'string',
-  },
-  {
-    name: 'contacto_numero_identificacion',
-    displayNameKey: 'entities.cuentaPagar.columns.identificacion',
-    type: 'string',
   },
 ];
 

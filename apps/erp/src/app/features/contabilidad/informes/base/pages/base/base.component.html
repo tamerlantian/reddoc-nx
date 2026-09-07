@@ -1,35 +1,62 @@
 <!--
   Informe "Base".
-  Panel de parámetros compartido pero sin las dos banderas, con el selector de
-  contacto proyectado, y tabla propia de movimientos con base gravable. Sin PDF.
+  El primero de los planos: sin jerarquía, sin `solo_con_saldo` y con sus propios
+  importes (débito, crédito, base). El panel lleva el selector de contacto
+  proyectado en la banda "documento". Sin PDF: el ERP anterior ni siquiera ponía
+  el botón acá.
 -->
 @let d = t().entities.informeCuentas;
 
 <lib-list-shell [breadcrumb]="breadcrumbItems()" [title]="nombre">
-  <div toolbar class="informe-toolbar">
-    <app-informe-cuentas-params [form]="form" idPrefix="ib" [showFlags]="false">
-      <div class="flex flex-col gap-1.5">
-        <label for="ib-contacto" class="informe-params__label">{{ d.params.contacto }}</label>
-        <lib-contacto-select
-          inputId="ib-contacto"
-          [formControl]="contacto"
-          [placeholder]="d.params.contactoPlaceholder"
-        />
-      </div>
-    </app-informe-cuentas-params>
+  <app-movimiento-informe-params
+    toolbar
+    [form]="form"
+    idPrefix="ib"
+    [showSoloConSaldo]="false"
+    [showDetalle]="true"
+  >
+    <div class="mi-params__field">
+      <label for="ib-contacto" class="mi-params__label">{{ d.params.contacto }}</label>
+      <lib-contacto-select
+        inputId="ib-contacto"
+        [formControl]="contacto"
+        [placeholder]="d.params.contactoPlaceholder"
+      />
+    </div>
 
-    <app-informe-cuentas-actions
+    <app-movimiento-informe-actions
+      acciones
       [loading]="isLoading()"
       [exportingExcel]="isExportingExcel()"
-      [exportingPdf]="isExportingPdf()"
       [busy]="isBusy()"
       [canExport]="canExport()"
       [showPdf]="false"
+      [hint]="hint()"
       (generar)="generar()"
       (excel)="exportExcel()"
-      (pdf)="exportPdf()"
     />
-  </div>
+  </app-movimiento-informe-params>
 
-  <app-base-movimientos-table table [rows]="rows()" [generated]="generated()" />
+  <!--
+    `jerarquia` y `descuadre` apagados: todas las filas son del mismo tipo, y
+    nada obliga a que débito iguale a crédito en un listado de bases gravables.
+  -->
+  <app-movimiento-informe-table
+    table
+    [rows]="rows()"
+    [amounts]="montos()"
+    [empty]="empty"
+    [totales]="totales()"
+    [loading]="isLoading()"
+    [generated]="generated()"
+    [showContacto]="true"
+    [showMovimiento]="true"
+    [showDetalle]="true"
+    [jerarquia]="false"
+    [descuadre]="false"
+    [totalCount]="totalCount()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)"
+  />
 </lib-list-shell>

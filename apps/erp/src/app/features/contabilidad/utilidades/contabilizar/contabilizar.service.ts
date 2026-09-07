@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 import {
   BaseHttpService,
@@ -8,6 +8,7 @@ import {
   type ListQuery,
   type PaginatedResponse,
 } from '@reddoc/core';
+import { DocumentoContabilizacionService } from '@erp/core/contabilidad';
 import type { ContabilizarRow, DescontabilizarCriterio } from './contabilizar.model';
 import { DESCONTABILIZAR_LIMITE } from './contabilizar.constants';
 
@@ -31,13 +32,18 @@ export interface CandidatosDescontabilizar {
  *  - `buscarParaDescontabilizar`: resuelve el rango del modal a una lista de ids.
  *  - `descontabilizar`: manda esos ids, también en una sola petición.
  *
- * Tenant-scoped por defecto (lo hereda de `BaseHttpService`).
+ * Contabilizar y descontabilizar **delegan** en `DocumentoContabilizacionService`
+ * (`@erp/core/contabilidad`): son los mismos endpoints que usa el diálogo
+ * "Contabilidad" de las fichas de detalle, y el payload `{ ids }` se declara en
+ * un solo lugar. Acá queda lo propio de la utilidad: listar pendientes y
+ * resolver el criterio del modal a ids.
  *
- * **Supuestos pendientes de confirmar con backend**: los paths `contabilizar/` y
- * `descontabilizar/` y que ambos reciban `{ ids }`.
+ * Tenant-scoped por defecto (lo hereda de `BaseHttpService`).
  */
 @Injectable({ providedIn: 'root' })
 export class ContabilizarService extends BaseHttpService {
+  private readonly contabilizacion = inject(DocumentoContabilizacionService);
+
   /**
    * Lista documentos combinando los filtros permanentes (`baseFilters`) con los
    * filtros/orden/paginación del `ListQuery` del usuario.
@@ -55,12 +61,12 @@ export class ContabilizarService extends BaseHttpService {
 
   /** Contabiliza los documentos indicados. */
   contabilizar(ids: readonly number[]): Observable<unknown> {
-    return this.post<unknown>(`${DOCUMENTO_ENDPOINT}contabilizar/`, { ids });
+    return this.contabilizacion.contabilizar(ids);
   }
 
   /** Revierte la contabilización de los documentos indicados. */
   descontabilizar(ids: readonly number[]): Observable<unknown> {
-    return this.post<unknown>(`${DOCUMENTO_ENDPOINT}descontabilizar/`, { ids });
+    return this.contabilizacion.descontabilizar(ids);
   }
 
   /**

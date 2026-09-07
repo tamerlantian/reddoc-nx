@@ -13,6 +13,77 @@ Estado (2026-07-31): portado el master **almacén** (§4). Es el primer master p
 
 ---
 
+## 0. Informes de inventario — contrato confirmado (2026-09-07)
+
+Los cuatro informes viven en un **punto único**, `/inventario/informe/`, discriminados por `informe`
+en el body. Antes cada pantalla pegaba a un master distinto con un `serializador` y filtros base
+adivinados; eso se fue.
+
+| `informe`               | Modelo                | Qué trae                                         |
+| ----------------------- | --------------------- | ------------------------------------------------ |
+| `existencia` (default)  | `GenItem`             | Una fila por ítem, saldo consolidado             |
+| `existencia_almacen`    | `InvExistencia`       | Una fila por ítem y almacén                      |
+| `inventario_valorizado` | `GenItem`             | Igual que existencia, con costo promedio y total |
+| `historial_movimiento`  | `GenDocumentoDetalle` | Las líneas de documento que movieron inventario  |
+
+Dos acciones, y **no reciben el mismo body**:
+
+```
+POST /inventario/informe/lista/   { informe, filtros, ordenamientos }
+POST /inventario/informe/excel/   { informe, filtros }
+```
+
+Diferencias con los informes de contabilidad, que condicionan el diseño:
+
+- `lista/` **sí acepta `ordenamientos`** (el de contabilidad los rechaza), así que las tablas siguen
+  siendo ordenables.
+- `excel/` **no** los acepta: el archivo sale con el orden que fije el backend. Lo arma
+  `InventarioInformeService.buildExcelBody`, para que ninguna página vuelva a mandarlos.
+- **No hay acción `totales/`** ni parámetros de periodo. Son **listados**, no reportes que se
+  generan: se quedan con `<lib-data-table>` + toolbar, sin nada del andamiaje de contabilidad.
+
+### Columnas
+
+Solo `existencia` está **verificado contra el schema** (`InvExistenciaInforme`):
+
+```
+id · codigo · nombre · referencia · existencia · remision · disponible · negativo · inactivo
+```
+
+`negativo` e `inactivo` no se pintaban y ahora sí. Los tres saldos son los **del ítem**, no de un
+almacén.
+
+`historial_movimiento` también quedó **verificado contra la respuesta real** (2026-09-07):
+
+```
+id · documento_id · documento_numero · documento_fecha · documento_tipo_id ·
+documento_tipo_nombre · contacto_nombre · item_id · item_codigo · item_nombre ·
+almacen_id · almacen_nombre · cantidad · cantidad_operada ·
+operacion_inventario · operacion_remision · costo · precio · detalle
+```
+
+Sus columnas apuntaban al lookup de Django del legacy y salían **todas vacías** menos `id`, `costo`
+y `precio`; además pintaba un `subtotal` que el informe no devuelve. Ya está corregido, con almacén,
+código de ítem y detalle sumados.
+
+**La asimetría que hay que tener presente**: las **columnas** leen el JSON y van **planas**; los
+**filtros** viajan como rutas ORM y van con **doble guion bajo**. No unificar unos con otras.
+
+- [ ] **Los campos de `existencia_almacen`.** Es el único que queda sin verificar, y sus columnas
+      siguen con doble guion bajo (`item__nombre`, `almacen__nombre`). La evidencia en contra ya es
+      fuerte: los **dos** serializers confirmados de esta familia usan nombres planos, y
+      `historial_movimiento` devuelve exactamente `item_id` / `item_codigo` / `item_nombre` /
+      `almacen_id` / `almacen_nombre` para las mismas entidades. Lo más probable es que esas
+      columnas salgan vacías hoy. No se cambiaron por inferencia: basta pedir su respuesta.
+- [ ] **Qué hacer con `operacion_inventario` y `operacion_remision`.** Son dos ejes independientes
+      (`1` suma, `-1` resta, `0` no toca ese saldo) y hoy se modelan pero no se pintan: en crudo son
+      números sin significado para quien lee. Si vale mostrarlos, hace falta el catálogo de valores
+      para etiquetarlos (entrada/salida) en vez de inventarlo.
+- [ ] **Los campos de `inventario_valorizado`.** Ya usa nombres planos, así que es el de menor
+      riesgo; si replica `existencia`, le faltarían `negativo` e `inactivo`.
+
+---
+
 ## 1. Por confirmar con backend
 
 ### 1.1 Serializadores

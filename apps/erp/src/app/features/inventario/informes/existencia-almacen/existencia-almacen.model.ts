@@ -1,16 +1,18 @@
 /**
- * Fila del informe **Existencias por almacén** (`POST /inventario/existencia/lista/`).
+ * Fila del informe **Existencias por almacén**
+ * (`POST /inventario/informe/lista/`, `informe: 'existencia_almacen'`).
  *
  * A diferencia de `Existencia` (una fila por ítem, saldo consolidado), acá el
  * grano es **ítem × almacén**: el mismo ítem aparece una vez por cada almacén
  * donde tiene movimiento.
  *
- * **Supuestos pendientes de confirmar con backend**: los nombres aplanados de
- * los relacionales. El ERP legacy los declaraba con lookup de Django
- * (`item__nombre`, `almacen__nombre`) y su tabla pintaba las llaves crudas de
- * la respuesta, así que se replican tal cual. Si el API nuevo los devuelve
- * aplanados (`item_nombre`), el fix es local: `existencia-almacen.constants.ts`
- * y este archivo.
+ * ⚠️ **Los nombres de los campos son un supuesto, y hay evidencia en contra.**
+ * Vienen del lookup de Django del ERP legacy (`item__nombre`), pero el único
+ * serializer de esta familia que el schema sí declara —`InvExistenciaInforme`,
+ * el del informe `existencia`— usa nombres **planos** (`codigo`, `nombre`). Si
+ * este informe sigue esa convención, las columnas con doble guion bajo salen
+ * **vacías**: `<lib-data-table>` resuelve el valor con `row[field]` plano.
+ * Pendiente de confirmar la lista de campos con backend.
  */
 export interface ExistenciaAlmacen {
   readonly id: number;

@@ -550,6 +550,167 @@ tabular-nums`. La **suma al pie**, tras `border-t-2 border-[rgba(20,48,73,0.12)]
 - **El parámetro recalculado sale de la propia respuesta** (`gen_asistente_datos_iniciales`), no de
   releer el endpoint de parámetros.
 
+## Regla: `<p-datepicker>` va siempre con `[fluid]="true"`
+
+Sin `fluid` el datepicker es `inline-flex` y **conserva su ancho intrínseco**: el input (~177px) más
+el botón del ícono (~40px) dan unos **217px** que no dependen del contenedor. En un campo más
+angosto el grupo desborda por la derecha, y si algún ancestro lleva `overflow: hidden` —cualquier
+recuadro con `border-radius`— lo que se recorta es justo **el botón del calendario**.
+
+El síntoma se reporta como dos cosas distintas ("los campos se ven pegados" + "no tiene el ícono")
+pero es una sola causa: contenido desbordado y recortado, no un problema de espaciado. Antes de
+tocar `gap` o `padding`, comprobar que el control declara `fluid`.
+
+Es la convención del ERP: 56 de los 62 usos ya lo pasan. Quedan sin él —mismo bug latente, no
+reportado todavía— `descontabilizar-modal`, `cuenta-cobrar-corte-list`,
+`generar-documento-modal` y `generar-nomina-electronica-modal`.
+
+Vale igual para cualquier control de PrimeNG con adorno lateral (`p-inputnumber` con botones,
+`p-inputgroup`): el ancho lo tiene que poner el contenedor, no el control.
+
+## Patrón: panel de parámetros de un informe (recuadro en bandas)
+
+`features/contabilidad/shared/components/movimiento-informe-params/` — para una pantalla de
+**consultar → resultado** donde hay que elegir varios parámetros antes de generar. Lo comparten el
+balance de prueba y el auxiliar general.
+
+El error a evitar (y que hubo): tirar todos los campos en un
+`grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr))` sobre el cuerpo de la card. Con 4
+campos se sostiene; con 8 se cae por tres motivos a la vez, y ninguno se arregla con espaciado:
+
+- **Sin agrupación**, periodo / rango de cuentas / filtros de documento son tres preguntas
+  distintas que se leen como una fila indiferenciada.
+- **`auto-fit` parte los pares**: según el ancho, «hasta» cae en otra fila que «desde». Un rango
+  partido en dos filas deja de leerse como rango. **Los dos extremos de un rango van siempre en la
+  misma fila**, y eso descarta `auto-fit` para este panel.
+- **Sin recuadro** los campos flotan, mientras la tabla sí tiene el suyo. La asimetría es lo que se
+  lee como "desordenado".
+
+La forma:
+
+- **Recuadro hermano del de la tabla** — mismo `border: 1px solid rgba(20 48 73 / 0.12)` y
+  `radius: 12px` que `.list-shell__table`. Dos piezas de la misma familia dentro de la card, no una
+  pieza y un montón de campos sueltos.
+- **Una banda por pregunta**, separadas por el filete estándar `rgba(20 48 73 / 0.08)`. Cada banda
+  lleva su **micro-encabezado arriba** y los campos debajo — el mismo `group-label` del app-switcher
+  y de la ficha de detalle (uppercase `0.65rem/600`, muted, `opacity .7`), que se distingue de la
+  etiqueta de campo por caja y peso, **nunca por color**.
+- **Las bandas de "qué cubre el informe" comparten fila** (periodo · plan de cuentas): a partir de
+  `1024px` van lado a lado con filete **vertical** entre ellas, y por debajo se apilan con filete
+  horizontal. Se probó el encabezado en una **columna a la izquierda** (`7.5rem` fija) y se descartó
+  al ponerlas lado a lado: dos columnas de encabezado se comen el ancho que necesitan los campos y
+  el par de fechas vuelve a envolver.
+- **El reparto de la fila es `flex: 1 1 0`, no `auto`:** con `auto` la banda de tres controles se
+  come a la de dos y las columnas dejan de leerse como pares.
+- **El filete de apilado va sobre los hijos directos del recuadro** (`> * + *`), no sobre la clase
+  de banda: dentro de una fila los hermanos se separan en **vertical**, y una regla por clase
+  alcanzaría los dos casos y pintaría un borde de más.
+- **Campos acotados** — `flex: 1 1 9rem; max-width: 15rem`. Sin `max-width` un rango de dos campos
+  se estira hasta los extremos y vuelve a dejar de leerse como par. La base es `9rem` y no `11rem`
+  porque con dos grupos repartiéndose la fila, `11rem` hace envolver el par de fechas justo en el
+  ancho donde entra la vista de dos columnas.
+- **Las banderas no son campos etiquetados.** Un checkbox metido en una celda de la grilla queda
+  huérfano; va al final de la banda a la que pertenece semánticamente (`solo_con_saldo` cuenta
+  "qué cuentas entran", así que vive en la banda del plan de cuentas), alineado contra el alto del
+  input.
+- **La botonera cierra el recuadro** como banda de pie: definir la consulta y lanzarla son el mismo
+  gesto. Como fila suelta debajo se lee como si perteneciera a la tabla.
+- **Los campos proyectados por `ng-content` los alcanza `:host ::ng-deep`** (son descendientes DOM
+  del contenedor de campos), así el informe que aporta parámetros propios no repite medidas ni el
+  estilo de etiqueta. Repetir `.informe-params__label` en el scss de cada página fue la duplicación
+  del panel anterior.
+- **Banda vacía = no se pinta**, y por eso su visibilidad es un `input` y no una detección del
+  `ng-content`: una banda sin contenido igual costaría su filete y su encabezado (ver la regla de
+  la ranura).
+- **Apilado bajo 768px:** el encabezado de grupo pasa arriba de sus campos y los campos sueltan su
+  `max-width`.
+
+## Patrón: informe paginado con totales de cuadre (tabla propia)
+
+`features/contabilidad/shared/components/movimiento-informe-table/` — cuando un
+informe **pagina** pero necesita una **fila de totales** que cubra el resultado entero.
+`<lib-data-table>` no la cubre, así que la tabla es propia; lo que **no** puede ser propio es el
+lenguaje visual, o el informe se lee como una isla dentro del ERP.
+
+Lo que hay que copiar de `<lib-data-table>`, y por qué:
+
+- **Encadenar el flex hasta el scrollport.** `:host { display:flex; flex-direction:column; flex:1;
+min-height:0; overflow:hidden }` y el wrapper con `flex:1; min-height:0; overflow:auto`.
+  **`flex: 1` en el host no es opcional:** `.list-shell__table` es un flex column con `flex:1` que
+  ocupa el alto de la card, y un hijo sin `flex` mide su contenido — la tabla queda pegada arriba y
+  el borde del recuadro dibuja un rectángulo vacío debajo. Con datos se disimula; **con el informe
+  vacío es lo único que se ve**. Fue un bug real (2026-09-04), heredado de `saldos-cuenta-table`,
+  donde no se notaba porque no había paginador debajo.
+- **Empty state que llena la caja**, no una línea en un `<td>`: `pi pi-inbox` (`1.4rem`, muted,
+  `opacity .5`) + título (`0.95rem/700 --brand-navy`) + pista (`0.8rem` muted, `max-width:280px`),
+  centrado con `padding: 4rem 1rem`. Para que llene el alto: `height:100%` en la tabla **solo
+  cuando está vacía** y `height:1px` en el `<th>` — en una tabla `height` es un mínimo, así que el
+  sobrante cae entero en la fila del empty state y el header no se infla.
+- **Dos vacíos distintos, dos copys distintos.** "Todavía no generaste" y "sin resultados" se leen
+  al revés: el primero pide una acción, el segundo dice que la acción ya se hizo y no había nada.
+  Un `generated: boolean` los separa. Y el copy va como `{ title, sub }` — la forma canónica de
+  todos los empty states del dict.
+- **Header sticky** `#f8f9fa` + `box-shadow: inset 0 -1px 0 rgba(19 38 60 / 0.1)` (no
+  `border-bottom`: con `border-collapse` el borde se despega al scrollear). Celdas `.6rem/.75rem`
+  (`th`) y `.55rem/.75rem` (`td`), `tabular-nums`, hover `rgba(19 38 60 / 0.02)`.
+- **Pie:** `border-top: 1px solid rgba(19 38 60 / 0.08)`, paginador **centrado** y contador
+  (`1–25 de 63 registros`) en `position:absolute; right` — mismo reparto que `lib-data-table`. El
+  contador va **fuera** del `<p-paginator>` (no por sus templates internos) para no acoplarse a la
+  estructura interna de PrimeNG; al paginador se le quita su caja (`padding:0; border:0;
+background:transparent`) porque el marco lo pone el pie.
+- **Totales sticky al fondo** (`position:sticky; bottom:0`) y **solo con filas**: un cuadre en `$ 0`
+  sobre un informe vacío no dice nada y compite con el empty state. Se resalta en rojo cuando
+  débito ≠ crédito — comparar dos cifras a ojo es justo lo que el informe evita.
+- **Los totales no se calculan sobre las filas.** Con el informe paginado, sumar lo recibido da el
+  total de la página. Vienen de su propia acción del backend (`totales/`).
+- **Cargando ≠ vaciar.** Al cambiar de página se atenúa lo que ya está (`opacity:.55;
+pointer-events:none`), no se parpadea la tabla entera. **No se atenúa el empty state**: no hay
+  nada que refrescar y el spinner del botón ya lo dice.
+- **Guard del paginador:** PrimeNG reemite `onPageChange` al reprogramarle `first`/`rows`; sin
+  `if (page === page() && pageSize === pageSize()) return;` cada respuesta dispara otra consulta.
+- **Las columnas de importe van como dato, no como banderas.** Cada informe declara las suyas
+  (`{field, label}[]`) y la tabla las recorre para el encabezado, las celdas y el pie. Nació con
+  cuatro columnas fijas de saldo y se rompió al llegar los informes **planos**: uno pide
+  `débito/crédito/base`, otro `base retenido/retenido` y otros dos un único `saldo` — cuatro sets
+  que no comparten **ninguna** columna. Con banderas eso son cuatro combinaciones excluyentes; con
+  datos, una línea por informe. Regla general: cuando las variantes no comparten columnas, el set
+  es dato; las banderas sirven para bloques que se **suman** (`showContacto`, `showMovimiento`).
+- **La jerarquía es opcional** (`[jerarquia]="false"`): en los informes planos todas las filas son
+  del mismo `tipo`, así que el tratamiento de subtotal/detalle atenuaría la tabla entera sin
+  distinguir nada. Igual el aviso de descuadre (`[descuadre]="false"`), que solo tiene sentido donde
+  el informe debe cuadrar.
+- **El descuadre se resalta solo sobre débito y crédito**, que son las dos cifras que se comparan.
+  Pintar de rojo los cuatro importes no diría cuál no cuadra.
+- **Jerarquía aplanada:** el backend intercala filas de subtotal (clase, grupo, cuenta) antes de
+  cada cuenta de movimiento, y un campo `tipo` es lo único que las distingue. Pintarlas todas iguales
+  hace **leer los importes duplicados**, porque cada subtotal está hecho de las filas que vienen
+  debajo. `tipo` decide **peso y fondo** — subtotal en `600` sobre `rgba(19 38 60 / 0.035)`, detalle
+  en muted — y **no sangría**: código y nombre arrancan todos en el mismo borde para poder escanear
+  la columna de códigos de arriba abajo. La profundidad ya la dice el propio código de cuenta
+  (`1` → `13` → `1355` → `135515`), así que indentar la repetía y descuadraba la lectura.
+- **No trackear por el id de la entidad** en el `@for`: las filas de subtotal traen `cuenta_id` en
+  `null` y Angular rechaza las claves duplicadas. Va `track $index`.
+- **Sass:** las declaraciones sueltas van **antes** de cualquier regla anidada (`&--x`,
+  `&::-webkit-scrollbar`) o el build tira `mixed-decls`.
+
+## Patrón: aviso de resultado desactualizado (informe ya generado)
+
+Para una pantalla de **consultar → resultado** donde los parámetros pueden cambiar después de
+generar (informes contables). El problema: cambiás la fecha y la tabla sigue mostrando los números
+del rango anterior como si fueran vigentes — y la descarga de Excel **sí** sale con los parámetros
+nuevos, así que pantalla y archivo dejan de coincidir sin que nadie avise.
+
+- **No se limpia la tabla.** Quitarle a alguien los números que está leyendo por haber tocado un
+  campo es peor que el problema. Se avisa y listo.
+- **Aviso a la izquierda de la botonera**, empujado con `mr-auto` dentro del `justify-end`:
+  `pi pi-exclamation-circle` + texto en `text-[0.78rem] text-amber-700`.
+- **Ámbar, no rojo** — mismo criterio que el aviso de vencimiento: apartarse no es un error, es un
+  estado legítimo con una salida obvia (volver a generar). El rojo se reserva para lo imposible.
+- **El texto nombra la salida**, no el síntoma: «Cambiaste los parámetros — generá de nuevo».
+- **Mecánica:** un `signal` que enciende `form.valueChanges` (solo si ya se generó) y que la
+  consulta apaga. El aviso viaja como `input` opcional (`hint`) de la botonera compartida, con
+  `@if` — vacío no pinta nada y no cuesta ranura de `gap`.
+
 ## i18n
 
 Claves bajo `layout.*` en `app.dict.ts` (tipo) + `app.es.ts` + `app.en.ts`. Resolución por
