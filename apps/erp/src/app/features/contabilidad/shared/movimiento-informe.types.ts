@@ -57,24 +57,56 @@ export type InformeFilaTipo =
   | 'MOVIMIENTO';
 
 /**
- * Fila base de los informes jerárquicos (`ConMovimientoInformeBalance`). Los
- * montos llegan como **string decimal** (`"120600.000000"`); se formatean con
- * `formatCop`, que ya los normaliza.
+ * Las columnas de **importe** que puede declarar un informe. Cada uno pide las
+ * suyas y no hay un set común: los jerárquicos traen los cuatro saldos, `bases`
+ * trae `debito`/`credito`/`base`, el certificado de retención `base_retenido` y
+ * `retenido`, y los estados financieros un único `saldo`.
+ *
+ * Por eso la tabla compartida recibe sus columnas de importe **como dato** en
+ * vez de tenerlas fijas: con banderas harían falta cuatro combinaciones que no
+ * comparten ninguna columna entre sí.
  */
-export interface InformeSaldosRow {
+export type InformeMontoField =
+  | 'saldo_anterior'
+  | 'debito'
+  | 'credito'
+  | 'saldo_final'
+  | 'base'
+  | 'base_retenido'
+  | 'retenido'
+  | 'saldo';
+
+/** Una columna de importe: de qué campo sale y con qué etiqueta se pinta. */
+export interface InformeMontoColumn {
+  readonly field: InformeMontoField;
+  readonly label: string;
+}
+
+/**
+ * Lo que identifica a una fila en cualquier informe de la familia. Los montos y
+ * el detalle se suman aparte porque cambian informe por informe.
+ *
+ * Los montos llegan como **string decimal** (`"120600.000000"`); se formatean
+ * con `formatCop`, que ya los normaliza.
+ */
+export interface InformeFilaIdentidad {
   readonly tipo: InformeFilaTipo;
-  /** Solo las filas de tipo `AUXILIAR` lo traen; en los subtotales es `null`. */
+  /** En los jerárquicos, solo las filas `AUXILIAR` lo traen; en los subtotales es `null`. */
   readonly cuenta_id: number | null;
   readonly codigo: string;
   readonly nombre: string;
+}
+
+/** Los cuatro saldos de los informes que recorren el plan de cuentas. */
+export interface InformeSaldosMontos {
   readonly saldo_anterior: string;
   readonly debito: string;
   readonly credito: string;
   readonly saldo_final: string;
 }
 
-/** Fila de los informes que abren el saldo **por tercero**. */
-export interface InformeContactoRow extends InformeSaldosRow {
+/** Columnas del tercero, en los informes que abren el saldo por contacto. */
+export interface InformeContactoExtra {
   readonly contacto_id: number | null;
   readonly identificacion: string | null;
   readonly contacto: string | null;
@@ -88,6 +120,25 @@ export interface InformeContactoRow extends InformeSaldosRow {
 export interface InformeMovimientoRef {
   readonly movimiento_id: number | null;
 }
+
+/** Cómo se identifica el asiento de cara al usuario. */
+export interface InformeDocumentoExtra {
+  readonly comprobante: string | null;
+  readonly numero: number | string | null;
+  /** Fecha del movimiento (`yyyy-MM-dd`). */
+  readonly fecha: string | null;
+}
+
+/** El texto escrito al contabilizar la línea. */
+export interface InformeDetalleExtra {
+  readonly detalle: string | null;
+}
+
+/** Fila base de los informes jerárquicos (`ConMovimientoInformeBalance`). */
+export interface InformeSaldosRow extends InformeFilaIdentidad, InformeSaldosMontos {}
+
+/** Fila de los informes que abren el saldo **por tercero**. */
+export interface InformeContactoRow extends InformeSaldosRow, InformeContactoExtra {}
 
 /**
  * Fila del **auxiliar de cuenta**: el plan de cuentas con una fila por asiento
@@ -106,34 +157,51 @@ export interface InformeAuxiliarCuentaRow extends InformeSaldosRow, InformeMovim
 export interface InformeAuxiliarContactoRow extends InformeContactoRow, InformeMovimientoRef {}
 
 /**
- * Fila del **auxiliar general**, la más ancha de la familia: sobre las del
- * auxiliar por contacto suma cómo se identifica el asiento de cara al usuario.
+ * Fila del **auxiliar general**, la más ancha de los jerárquicos: sobre las del
+ * auxiliar por contacto suma cómo se identifica el asiento.
  */
-export interface InformeMovimientoRow extends InformeAuxiliarContactoRow {
-  readonly comprobante: string | null;
-  readonly numero: number | string | null;
-  /** Fecha del movimiento (`yyyy-MM-dd`). */
-  readonly fecha: string | null;
-}
+export interface InformeMovimientoRow extends InformeAuxiliarContactoRow, InformeDocumentoExtra {}
 
 /**
- * Lo que acepta la tabla compartida: una fila jerárquica que **puede** traer los
- * datos del tercero y del movimiento. Qué columnas se pintan lo decide el
- * informe (por bloques), no la fila.
+ * Fila del informe **Base**, el primero de los **planos**: una línea contable
+ * con su base gravable, el documento que la originó, su tercero y el detalle
+ * escrito al contabilizar.
+ *
+ * No recorre el plan de cuentas, así que **no tiene saldo anterior ni final**:
+ * sus importes son `debito`, `credito` y `base`.
  */
-export type InformeTableRow = InformeSaldosRow & Partial<InformeMovimientoRow>;
-
-/**
- * Totales del informe **completo**, servidos por `totales/`. Suman solo las
- * filas de tipo `AUXILIAR`: los subtotales y el detalle están hechos de ellas,
- * así que sumarlo todo multiplicaría el balance.
- */
-export interface InformeTotales {
-  readonly saldo_anterior: string;
+export interface InformeBasesRow
+  extends
+    InformeFilaIdentidad,
+    InformeContactoExtra,
+    InformeMovimientoRef,
+    InformeDocumentoExtra,
+    InformeDetalleExtra {
   readonly debito: string;
   readonly credito: string;
-  readonly saldo_final: string;
+  readonly base: string;
 }
+
+/**
+ * Lo que acepta la tabla compartida: la identidad de la fila más **cualquier**
+ * combinación de montos y de columnas opcionales. Qué se pinta lo decide el
+ * informe —los montos como dato, el resto por bloques—, no la fila.
+ */
+export type InformeTableRow = InformeFilaIdentidad &
+  Partial<Record<InformeMontoField, string>> &
+  Partial<
+    InformeContactoExtra & InformeMovimientoRef & InformeDocumentoExtra & InformeDetalleExtra
+  >;
+
+/**
+ * Totales del informe **completo**, servidos por `totales/`. Trae solo los
+ * campos que ese informe declara.
+ *
+ * En los jerárquicos suma **solo las filas de tipo `AUXILIAR`**: los subtotales
+ * y el detalle están hechos de ellas, así que sumarlo todo multiplicaría el
+ * balance. En los planos, que no tienen jerarquía, suma todas sus filas.
+ */
+export type InformeTotales = Readonly<Partial<Record<InformeMontoField, string>>>;
 
 /**
  * Body del informe, sin el discriminador `informe` (lo pone el servicio).

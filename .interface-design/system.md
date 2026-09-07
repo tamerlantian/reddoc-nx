@@ -668,6 +668,19 @@ pointer-events:none`), no se parpadea la tabla entera. **No se atenúa el empty 
   nada que refrescar y el spinner del botón ya lo dice.
 - **Guard del paginador:** PrimeNG reemite `onPageChange` al reprogramarle `first`/`rows`; sin
   `if (page === page() && pageSize === pageSize()) return;` cada respuesta dispara otra consulta.
+- **Las columnas de importe van como dato, no como banderas.** Cada informe declara las suyas
+  (`{field, label}[]`) y la tabla las recorre para el encabezado, las celdas y el pie. Nació con
+  cuatro columnas fijas de saldo y se rompió al llegar los informes **planos**: uno pide
+  `débito/crédito/base`, otro `base retenido/retenido` y otros dos un único `saldo` — cuatro sets
+  que no comparten **ninguna** columna. Con banderas eso son cuatro combinaciones excluyentes; con
+  datos, una línea por informe. Regla general: cuando las variantes no comparten columnas, el set
+  es dato; las banderas sirven para bloques que se **suman** (`showContacto`, `showMovimiento`).
+- **La jerarquía es opcional** (`[jerarquia]="false"`): en los informes planos todas las filas son
+  del mismo `tipo`, así que el tratamiento de subtotal/detalle atenuaría la tabla entera sin
+  distinguir nada. Igual el aviso de descuadre (`[descuadre]="false"`), que solo tiene sentido donde
+  el informe debe cuadrar.
+- **El descuadre se resalta solo sobre débito y crédito**, que son las dos cifras que se comparan.
+  Pintar de rojo los cuatro importes no diría cuál no cuadra.
 - **Jerarquía aplanada:** el backend intercala filas de subtotal (clase, grupo, cuenta) antes de
   cada cuenta de movimiento, y un campo `tipo` es lo único que las distingue. Pintarlas todas iguales
   hace **leer los importes duplicados**, porque cada subtotal está hecho de las filas que vienen

@@ -20,10 +20,13 @@
           <th class="mi-table__th w-24 text-right" scope="col">{{ d.columns.numero }}</th>
           <th class="mi-table__th w-32 text-left" scope="col">{{ d.columns.fecha }}</th>
         }
-        <th class="mi-table__th w-36 text-right" scope="col">{{ d.columns.saldoAnterior }}</th>
-        <th class="mi-table__th w-36 text-right" scope="col">{{ d.columns.debito }}</th>
-        <th class="mi-table__th w-36 text-right" scope="col">{{ d.columns.credito }}</th>
-        <th class="mi-table__th w-36 text-right" scope="col">{{ d.columns.saldoFinal }}</th>
+        @if (showDetalle()) {
+          <th class="mi-table__th min-w-[13rem] text-left" scope="col">{{ d.columns.detalle }}</th>
+        }
+        <!-- Los importes los declara cada informe: no hay un set común. -->
+        @for (monto of amounts(); track monto.field) {
+          <th class="mi-table__th w-36 text-right" scope="col">{{ monto.label }}</th>
+        }
       </tr>
     </thead>
 
@@ -53,14 +56,14 @@
             <td class="mi-table__td text-right tabular-nums">{{ fila.row.numero }}</td>
             <td class="mi-table__td tabular-nums">{{ formatFecha(fila.row.fecha) }}</td>
           }
-          <td class="mi-table__td text-right tabular-nums">
-            {{ formatMonto(fila.row.saldo_anterior) }}
-          </td>
-          <td class="mi-table__td text-right tabular-nums">{{ formatMonto(fila.row.debito) }}</td>
-          <td class="mi-table__td text-right tabular-nums">{{ formatMonto(fila.row.credito) }}</td>
-          <td class="mi-table__td text-right tabular-nums">
-            {{ formatMonto(fila.row.saldo_final) }}
-          </td>
+          @if (showDetalle()) {
+            <td class="mi-table__td whitespace-normal">{{ fila.row.detalle }}</td>
+          }
+          @for (monto of amounts(); track monto.field) {
+            <td class="mi-table__td text-right tabular-nums">
+              {{ montoDeFila(fila.row, monto) }}
+            </td>
+          }
         </tr>
       } @empty {
         <!-- Mismo bloque que `<lib-data-table>`: ícono atenuado, título y pista. -->
@@ -80,12 +83,13 @@
     <!--
       Totales del informe completo (acción `totales/`), no de la página: con el
       informe paginado y con subtotales intercalados, sumar lo que se ve no
-      diría nada del cuadre. Si débito y crédito no coinciden se resalta.
+      diría nada del cuadre. Si débito y crédito no coinciden se resalta, y solo
+      sobre esas dos columnas: pintar los cuatro importes no diría cuál falla.
     -->
     @if (totalesVisibles(); as tot) {
       <tfoot>
         <tr>
-          <td class="mi-table__tf" colspan="2">
+          <td class="mi-table__tf" [attr.colspan]="identityColumnCount()">
             {{ d.columns.total }}
             @if (descuadrado()) {
               <span class="mi-table__warn" [title]="d.descuadre">
@@ -93,29 +97,14 @@
               </span>
             }
           </td>
-          @if (showContacto()) {
-            <td class="mi-table__tf" colspan="2"></td>
+          @for (monto of amounts(); track monto.field) {
+            <td
+              class="mi-table__tf text-right tabular-nums"
+              [class.mi-table__tf--warn]="resaltaDescuadre(monto)"
+            >
+              {{ montoDeTotal(tot, monto) }}
+            </td>
           }
-          @if (showMovimientoId()) {
-            <td class="mi-table__tf"></td>
-          }
-          @if (showMovimiento()) {
-            <td class="mi-table__tf" colspan="3"></td>
-          }
-          <td class="mi-table__tf"></td>
-          <td
-            class="mi-table__tf text-right tabular-nums"
-            [class.mi-table__tf--warn]="descuadrado()"
-          >
-            {{ formatMonto(tot.debito) }}
-          </td>
-          <td
-            class="mi-table__tf text-right tabular-nums"
-            [class.mi-table__tf--warn]="descuadrado()"
-          >
-            {{ formatMonto(tot.credito) }}
-          </td>
-          <td class="mi-table__tf"></td>
         </tr>
       </tfoot>
     }

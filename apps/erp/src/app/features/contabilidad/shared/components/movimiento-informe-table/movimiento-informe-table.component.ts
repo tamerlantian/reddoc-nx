@@ -5,6 +5,7 @@ import type { AppDict } from '@erp/i18n';
 import type {
   InformeEmptyCopySet,
   InformeFilaTipo,
+  InformeMontoColumn,
   InformeTableRow,
   InformeTotales,
 } from '../../movimiento-informe.types';
@@ -68,6 +69,13 @@ export class MovimientoInformeTableComponent {
 
   readonly rows = input.required<readonly InformeTableRow[]>();
 
+  /**
+   * Columnas de **importe**, en orden. Van como dato y no como banderas porque
+   * cada informe declara las suyas y los cuatro planos no comparten ninguna
+   * entre sí (ver `InformeMontoField`). La fila de totales usa las mismas.
+   */
+  readonly amounts = input.required<readonly InformeMontoColumn[]>();
+
   /** Los dos textos del estado vacío, que aporta cada informe. */
   readonly empty = input.required<InformeEmptyCopySet>();
 
@@ -105,6 +113,23 @@ export class MovimientoInformeTableComponent {
    */
   readonly showMovimientoId = input<boolean>(false);
 
+  /** Intercala el texto escrito al contabilizar. Solo lo trae el informe *base*. */
+  readonly showDetalle = input<boolean>(false);
+
+  /**
+   * `tipo` decide el peso y el fondo de la fila. Se apaga en los informes
+   * **planos**: ahí todas las filas son del mismo tipo, así que el tratamiento
+   * de detalle atenuaría la tabla entera sin distinguir nada.
+   */
+  readonly jerarquia = input<boolean>(true);
+
+  /**
+   * Avisa cuando el total de débito no iguala al de crédito. Solo tiene sentido
+   * donde el informe **debe** cuadrar; en los planos, que listan lo que pasó en
+   * el rango sin recorrer el plan, no hay nada que cuadre.
+   */
+  readonly descuadre = input<boolean>(true);
+
   readonly totalCount = input<number>(0);
   readonly page = input<number>(0);
   readonly pageSize = input<number>(25);
@@ -114,13 +139,22 @@ export class MovimientoInformeTableComponent {
   /** PrimeNG muta el array del dropdown, así que no puede ser el `readonly` de arriba. */
   protected readonly rowsPerPageOptions = [...ROWS_PER_PAGE];
 
-  /** Cantidad de columnas — la usa el `colspan` del estado vacío. */
-  protected readonly columnCount = computed(
+  /**
+   * Columnas que **no** son importes: cuenta, nombre y los bloques opcionales.
+   * La usa el `colspan` de la etiqueta "Total" en el pie.
+   */
+  protected readonly identityColumnCount = computed(
     () =>
-      6 +
+      2 +
       (this.showContacto() ? 2 : 0) +
+      (this.showMovimientoId() ? 1 : 0) +
       (this.showMovimiento() ? 3 : 0) +
-      (this.showMovimientoId() ? 1 : 0),
+      (this.showDetalle() ? 1 : 0),
+  );
+
+  /** Cantidad total de columnas — la usa el `colspan` del estado vacío. */
+  protected readonly columnCount = computed(
+    () => this.identityColumnCount() + this.amounts().length,
   );
 
   /**
@@ -131,8 +165,8 @@ export class MovimientoInformeTableComponent {
   protected readonly filas = computed<readonly InformeFilaVm[]>(() =>
     this.rows().map((row) => ({
       row,
-      esSubtotal: SUBTOTALES.has(row.tipo),
-      esDetalle: DETALLE.has(row.tipo),
+      esSubtotal: this.jerarquia() && SUBTOTALES.has(row.tipo),
+      esDetalle: this.jerarquia() && DETALLE.has(row.tipo),
     })),
   );
 
@@ -149,10 +183,29 @@ export class MovimientoInformeTableComponent {
    * iguala al de crédito; compararlos a ojo es justo lo que se quiere evitar.
    */
   protected readonly descuadrado = computed(() => {
+    if (!this.descuadre()) return false;
     const totales = this.totalesVisibles();
     if (!totales) return false;
     return toFiniteNumber(totales.debito) !== toFiniteNumber(totales.credito);
   });
+
+  /** Importe de una fila para la columna de monto dada. */
+  protected montoDeFila(row: InformeTableRow, column: InformeMontoColumn): string {
+    return this.formatMonto(row[column.field]);
+  }
+
+  /** Importe del pie para la columna de monto dada. */
+  protected montoDeTotal(totales: InformeTotales, column: InformeMontoColumn): string {
+    return this.formatMonto(totales[column.field]);
+  }
+
+  /**
+   * El descuadre se resalta solo sobre las dos columnas que se comparan; pintar
+   * de rojo los cuatro importes no diría cuál no cuadra.
+   */
+  protected resaltaDescuadre(column: InformeMontoColumn): boolean {
+    return this.descuadrado() && (column.field === 'debito' || column.field === 'credito');
+  }
 
   /** Primer registro de la página (1-based), para el contador del pie. */
   protected readonly rangeStart = computed(() =>

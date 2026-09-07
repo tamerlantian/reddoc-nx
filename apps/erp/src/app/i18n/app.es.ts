@@ -4901,6 +4901,8 @@ export const es: AppDict = {
         numero: 'Número',
         fecha: 'Fecha',
         movimiento: 'Asiento',
+        detalle: 'Detalle',
+        base: 'Base',
         saldoAnterior: 'Saldo anterior',
         debito: 'Débito',
         credito: 'Crédito',
@@ -5179,19 +5181,15 @@ export const es: AppDict = {
     },
     informeBase: {
       name: 'Base',
-      columns: {
-        id: 'ID',
-        comprobante: 'Comprobante',
-        numero: 'Número',
-        fecha: 'Fecha',
-        cuenta: 'Cuenta',
-        cuentaNombre: 'Nombre de la cuenta',
-        identificacion: 'Identificación',
-        contacto: 'Contacto',
-        debito: 'Débito',
-        credito: 'Crédito',
-        base: 'Base',
-        detalle: 'Detalle',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver las bases gravables.',
+        },
+        noData: {
+          title: 'Sin bases en el periodo',
+          sub: 'Ninguna línea con base gravable entre esas fechas. Probá ampliar el periodo o el rango de cuentas.',
+        },
       },
     },
     nominaInforme: {

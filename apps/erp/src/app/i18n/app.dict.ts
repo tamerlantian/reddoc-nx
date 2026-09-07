@@ -3732,6 +3732,10 @@ export interface AppDict
         fecha: string;
         /** Id del asiento — solo el auxiliar de cuenta, que no trae comprobante. */
         movimiento: string;
+        /** Texto escrito al contabilizar — solo el informe base. */
+        detalle: string;
+        /** Base gravable de la línea — solo el informe base. */
+        base: string;
         saldoAnterior: string;
         debito: string;
         credito: string;
@@ -3940,19 +3944,9 @@ export interface AppDict
     };
     informeBase: {
       name: string;
-      columns: {
-        id: string;
-        comprobante: string;
-        numero: string;
-        fecha: string;
-        cuenta: string;
-        cuentaNombre: string;
-        identificacion: string;
-        contacto: string;
-        debito: string;
-        credito: string;
-        base: string;
-        detalle: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
       };
     };
     nominaInforme: {

@@ -30,7 +30,10 @@ realineó y lo común se extrajo a `shared/movimiento-informe.*`. Sobre esa base
 sin uso la tabla `<app-saldos-cuenta-table>` y los tipos de fila de la familia vieja, que se
 borraron.
 
-Los **4 informes planos** que quedan (base, certificado de retención y los dos estados financieros)
+Migró también el **informe base**, el primero de los planos, y con él la tabla compartida pasó a
+recibir sus **columnas de importe como dato**: los cuatro planos no comparten ninguna entre sí.
+
+Los **3 informes planos** que quedan (certificado de retención y los dos estados financieros)
 siguen sobre `InformeCuentasService`; §1–§4 sobre ellos sigue vigente y §5 quedó cerrado.
 
 ---
@@ -186,12 +189,13 @@ nombre, su archivo y qué bloques de columnas enciende (`showContacto`, `showMov
       movimientos (que lista por `id`), pero es una columna técnica: quien lee un auxiliar busca el
       comprobante y el número, que el `auxiliar_general` sí trae. Preguntar si es intencional.
       **Aplica igual a `auxiliar_contacto`**, que tiene el mismo hueco.
-- [ ] Migrar los **4 informes planos** que quedan: `bases`, `certificado_retencion`,
-      `estado_resultados` y `estado_situacion_financiera`. No recorren el plan de cuentas, así que
-      no tienen jerarquía, subtotales ni `solo_con_saldo`: la tabla compartida necesita un modo sin
-      `tipo` antes de servirlos, y `bases` y `certificado_retencion` traen además columnas propias
-      (`base`, `base_retenido`, `retenido`). Cuando migren, se borra entera la familia vieja
-      (`informe-cuentas.*` y `<app-informe-cuentas-params>`).
+- [ ] Migrar los **3 informes planos** que quedan: `certificado_retencion` (`base_retenido`,
+      `retenido`), `estado_resultados` y `estado_situacion_financiera` (un único `saldo`, más
+      `clase` y `grupo` en vez de la jerarquía). La tabla compartida ya sabe servir planos —
+      `[jerarquia]="false"`, `[descuadre]="false"` y sus montos por dato—, así que falta sumar sus
+      campos a `InformeMontoField` y, en los estados, las dos columnas de ubicación en el plan.
+      Cuando migren, se borra entera la familia vieja (`informe-cuentas.*`,
+      `<app-informe-cuentas-params>` y `informe-cuentas-page.base.ts`).
 
 ---
 
@@ -263,7 +267,7 @@ falta para agrupar o indentar, están en el modelo del legacy.
 | 6   | ~~El balance por contacto va **sin fila de totales**~~ — **recuperada** al migrar (§0)          | La razón era que el front sumaba las filas recibidas y, con la cuenta repetida por contacto, el total no significaba nada. En el contrato nuevo los totales los da `totales/`, que suma **solo las filas `AUXILIAR`**: el desglose por tercero no entra, así que el cuadre es el real |
 | 7   | Las tres acciones usan el endpoint del propio informe                                           | El PDF del balance por contacto pegaba a `informe-balance-prueba/` en vez de `-tercero/`: descargaba el informe equivocado. Bug del original, corregido acá                                                                                                                           |
 | 8   | El informe _base_ tiene **tabla propia** (`<app-base-movimientos-table>`)                       | No comparte ni una columna de saldos con sus hermanos: no hay saldo anterior ni actual, y sí `base` y `detalle`                                                                                                                                                                       |
-| 9   | El informe _base_ **suma fila de totales**, que el original no tenía                            | En un informe de base gravable el total es justo el dato que se busca (es lo que se declara). Sin él había que exportar a Excel para conocerlo                                                                                                                                        |
+| 9   | El informe _base_ **suma fila de totales**, que el original no tenía                            | En un informe de base gravable el total es justo el dato que se busca (es lo que se declara). Sin él había que exportar a Excel para conocerlo. Al migrar (§0) los totales pasaron a venir de `totales/`, que devuelve `debito`, `credito` y `base`                                   |
 | 10  | Los estados financieros **no ofrecen rango de cuentas ni banderas**                             | Su plantilla original tampoco los renderizaba (los controles existían muertos). Un estado financiero cubre las clases que le corresponden, no un rango elegido a mano                                                                                                                 |
 | 11  | Los estados financieros van **sin fila de totales**                                             | El saldo mezcla cuentas de naturaleza contraria (ingresos/gastos, activo/pasivo): una suma cruda no es la utilidad ni el patrimonio. Calcularla bien es trabajo del backend                                                                                                           |
 | 12  | `nivel` se tipa pero no se usa                                                                  | El legacy tampoco lo usaba para pintar jerarquía. Queda disponible por si se quiere indentar el plan de cuentas                                                                                                                                                                       |
@@ -293,7 +297,7 @@ No son deudas, son mejoras que el informe original tampoco tenía:
 | Auxiliar de cuenta             | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
 | Auxiliar por contacto          | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
 | Auxiliar general               | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
-| Base                           | `informe-base/`                        | rango + `contacto_id`     | propia (base gravable)        | no  |
+| Base                           | `movimiento-informe/` (§0)             | periodo + rango + filtros | compartida (plana, paginada)  | no  |
 | Certificado de retención       | `informe-certificado-retencion/`       | rango + `contacto_id`     | propia (retenciones)          | sí  |
 | Estado de resultados           | `informe-estado-resultados/`           | solo periodo              | estados financieros           | no  |
 | Estado de situación financiera | `informe-estado-situacion-financiera/` | solo periodo              | estados financieros           | no  |

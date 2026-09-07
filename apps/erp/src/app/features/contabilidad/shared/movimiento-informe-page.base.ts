@@ -9,7 +9,11 @@ import type { BreadcrumbItem } from '@reddoc/feature-base';
 import { ActiveModuleStore, currentModuleId, resolveModuleName } from '@erp/core/erp-modules';
 import type { AppDict } from '@erp/i18n';
 import type { MovimientoInformeService } from './movimiento-informe.service';
-import type { InformeTotales, MovimientoInformeParams } from './movimiento-informe.types';
+import type {
+  InformeMontoColumn,
+  InformeTotales,
+  MovimientoInformeParams,
+} from './movimiento-informe.types';
 import {
   buildMovimientoInformeForm,
   buildMovimientoInformeParams,
@@ -79,6 +83,25 @@ export abstract class MovimientoInformePageBase<TRow> {
     return [];
   }
 
+  /**
+   * Columnas de importe del informe, en orden. El default son los cuatro saldos
+   * de los informes que recorren el plan de cuentas; los **planos** lo
+   * sobrescriben, porque ninguno de ellos comparte columnas con este set.
+   *
+   * Recibe el diccionario de columnas ya resuelto para que las etiquetas sigan
+   * al idioma sin que cada informe repita el `inject` del i18n.
+   */
+  protected montosDe(
+    columns: AppDict['entities']['informeCuentas']['columns'],
+  ): readonly InformeMontoColumn[] {
+    return [
+      { field: 'saldo_anterior', label: columns.saldoAnterior },
+      { field: 'debito', label: columns.debito },
+      { field: 'credito', label: columns.credito },
+      { field: 'saldo_final', label: columns.saldoFinal },
+    ];
+  }
+
   // ── Estado ────────────────────────────────────────────────────────────────
   protected readonly form = buildMovimientoInformeForm(this.fb, this.rangeValidator());
 
@@ -121,6 +144,11 @@ export abstract class MovimientoInformePageBase<TRow> {
 
   /** La descarga solo tiene sentido sobre un informe ya generado. */
   protected readonly canExport = computed(() => this.generated() && !this.isBusy());
+
+  /** Las columnas de importe que la tabla debe pintar, ya traducidas. */
+  protected readonly montos = computed<readonly InformeMontoColumn[]>(() =>
+    this.montosDe(this.t().entities.informeCuentas.columns),
+  );
 
   constructor() {
     this.watchParam(this.form);

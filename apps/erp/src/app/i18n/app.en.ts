@@ -4838,6 +4838,8 @@ export const en: AppDict = {
         numero: 'Number',
         fecha: 'Date',
         movimiento: 'Entry',
+        detalle: 'Details',
+        base: 'Tax base',
         saldoAnterior: 'Opening balance',
         debito: 'Debit',
         credito: 'Credit',
@@ -5114,20 +5116,16 @@ export const en: AppDict = {
       },
     },
     informeBase: {
-      name: 'Taxable base',
-      columns: {
-        id: 'ID',
-        comprobante: 'Voucher',
-        numero: 'Number',
-        fecha: 'Date',
-        cuenta: 'Account',
-        cuentaNombre: 'Account name',
-        identificacion: 'ID number',
-        contacto: 'Contact',
-        debito: 'Debit',
-        credito: 'Credit',
-        base: 'Base',
-        detalle: 'Detail',
+      name: 'Tax base',
+      empty: {
+        notGenerated: {
+          title: 'Report not generated yet',
+          sub: 'Pick the period and the accounts, then generate to see the tax bases.',
+        },
+        noData: {
+          title: 'No tax bases in the period',
+          sub: 'No line carried a tax base between those dates. Try widening the period or the account range.',
+        },
       },
     },
     nominaInforme: {
