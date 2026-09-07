@@ -6,6 +6,10 @@
   <table class="mi-table" [class.mi-table--empty]="isEmpty()">
     <thead>
       <tr>
+        @if (showUbicacion()) {
+          <th class="mi-table__th min-w-[11rem] text-left" scope="col">{{ d.columns.clase }}</th>
+          <th class="mi-table__th min-w-[12rem] text-left" scope="col">{{ d.columns.grupo }}</th>
+        }
         <th class="mi-table__th w-32 text-left" scope="col">{{ d.columns.cuenta }}</th>
         <th class="mi-table__th min-w-[13rem] text-left" scope="col">{{ d.columns.nombre }}</th>
         @if (showContacto()) {
@@ -42,6 +46,10 @@
           [class.mi-table__row--subtotal]="fila.esSubtotal"
           [class.mi-table__row--detalle]="fila.esDetalle"
         >
+          @if (showUbicacion()) {
+            <td class="mi-table__td whitespace-normal">{{ fila.row.clase }}</td>
+            <td class="mi-table__td whitespace-normal">{{ fila.row.grupo }}</td>
+          }
           <td class="mi-table__td tabular-nums">{{ fila.row.codigo }}</td>
           <td class="mi-table__td whitespace-normal">{{ fila.row.nombre }}</td>
           @if (showContacto()) {

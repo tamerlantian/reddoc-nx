@@ -117,6 +117,12 @@ export class MovimientoInformeTableComponent {
   readonly showDetalle = input<boolean>(false);
 
   /**
+   * Antepone clase y grupo. Lo usan los **estados financieros**, que ubican cada
+   * cuenta en el plan con dos columnas en vez de con filas de subtotal.
+   */
+  readonly showUbicacion = input<boolean>(false);
+
+  /**
    * `tipo` decide el peso y el fondo de la fila. Se apaga en los informes
    * **planos**: ahí todas las filas son del mismo tipo, así que el tratamiento
    * de detalle atenuaría la tabla entera sin distinguir nada.
@@ -146,6 +152,7 @@ export class MovimientoInformeTableComponent {
   protected readonly identityColumnCount = computed(
     () =>
       2 +
+      (this.showUbicacion() ? 2 : 0) +
       (this.showContacto() ? 2 : 0) +
       (this.showMovimientoId() ? 1 : 0) +
       (this.showMovimiento() ? 3 : 0) +

@@ -34,7 +34,12 @@ Migraron también el **informe base** —con él la tabla compartida pasó a rec
 importe como dato**, porque los cuatro planos no comparten ninguna entre sí— y el **certificado de
 retención**, que **no necesitó ningún cambio en la tabla**: configuración pura.
 
-Quedan **2**, los dos estados financieros; §1–§4 sobre ellos sigue vigente y §5 quedó cerrado.
+Migró también el **estado de resultados**, que estrenó la última pieza que le faltaba a la tabla:
+`[showUbicacion]`, clase y grupo en columnas. Con eso **la tabla compartida queda cerrada** — el
+enum del backend tiene 9 informes y ninguno pide nada más.
+
+Queda **1**, el estado de situación financiera, que es el mismo molde con otro discriminador;
+§1–§4 sobre él sigue vigente y §5 quedó cerrado.
 
 ---
 
@@ -176,6 +181,12 @@ nombre, su archivo y qué bloques de columnas enciende (`showContacto`, `showMov
       Todo vive en `INFORME_FILTER_FIELD` (`shared/movimiento-informe.utils.ts`) y está fijado por
       `movimiento-informe.utils.spec.ts`, que compara el body emitido contra el ejemplo de backend.
 
+- [ ] **Confirmar `centro_costo_id`.** El estado de resultados acota por centro de costo con esa
+      `propiedad`, deducida de la convención de las otras dos FK del informe (`contacto_id`,
+      `comprobante_id`), que backend sí confirmó — pero `centro_costo` no estaba en esa lista. Si no
+      está en la whitelist, el informe sale **sin filtrar** y no da error, igual que pasó con
+      `contacto__numero_identificacion`. El fix es `INFORME_FILTER_FIELD.centroCostoId`, y el caso
+      está fijado en `movimiento-informe.utils.spec.ts`.
 - [ ] **Si `limit` se respeta.** Backend habló de "25 por página, `?page=N`" y solo mencionó `page`;
       el front manda además `limit` y la tabla ofrece el dropdown 10/25/50/100. Si el endpoint lo
       ignora, el dropdown no hace nada.
@@ -189,13 +200,11 @@ nombre, su archivo y qué bloques de columnas enciende (`showContacto`, `showMov
       movimientos (que lista por `id`), pero es una columna técnica: quien lee un auxiliar busca el
       comprobante y el número, que el `auxiliar_general` sí trae. Preguntar si es intencional.
       **Aplica igual a `auxiliar_contacto`**, que tiene el mismo hueco.
-- [ ] Migrar los **2 estados financieros** (`estado_resultados` y `estado_situacion_financiera`).
-      Son el único caso que todavía le pide algo a la tabla: un único importe `saldo` (que ya sale
-      por `montosDe()`) más **`clase` y `grupo`**, dos columnas de ubicación en el plan que hoy no
-      existen en ningún tipo. Es una bandera de bloque más —la quinta— y con eso la tabla queda
-      cerrada: el enum del backend tiene 9 informes y no viene más variación.
-      Cuando migren, se borra entera la familia vieja (`informe-cuentas.*`,
-      `<app-informe-cuentas-params>` y `informe-cuentas-page.base.ts`).
+- [ ] Migrar el **estado de situación financiera**, el último. Comparte forma exacta con el estado
+      de resultados —mismo `InformeEstadoRow`, mismo `[showUbicacion]`, mismo único `saldo`—, así
+      que es el servicio con su discriminador más la página: ~15 líneas. Al hacerlo se borran
+      `<app-estado-financiero-table>`, `EstadoFinancieroRow` y **la familia vieja entera**
+      (`informe-cuentas.*`, `informe-cuentas-page.base.ts` y `<app-informe-cuentas-params>`).
 
 ---
 
@@ -299,7 +308,7 @@ No son deudas, son mejoras que el informe original tampoco tenía:
 | Auxiliar general               | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
 | Base                           | `movimiento-informe/` (§0)             | periodo + rango + filtros | compartida (plana, paginada)  | no  |
 | Certificado de retención       | `movimiento-informe/` (§0)             | periodo + rango + filtros | compartida (plana, paginada)  | no  |
-| Estado de resultados           | `informe-estado-resultados/`           | solo periodo              | estados financieros           | no  |
+| Estado de resultados           | `movimiento-informe/` (§0)             | solo periodo              | compartida (plana, paginada)  | no  |
 | Estado de situación financiera | `informe-estado-situacion-financiera/` | solo periodo              | estados financieros           | no  |
 
 > "Completos" = periodo + rango de cuentas + las dos banderas.
@@ -329,6 +338,35 @@ Se portó **lo que hace**, no lo que promete el nombre.
 por asiento de cada auxiliar del plan— y la pantalla ya migró, así que el auxiliar por fin es un
 auxiliar. Queda un resto: esas filas solo traen `movimiento_id`, sin comprobante ni número (ver el
 pendiente en §0). Lo mismo aplicaba a _auxiliar por tercero_, que todavía no migra.
+
+---
+
+## 5.1 Consulta de movimientos: cuatro columnas que no leen nada (2026-09-07)
+
+Detectado al revisar de dónde salía la confusión entre _grupo_ y _centro de costo_; **no se tocó**,
+es otra pantalla y otro alcance.
+
+`movimiento.constants.ts` declara las columnas de la tabla con **rutas ORM** (`a__b`), pero
+`<lib-data-table>` resuelve el valor con `row[field]` **plano**, y el serializer `ConMovimiento`
+devuelve los campos con un solo guion bajo. Ninguna de estas cuatro coincide:
+
+| La columna usa           | El serializer devuelve |
+| ------------------------ | ---------------------- |
+| `comprobante__nombre`    | `comprobante_nombre`   |
+| `cuenta__codigo`         | `cuenta_codigo`        |
+| `grupo__nombre`          | `centro_costo_nombre`  |
+| `contacto__nombre_corto` | `contacto_nombre`      |
+
+Las cuatro deberían salir **vacías**. Encaja con que el módulo nunca se ejercitó contra
+`reddocapi.uk`. Ojo: **los `__` sí corresponden en `MOVIMIENTO_FILTER_FIELDS`** —ahí son rutas ORM y
+el backend las espera así—, el problema es solo en `MOVIMIENTO_COLUMNS`, que es lectura del JSON.
+
+Además `grupo__nombre` conserva un nombre que el backend ya cambió: hoy es `centro_costo`. El aviso
+estaba escrito en el propio archivo («si el backend renombró el campo, esta cadena es el fix»).
+
+**No confundir con el `grupo` de los estados financieros**, que es el segundo nivel del plan de
+cuentas (`ConCuenta.cuenta_grupo`), no el centro de costo. Son dos cosas distintas con el mismo
+nombre.
 
 ---
 

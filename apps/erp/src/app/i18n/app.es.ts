@@ -4884,6 +4884,8 @@ export const es: AppDict = {
         numeroPlaceholder: 'Todos los números',
         comprobante: 'Comprobante',
         comprobantePlaceholder: 'Todos los comprobantes',
+        centroCosto: 'Centro de costo',
+        centroCostoPlaceholder: 'Todos los centros de costo',
         incluirCierre: 'Incluir cierre',
         soloConMovimiento: 'Solo cuentas con movimiento',
         soloConSaldo: 'Solo cuentas con saldo',
@@ -4905,6 +4907,9 @@ export const es: AppDict = {
         base: 'Base',
         baseRetenido: 'Base retenida',
         retenido: 'Retenido',
+        clase: 'Clase',
+        grupo: 'Grupo',
+        saldo: 'Saldo',
         saldoAnterior: 'Saldo anterior',
         debito: 'Débito',
         credito: 'Crédito',
@@ -5168,7 +5173,19 @@ export const es: AppDict = {
         saldo: 'Saldo',
       },
     },
-    estadoResultados: { name: 'Estado resultados' },
+    estadoResultados: {
+      name: 'Estado de resultados',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y generá para ver el resultado.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta de resultado movió entre esas fechas. Probá ampliar el periodo.',
+        },
+      },
+    },
     estadoSituacionFinanciera: { name: 'Estado situación financiera' },
     certificadoRetencion: {
       name: 'Certificado retención',

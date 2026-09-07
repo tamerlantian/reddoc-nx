@@ -129,6 +129,16 @@ export interface InformeDocumentoExtra {
   readonly fecha: string | null;
 }
 
+/**
+ * Dónde cae la cuenta en el plan. Solo la traen los **estados financieros**, que
+ * no recorren la jerarquía fila por fila —no tienen subtotales— sino que ubican
+ * cada cuenta con su clase y su grupo en columnas propias.
+ */
+export interface InformeUbicacionExtra {
+  readonly clase: string | null;
+  readonly grupo: string | null;
+}
+
 /** El texto escrito al contabilizar la línea. */
 export interface InformeDetalleExtra {
   readonly detalle: string | null;
@@ -198,6 +208,17 @@ export interface InformeCertificadoRow extends InformeFilaIdentidad, InformeCont
 }
 
 /**
+ * Fila de los **estados financieros** (resultados y situación financiera): una
+ * cuenta con su saldo, ubicada en el plan por clase y grupo.
+ *
+ * Los dos informes comparten forma exacta. Son planos: un único importe y sin
+ * jerarquía, porque la ubicación va en columnas en vez de en filas de subtotal.
+ */
+export interface InformeEstadoRow extends InformeFilaIdentidad, InformeUbicacionExtra {
+  readonly saldo: string;
+}
+
+/**
  * Lo que acepta la tabla compartida: la identidad de la fila más **cualquier**
  * combinación de montos y de columnas opcionales. Qué se pinta lo decide el
  * informe —los montos como dato, el resto por bloques—, no la fila.
@@ -205,7 +226,11 @@ export interface InformeCertificadoRow extends InformeFilaIdentidad, InformeCont
 export type InformeTableRow = InformeFilaIdentidad &
   Partial<Record<InformeMontoField, string>> &
   Partial<
-    InformeContactoExtra & InformeMovimientoRef & InformeDocumentoExtra & InformeDetalleExtra
+    InformeContactoExtra &
+      InformeMovimientoRef &
+      InformeDocumentoExtra &
+      InformeDetalleExtra &
+      InformeUbicacionExtra
   >;
 
 /**

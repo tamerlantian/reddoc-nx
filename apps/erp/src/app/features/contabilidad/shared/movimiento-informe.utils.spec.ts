@@ -73,12 +73,24 @@ describe('movimiento-informe · filtros', () => {
     ]);
   });
 
+  it('manda el centro de costo por id, encadenado', () => {
+    const params = buildMovimientoInformeParams(
+      formEnEnero(),
+      buildFiltrosDetalle({ numero: 77, centroCosto: option(5, 'Administración') }),
+    );
+
+    expect(params.filtros).toEqual([
+      { propiedad: 'numero', operador: '=', valor: 77 },
+      { propiedad: 'centro_costo_id', operador: '=', valor: 5, operador_logico: 'AND' },
+    ]);
+  });
+
   it('trata el número 0 como un valor y no como vacío', () => {
-    const filtros = buildFiltrosDetalle({ numero: 0, contacto: null, comprobante: null });
+    const filtros = buildFiltrosDetalle({ numero: 0 });
     expect(filtros).toEqual([{ field: 'numero', operator: 'eq', value: 0 }]);
   });
 
   it('sin parámetros de detalle no agrega filtros', () => {
-    expect(buildFiltrosDetalle({ numero: null, contacto: null, comprobante: null })).toEqual([]);
+    expect(buildFiltrosDetalle({})).toEqual([]);
   });
 });

@@ -4821,6 +4821,8 @@ export const en: AppDict = {
         numeroPlaceholder: 'All numbers',
         comprobante: 'Voucher',
         comprobantePlaceholder: 'All vouchers',
+        centroCosto: 'Cost center',
+        centroCostoPlaceholder: 'All cost centers',
         incluirCierre: 'Include closing entries',
         soloConMovimiento: 'Only accounts with activity',
         soloConSaldo: 'Only accounts with balance',
@@ -4842,6 +4844,9 @@ export const en: AppDict = {
         base: 'Tax base',
         baseRetenido: 'Withheld base',
         retenido: 'Withheld',
+        clase: 'Class',
+        grupo: 'Group',
+        saldo: 'Balance',
         saldoAnterior: 'Opening balance',
         debito: 'Debit',
         credito: 'Credit',
@@ -5104,7 +5109,19 @@ export const en: AppDict = {
         saldo: 'Balance',
       },
     },
-    estadoResultados: { name: 'Income statement' },
+    estadoResultados: {
+      name: 'Income statement',
+      empty: {
+        notGenerated: {
+          title: 'Report not generated yet',
+          sub: 'Pick the period and generate to see the result.',
+        },
+        noData: {
+          title: 'No activity in the period',
+          sub: 'No income account moved between those dates. Try widening the period.',
+        },
+      },
+    },
     estadoSituacionFinanciera: { name: 'Statement of financial position' },
     certificadoRetencion: {
       name: 'Withholding certificate',

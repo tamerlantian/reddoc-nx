@@ -18,6 +18,13 @@ export const INFORME_FILTER_FIELD = {
   contactoId: 'contacto_id',
   numero: 'numero',
   comprobanteId: 'comprobante_id',
+  /**
+   * **Sin confirmar.** Sigue la convención de las otras dos FK del informe
+   * (`contacto_id`, `comprobante_id`), que backend sí confirmó, pero
+   * `centro_costo` no estaba en esa lista. Ojo: no es lo mismo que el `grupo` de
+   * los estados financieros, que es un nivel del plan de cuentas.
+   */
+  centroCostoId: 'centro_costo_id',
 } as const;
 
 /** Propiedad por la que el backend acota el rango de cuentas. */
@@ -124,15 +131,17 @@ export function buildMovimientoInformeParams(
 }
 
 /**
- * Parámetros de detalle de los auxiliares. Cada uno es opcional: el que quede
- * vacío no genera filtro.
+ * Parámetros de detalle. Todos opcionales: cada informe pasa los suyos y el que
+ * no venga no genera filtro.
  */
 export interface FiltrosDetalleInput {
   /** Opción del `<lib-contacto-select>`; se filtra por su id. */
-  readonly contacto: ErpSelectOption | null;
-  readonly numero: number | null;
+  readonly contacto?: ErpSelectOption | null;
+  readonly numero?: number | null;
   /** Opción del selector de comprobantes; se filtra por su id. */
-  readonly comprobante: ErpSelectOption | null;
+  readonly comprobante?: ErpSelectOption | null;
+  /** Opción del selector de centros de costo; se filtra por su id. */
+  readonly centroCosto?: ErpSelectOption | null;
 }
 
 /**
@@ -170,6 +179,14 @@ export function buildFiltrosDetalle(input: FiltrosDetalleInput): readonly Filter
       field: INFORME_FILTER_FIELD.comprobanteId,
       operator: 'eq',
       value: input.comprobante.id,
+    });
+  }
+
+  if (input.centroCosto) {
+    conditions.push({
+      field: INFORME_FILTER_FIELD.centroCostoId,
+      operator: 'eq',
+      value: input.centroCosto.id,
     });
   }
 

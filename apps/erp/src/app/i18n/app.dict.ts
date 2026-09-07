@@ -3713,6 +3713,9 @@ export interface AppDict
         numeroPlaceholder: string;
         comprobante: string;
         comprobantePlaceholder: string;
+        /** Dimensión del movimiento — no confundir con el `grupo` del plan de cuentas. */
+        centroCosto: string;
+        centroCostoPlaceholder: string;
         incluirCierre: string;
         soloConMovimiento: string;
         /** Familia nueva: el contrato renombró `cuenta_con_movimiento`. */
@@ -3739,6 +3742,10 @@ export interface AppDict
         /** Los dos importes del certificado de retención. */
         baseRetenido: string;
         retenido: string;
+        /** Ubicación en el plan e importe único — solo los estados financieros. */
+        clase: string;
+        grupo: string;
+        saldo: string;
         saldoAnterior: string;
         debito: string;
         credito: string;
@@ -3932,7 +3939,13 @@ export interface AppDict
         saldo: string;
       };
     };
-    estadoResultados: { name: string };
+    estadoResultados: {
+      name: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
     estadoSituacionFinanciera: { name: string };
     certificadoRetencion: {
       name: string;
