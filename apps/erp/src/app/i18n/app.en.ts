@@ -253,7 +253,6 @@ export const en: AppDict = {
         master: 'Administration',
         document: 'Documents',
         process: 'Process',
-        movement: 'Movements',
         utility: 'Utilities',
         report: 'Reports',
       },

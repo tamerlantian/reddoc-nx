@@ -266,7 +266,6 @@ export interface AppDict
         master: string;
         document: string;
         process: string;
-        movement: string;
         utility: string;
         report: string;
       };

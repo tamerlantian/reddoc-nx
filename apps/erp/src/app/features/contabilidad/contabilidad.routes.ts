@@ -51,11 +51,6 @@ export const CONTABILIDAD_ROUTES: Route[] = [
           import('./documentos/cierre/cierre.routes').then((m) => m.CIERRE_ROUTES),
       },
       {
-        path: 'movimientos',
-        loadChildren: () =>
-          import('./movimiento/movimiento.routes').then((m) => m.MOVIMIENTO_ROUTES),
-      },
-      {
         path: 'utilidades/conciliacion',
         loadChildren: () =>
           import('./utilidades/conciliacion/conciliacion.routes').then(
@@ -68,6 +63,18 @@ export const CONTABILIDAD_ROUTES: Route[] = [
           import('./utilidades/contabilizar/contabilizar.routes').then(
             (m) => m.CONTABILIZAR_ROUTES,
           ),
+      },
+      {
+        path: 'informes/movimientos',
+        loadChildren: () =>
+          import('./informes/movimiento/movimiento.routes').then((m) => m.MOVIMIENTO_ROUTES),
+      },
+      {
+        // La consulta vivía en `movimientos` cuando el sidebar tenía su propia
+        // sección. Se mantiene el redirect para no romper enlaces guardados.
+        path: 'movimientos',
+        pathMatch: 'full',
+        redirectTo: 'informes/movimientos',
       },
       {
         path: 'informes/balance-prueba',

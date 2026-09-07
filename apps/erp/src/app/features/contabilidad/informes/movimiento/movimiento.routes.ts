@@ -9,7 +9,9 @@ import type { Route } from '@angular/router';
  * La página deriva el módulo activo del `ActiveModuleStore`, así que podría
  * montarse desde otro módulo sin tocarla.
  *
- * URL: `/t/:tenantSlug/contabilidad/movimientos`
+ * URL: `/t/:tenantSlug/contabilidad/informes/movimientos`. La ruta vieja
+ * (`contabilidad/movimientos`, de cuando el sidebar tenía sección propia)
+ * redirige acá desde `contabilidad.routes.ts`.
  */
 export const MOVIMIENTO_ROUTES: Route[] = [
   {
