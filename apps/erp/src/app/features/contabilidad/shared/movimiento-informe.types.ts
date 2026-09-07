@@ -6,9 +6,8 @@ import type { BackendFilter, ErpSelectOption } from '@reddoc/core';
  * por `/contabilidad/movimiento-informe/` en tres acciones con el **mismo body**:
  * `lista/` (paginada), `excel/` y `totales/`.
  *
- * Es la familia nueva, la que reemplaza a `informe-cuentas.types.ts` —aquella
- * pide `{ parametros }` a `/contabilidad/movimiento/informe-*` y recibe el
- * informe entero—. Las diferencias que definen todo lo demás:
+ * Los **nueve** informes contables del ERP viven acá. Lo que define todo lo
+ * demás de la familia:
  *
  * - El informe se elige con el discriminador `informe` del body.
  * - **Pagina** (`{ count, results }`), y por eso los totales de cuadre salen de

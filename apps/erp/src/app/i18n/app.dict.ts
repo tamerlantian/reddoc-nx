@@ -3946,7 +3946,13 @@ export interface AppDict
         noData: { title: string; sub: string };
       };
     };
-    estadoSituacionFinanciera: { name: string };
+    estadoSituacionFinanciera: {
+      name: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
     certificadoRetencion: {
       name: string;
       empty: {

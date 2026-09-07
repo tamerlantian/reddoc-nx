@@ -5122,7 +5122,19 @@ export const en: AppDict = {
         },
       },
     },
-    estadoSituacionFinanciera: { name: 'Statement of financial position' },
+    estadoSituacionFinanciera: {
+      name: 'Statement of financial position',
+      empty: {
+        notGenerated: {
+          title: 'Report not generated yet',
+          sub: 'Pick the period and generate to see the financial position.',
+        },
+        noData: {
+          title: 'No activity in the period',
+          sub: 'No account moved between those dates. Try widening the period.',
+        },
+      },
+    },
     certificadoRetencion: {
       name: 'Withholding certificate',
       empty: {

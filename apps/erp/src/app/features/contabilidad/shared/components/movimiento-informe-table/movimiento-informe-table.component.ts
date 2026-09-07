@@ -32,7 +32,7 @@ interface InformeFilaVm {
 }
 
 /**
- * Tabla de los informes contables de la familia **nueva**, la que sirve
+ * Tabla de los nueve informes contables que sirve
  * `/contabilidad/movimiento-informe/`.
  *
  * Pinta el informe como lo que es: un **árbol aplanado**. El backend intercala

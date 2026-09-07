@@ -13,16 +13,14 @@ import type {
 export const MOVIMIENTO_INFORME_ENDPOINT = '/contabilidad/movimiento-informe/';
 
 /**
- * Base de los servicios de la familia **nueva** de informes contables.
+ * Base de los servicios de los informes contables.
  *
  * Cada informe solo declara su `informe` (el discriminador del enum); toda la
  * mecánica —las tres acciones, la paginación por query params, el body común—
  * vive acá. Un informe de esta familia son unas diez líneas.
  *
- * No extiende `InformeCuentasService` —la base de la familia vieja— porque el
- * contrato es otro: manda `{ informe, fecha_desde, fecha_hasta, solo_con_saldo,
- * filtros }` plano en vez de `{ parametros }`, y recibe una página en vez del
- * informe entero.
+ * El body va plano (`{ informe, fecha_desde, fecha_hasta, solo_con_saldo,
+ * filtros }`) y la respuesta es una página, no el informe entero.
  *
  * No se manda `ordenamientos`: el endpoint lo rechaza a propósito (el orden lo
  * fija el agrupado, por código de cuenta).

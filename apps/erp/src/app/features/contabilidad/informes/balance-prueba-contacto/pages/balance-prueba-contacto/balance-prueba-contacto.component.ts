@@ -6,7 +6,7 @@ import type { ErpSelectOption, FilterCondition } from '@reddoc/core';
 import { MovimientoInformePageBase } from '../../../../shared/movimiento-informe-page.base';
 import type { InformeContactoRow } from '../../../../shared/movimiento-informe.types';
 import { buildFiltrosDetalle } from '../../../../shared/movimiento-informe.utils';
-import { InformeCuentasActionsComponent } from '../../../../shared/components/informe-cuentas-actions/informe-cuentas-actions.component';
+import { MovimientoInformeActionsComponent } from '../../../../shared/components/movimiento-informe-actions/movimiento-informe-actions.component';
 import { MovimientoInformeParamsComponent } from '../../../../shared/components/movimiento-informe-params/movimiento-informe-params.component';
 import { MovimientoInformeTableComponent } from '../../../../shared/components/movimiento-informe-table/movimiento-informe-table.component';
 import { BalancePruebaContactoService } from '../../balance-prueba-contacto.service';
@@ -37,7 +37,7 @@ import { BalancePruebaContactoService } from '../../balance-prueba-contacto.serv
     ListShellComponent,
     ErpContactoSelectComponent,
     MovimientoInformeParamsComponent,
-    InformeCuentasActionsComponent,
+    MovimientoInformeActionsComponent,
     MovimientoInformeTableComponent,
   ],
   templateUrl: './balance-prueba-contacto.component.html',

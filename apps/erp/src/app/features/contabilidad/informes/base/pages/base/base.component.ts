@@ -10,7 +10,7 @@ import type {
 } from '../../../../shared/movimiento-informe.types';
 import { buildFiltrosDetalle } from '../../../../shared/movimiento-informe.utils';
 import type { AppDict } from '@erp/i18n';
-import { InformeCuentasActionsComponent } from '../../../../shared/components/informe-cuentas-actions/informe-cuentas-actions.component';
+import { MovimientoInformeActionsComponent } from '../../../../shared/components/movimiento-informe-actions/movimiento-informe-actions.component';
 import { MovimientoInformeParamsComponent } from '../../../../shared/components/movimiento-informe-params/movimiento-informe-params.component';
 import { MovimientoInformeTableComponent } from '../../../../shared/components/movimiento-informe-table/movimiento-informe-table.component';
 import { InformeBaseService } from '../../base.service';
@@ -47,7 +47,7 @@ import { InformeBaseService } from '../../base.service';
     ListShellComponent,
     ErpContactoSelectComponent,
     MovimientoInformeParamsComponent,
-    InformeCuentasActionsComponent,
+    MovimientoInformeActionsComponent,
     MovimientoInformeTableComponent,
   ],
   templateUrl: './base.component.html',

@@ -7,7 +7,7 @@ import type { ErpSelectOption, FilterCondition } from '@reddoc/core';
 import { MovimientoInformePageBase } from '../../../../shared/movimiento-informe-page.base';
 import type { InformeAuxiliarContactoRow } from '../../../../shared/movimiento-informe.types';
 import { buildFiltrosDetalle } from '../../../../shared/movimiento-informe.utils';
-import { InformeCuentasActionsComponent } from '../../../../shared/components/informe-cuentas-actions/informe-cuentas-actions.component';
+import { MovimientoInformeActionsComponent } from '../../../../shared/components/movimiento-informe-actions/movimiento-informe-actions.component';
 import { MovimientoInformeParamsComponent } from '../../../../shared/components/movimiento-informe-params/movimiento-informe-params.component';
 import { MovimientoInformeTableComponent } from '../../../../shared/components/movimiento-informe-table/movimiento-informe-table.component';
 import { AuxiliarContactoService } from '../../auxiliar-contacto.service';
@@ -47,7 +47,7 @@ const COMPROBANTE_ENDPOINT = '/contabilidad/comprobante/seleccionar/';
     ErpContactoSelectComponent,
     ErpApiAutocompleteComponent,
     MovimientoInformeParamsComponent,
-    InformeCuentasActionsComponent,
+    MovimientoInformeActionsComponent,
     MovimientoInformeTableComponent,
   ],
   templateUrl: './auxiliar-contacto.component.html',

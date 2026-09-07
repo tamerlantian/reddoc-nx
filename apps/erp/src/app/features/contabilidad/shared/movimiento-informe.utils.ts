@@ -1,8 +1,19 @@
 import type { FormBuilder, ValidatorFn } from '@angular/forms';
 import { buildFiltros, toIsoDate, type ErpSelectOption, type FilterCondition } from '@reddoc/core';
-import { finDelMes, inicioDelMes } from './informe-cuentas.utils';
-import { rangoFechasMismoAnio } from './informe-cuentas.validators';
+import { rangoFechasMismoAnio } from './rango-fechas.validators';
 import type { MovimientoInformeForm, MovimientoInformeParams } from './movimiento-informe.types';
+
+/** Primer día del mes en curso — valor inicial de `fecha_desde`. */
+function inicioDelMes(): Date {
+  const hoy = new Date();
+  return new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+}
+
+/** Último día del mes en curso — valor inicial de `fecha_hasta`. */
+function finDelMes(): Date {
+  const hoy = new Date();
+  return new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+}
 
 /**
  * Propiedades por las que el backend acota el informe. **Confirmadas con backend**
@@ -62,8 +73,8 @@ export function buildMovimientoInformeForm(
 
 /**
  * Código de la cuenta elegida. `<app-cuenta-select>` lo expone suelto en la
- * opción (además de la etiqueta `"1105 - Caja general"`), así que no hace falta
- * recortarlo del label como hacen los informes de la familia vieja.
+ * opción (además de la etiqueta `"1105 - Caja general"`), así que se lee de ahí
+ * y no se recorta del label.
  */
 function codigoDe(option: ErpSelectOption | null): string {
   const codigo = option?.['codigo'];

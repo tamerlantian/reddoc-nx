@@ -11,7 +11,7 @@ import type { AppDict } from '@erp/i18n';
  * pero las descargas se habilitan únicamente sobre un informe ya generado.
  */
 @Component({
-  selector: 'app-informe-cuentas-actions',
+  selector: 'app-movimiento-informe-actions',
   standalone: true,
   imports: [ButtonModule],
   template: `
@@ -62,7 +62,7 @@ import type { AppDict } from '@erp/i18n';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InformeCuentasActionsComponent {
+export class MovimientoInformeActionsComponent {
   private readonly i18n = inject<I18nService<AppDict>>(I18nService);
   protected readonly t = this.i18n.t;
 

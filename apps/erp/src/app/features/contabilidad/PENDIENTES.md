@@ -34,12 +34,15 @@ Migraron también el **informe base** —con él la tabla compartida pasó a rec
 importe como dato**, porque los cuatro planos no comparten ninguna entre sí— y el **certificado de
 retención**, que **no necesitó ningún cambio en la tabla**: configuración pura.
 
-Migró también el **estado de resultados**, que estrenó la última pieza que le faltaba a la tabla:
-`[showUbicacion]`, clase y grupo en columnas. Con eso **la tabla compartida queda cerrada** — el
+Migraron por último los **dos estados financieros**. El de resultados estrenó la pieza que le
+faltaba a la tabla —`[showUbicacion]`, clase y grupo en columnas— y con eso quedó **cerrada**: el
 enum del backend tiene 9 informes y ninguno pide nada más.
 
-Queda **1**, el estado de situación financiera, que es el mismo molde con otro discriminador;
-§1–§4 sobre él sigue vigente y §5 quedó cerrado.
+**Están los 9.** La familia vieja se borró entera (`informe-cuentas.*`, su page base, su panel de
+parámetros y `<app-estado-financiero-table>`); §1–§5 quedan como **registro histórico** de cómo era
+y ya no describen nada del código. Sobrevivieron dos cosas que no eran suyas: los validadores de
+rango de fechas, que pasaron a `rango-fechas.validators.ts` porque también los usa
+`descontabilizar-modal`, y la botonera, renombrada a `<app-movimiento-informe-actions>`.
 
 ---
 
@@ -200,11 +203,6 @@ nombre, su archivo y qué bloques de columnas enciende (`showContacto`, `showMov
       movimientos (que lista por `id`), pero es una columna técnica: quien lee un auxiliar busca el
       comprobante y el número, que el `auxiliar_general` sí trae. Preguntar si es intencional.
       **Aplica igual a `auxiliar_contacto`**, que tiene el mismo hueco.
-- [ ] Migrar el **estado de situación financiera**, el último. Comparte forma exacta con el estado
-      de resultados —mismo `InformeEstadoRow`, mismo `[showUbicacion]`, mismo único `saldo`—, así
-      que es el servicio con su discriminador más la página: ~15 líneas. Al hacerlo se borran
-      `<app-estado-financiero-table>`, `EstadoFinancieroRow` y **la familia vieja entera**
-      (`informe-cuentas.*`, `informe-cuentas-page.base.ts` y `<app-informe-cuentas-params>`).
 
 ---
 
@@ -299,24 +297,24 @@ No son deudas, son mejoras que el informe original tampoco tenía:
 
 ## 4. Mapa de los informes portados
 
-| Informe                        | Endpoint                               | Parámetros                | Tabla                         | PDF |
-| ------------------------------ | -------------------------------------- | ------------------------- | ----------------------------- | --- |
-| Balance de prueba              | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
-| Balance de prueba por contacto | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
-| Auxiliar de cuenta             | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
-| Auxiliar por contacto          | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
-| Auxiliar general               | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
-| Base                           | `movimiento-informe/` (§0)             | periodo + rango + filtros | compartida (plana, paginada)  | no  |
-| Certificado de retención       | `movimiento-informe/` (§0)             | periodo + rango + filtros | compartida (plana, paginada)  | no  |
-| Estado de resultados           | `movimiento-informe/` (§0)             | solo periodo              | compartida (plana, paginada)  | no  |
-| Estado de situación financiera | `informe-estado-situacion-financiera/` | solo periodo              | estados financieros           | no  |
+| Informe                        | Endpoint                   | Parámetros                | Tabla                         | PDF |
+| ------------------------------ | -------------------------- | ------------------------- | ----------------------------- | --- |
+| Balance de prueba              | `movimiento-informe/` (§0) | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Balance de prueba por contacto | `movimiento-informe/` (§0) | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Auxiliar de cuenta             | `movimiento-informe/` (§0) | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Auxiliar por contacto          | `movimiento-informe/` (§0) | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Auxiliar general               | `movimiento-informe/` (§0) | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Base                           | `movimiento-informe/` (§0) | periodo + rango + filtros | compartida (plana, paginada)  | no  |
+| Certificado de retención       | `movimiento-informe/` (§0) | periodo + rango + filtros | compartida (plana, paginada)  | no  |
+| Estado de resultados           | `movimiento-informe/` (§0) | solo periodo              | compartida (plana, paginada)  | no  |
+| Estado de situación financiera | `movimiento-informe/` (§0) | solo periodo              | compartida (plana, paginada)  | no  |
 
 > "Completos" = periodo + rango de cuentas + las dos banderas.
 
 Para agregar uno nuevo de esta familia: declarar el servicio con su endpoint
 (`extends InformeCuentasService`), extender `InformeCuentasPageBase` con `nombre` y `archivo`, y
 componer en la plantilla `<app-informe-cuentas-params>` (con los campos extra por `ng-content`),
-`<app-informe-cuentas-actions>` y la tabla que corresponda.
+`<app-movimiento-informe-actions>` y la tabla que corresponda.
 
 ## 5. ~~Duda funcional abierta: el auxiliar de cuenta~~ — cerrada al migrar (§0)
 

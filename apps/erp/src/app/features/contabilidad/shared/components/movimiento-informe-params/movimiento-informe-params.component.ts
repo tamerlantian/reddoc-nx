@@ -8,14 +8,8 @@ import type { AppDict } from '@erp/i18n';
 import type { MovimientoInformeForm } from '../../movimiento-informe.types';
 
 /**
- * Panel de parámetros de la familia **nueva** de informes contables: periodo,
- * rango de cuentas y `solo_con_saldo`.
- *
- * No reusa `<app-informe-cuentas-params>` porque el contrato es otro: aquel ata
- * por `formControlName` dos banderas que acá no existen —`incluir_cierre`, que
- * el backend ya no expone, y `cuenta_con_movimiento`, que pasó a llamarse
- * `solo_con_saldo`—, así que compartirlo obligaría a arrastrar controles
- * muertos en el formulario solo para satisfacer su template.
+ * Panel de parámetros de los informes contables: periodo, rango de cuentas y
+ * `solo_con_saldo`.
  *
  * Componente tonto: recibe el `FormGroup` ya construido
  * (`buildMovimientoInformeForm`); la página es la dueña del estado. Los

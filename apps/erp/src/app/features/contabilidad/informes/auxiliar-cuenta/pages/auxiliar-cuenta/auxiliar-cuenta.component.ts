@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ListShellComponent } from '@reddoc/feature-base';
 import { MovimientoInformePageBase } from '../../../../shared/movimiento-informe-page.base';
 import type { InformeAuxiliarCuentaRow } from '../../../../shared/movimiento-informe.types';
-import { InformeCuentasActionsComponent } from '../../../../shared/components/informe-cuentas-actions/informe-cuentas-actions.component';
+import { MovimientoInformeActionsComponent } from '../../../../shared/components/movimiento-informe-actions/movimiento-informe-actions.component';
 import { MovimientoInformeParamsComponent } from '../../../../shared/components/movimiento-informe-params/movimiento-informe-params.component';
 import { MovimientoInformeTableComponent } from '../../../../shared/components/movimiento-informe-table/movimiento-informe-table.component';
 import { AuxiliarCuentaService } from '../../auxiliar-cuenta.service';
@@ -33,7 +33,7 @@ import { AuxiliarCuentaService } from '../../auxiliar-cuenta.service';
   imports: [
     ListShellComponent,
     MovimientoInformeParamsComponent,
-    InformeCuentasActionsComponent,
+    MovimientoInformeActionsComponent,
     MovimientoInformeTableComponent,
   ],
   templateUrl: './auxiliar-cuenta.component.html',

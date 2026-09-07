@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ListShellComponent } from '@reddoc/feature-base';
 import { MovimientoInformePageBase } from '../../../../shared/movimiento-informe-page.base';
 import type { InformeSaldosRow } from '../../../../shared/movimiento-informe.types';
-import { InformeCuentasActionsComponent } from '../../../../shared/components/informe-cuentas-actions/informe-cuentas-actions.component';
+import { MovimientoInformeActionsComponent } from '../../../../shared/components/movimiento-informe-actions/movimiento-informe-actions.component';
 import { MovimientoInformeParamsComponent } from '../../../../shared/components/movimiento-informe-params/movimiento-informe-params.component';
 import { MovimientoInformeTableComponent } from '../../../../shared/components/movimiento-informe-table/movimiento-informe-table.component';
 import { BalancePruebaService } from '../../balance-prueba.service';
@@ -14,8 +14,7 @@ import { BalancePruebaService } from '../../balance-prueba.service';
  * del rango y saldo final. Es un **reporte que se genera**: la tabla arranca
  * vacía y el usuario elige los parámetros antes de consultar.
  *
- * El primero de la familia nueva (`/contabilidad/movimiento-informe/`), que
- * **pagina** y sirve las filas **jerarquizadas**: cada auxiliar viene precedido
+ * El endpoint **pagina** y sirve las filas **jerarquizadas**: cada auxiliar viene precedido
  * por los subtotales de su clase, grupo y cuenta, y `tipo` es lo único que los
  * distingue. Por eso los totales del pie no salen de sumar las filas recibidas
  * sino de la acción `totales/`, que suma solo las de tipo `AUXILIAR` sobre el
@@ -34,7 +33,7 @@ import { BalancePruebaService } from '../../balance-prueba.service';
   imports: [
     ListShellComponent,
     MovimientoInformeParamsComponent,
-    InformeCuentasActionsComponent,
+    MovimientoInformeActionsComponent,
     MovimientoInformeTableComponent,
   ],
   templateUrl: './balance-prueba.component.html',

@@ -10,7 +10,7 @@ import type {
   InformeMontoColumn,
 } from '../../../../shared/movimiento-informe.types';
 import { buildFiltrosDetalle } from '../../../../shared/movimiento-informe.utils';
-import { InformeCuentasActionsComponent } from '../../../../shared/components/informe-cuentas-actions/informe-cuentas-actions.component';
+import { MovimientoInformeActionsComponent } from '../../../../shared/components/movimiento-informe-actions/movimiento-informe-actions.component';
 import { MovimientoInformeParamsComponent } from '../../../../shared/components/movimiento-informe-params/movimiento-informe-params.component';
 import { MovimientoInformeTableComponent } from '../../../../shared/components/movimiento-informe-table/movimiento-informe-table.component';
 import { EstadoResultadosService } from '../../estado-resultados.service';
@@ -54,7 +54,7 @@ const CENTRO_COSTO_ENDPOINT = '/contabilidad/centro-costo/seleccionar/';
     ListShellComponent,
     ErpApiAutocompleteComponent,
     MovimientoInformeParamsComponent,
-    InformeCuentasActionsComponent,
+    MovimientoInformeActionsComponent,
     MovimientoInformeTableComponent,
   ],
   templateUrl: './estado-resultados.component.html',

@@ -5186,7 +5186,19 @@ export const es: AppDict = {
         },
       },
     },
-    estadoSituacionFinanciera: { name: 'Estado situación financiera' },
+    estadoSituacionFinanciera: {
+      name: 'Estado de situación financiera',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y generá para ver la situación financiera.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta movió entre esas fechas. Probá ampliar el periodo.',
+        },
+      },
+    },
     certificadoRetencion: {
       name: 'Certificado retención',
       empty: {

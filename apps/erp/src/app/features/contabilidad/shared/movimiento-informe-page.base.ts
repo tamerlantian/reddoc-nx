@@ -23,8 +23,8 @@ import {
 const PAGE_SIZE_DEFAULT = 25;
 
 /**
- * Base de las páginas de la familia **nueva** de informes contables, los que
- * pegan a `/contabilidad/movimiento-informe/`.
+ * Base de las páginas de los informes contables, los nueve que pegan a
+ * `/contabilidad/movimiento-informe/`.
  *
  * Todas hacen lo mismo —armar los parámetros, generar, paginar y descargar el
  * Excel— y solo cambian el informe, el nombre visible y el nombre del archivo.
