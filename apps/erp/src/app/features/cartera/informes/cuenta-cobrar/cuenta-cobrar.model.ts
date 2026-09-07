@@ -13,10 +13,11 @@
  * `string` con cola de decimales (`"17114747.958000"`); las fechas como
  * `yyyy-MM-dd`.
  *
- * **Supuesto pendiente de confirmar con backend**: el endpoint
- * `documento-informe`, el identificador `cuenta_cobrar` y los nombres aplanados
- * siguen la convención de `venta_item`/`pendiente_facturar`; el informe viejo
- * consultaba `general/documento` con `serializador=informe_cuenta_cobrar`.
+ * Comparte serializer con su gemelo de **cuentas por pagar**, verificado contra
+ * la respuesta real el 2026-09-07: mismo endpoint, mismos campos aplanados, solo
+ * cambia el identificador del informe. El endpoint devuelve además sector, sede,
+ * plazo/método/forma de pago y las banderas de estado, que no se modelan porque
+ * la pantalla no los usa.
  */
 export interface CuentaCobrar {
   readonly id: number;
@@ -27,13 +28,21 @@ export interface CuentaCobrar {
   readonly fecha: string | null;
   /** Fecha de vencimiento (`yyyy-MM-dd`). */
   readonly fecha_vence: string | null;
+  readonly contacto_id: number | null;
   readonly contacto_numero_identificacion: string | null;
-  readonly contacto_nombre_corto: string | null;
+  /**
+   * Nombre del tercero. **Es `contacto_nombre`, no `contacto_nombre_corto`**:
+   * este informe aplana el documento con el nombre completo. El campo estaba
+   * mal nombrado y por eso la columna salía vacía.
+   */
+  readonly contacto_nombre: string | null;
   /** Base gravable del documento. */
   readonly subtotal: string | null;
+  /** Descuento aplicado al documento. */
+  readonly descuento: string | null;
   /** Impuestos del documento. */
   readonly impuesto: string | null;
-  /** Total del documento (subtotal + impuesto). */
+  /** Total del documento (subtotal − descuento + impuesto). */
   readonly total: string | null;
   /** Monto ya cruzado/pagado del documento. */
   readonly afectado: string | null;

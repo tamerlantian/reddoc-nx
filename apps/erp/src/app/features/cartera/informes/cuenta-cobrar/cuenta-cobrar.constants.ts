@@ -41,7 +41,15 @@ export const CUENTA_COBRAR_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'contacto_nombre_corto',
+    field: 'contacto_numero_identificacion',
+    headerKey: 'entities.cuentaCobrar.columns.identificacion',
+    type: 'text',
+    width: '130px',
+  },
+  {
+    // `contacto_nombre`, no `contacto_nombre_corto`: es lo que devuelve el
+    // informe. Con el nombre viejo la columna salía vacía.
+    field: 'contacto_nombre',
     headerKey: 'entities.cuentaCobrar.columns.contacto',
     type: 'text',
   },
@@ -98,7 +106,9 @@ export const CUENTA_COBRAR_FILTER_FIELDS: readonly FilterField[] = [
     type: 'string',
   },
   {
-    name: 'contacto_nombre_corto',
+    // TODO(backend): sin confirmar, igual que en cuentas por pagar. El valor
+    // anterior no existe en la respuesta del informe.
+    name: 'contacto_nombre',
     displayNameKey: 'entities.cuentaCobrar.columns.contacto',
     type: 'string',
   },

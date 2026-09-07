@@ -8,9 +8,8 @@ export const CUENTA_PAGAR_FILTERS_STORAGE_KEY = 'cuenta-pagar:filters:v1';
  * documento (tipo, número, fecha, vencimiento), del contacto y los montos
  * (subtotal, impuesto, total, afectado, pendiente).
  *
- * Se replica el mismo set que el informe hermano de cuentas por cobrar. El
- * informe viejo de pagar además exponía `contacto_id` e identificación como
- * columnas visibles; se omiten aquí para mantener la pareja consistente.
+ * La identificación del tercero va **antes** que su nombre, como en el resto de
+ * los informes del ERP: es el dato por el que se lo busca.
  */
 export const CUENTA_PAGAR_COLUMNS: readonly ColumnDef[] = [
   {
@@ -45,7 +44,15 @@ export const CUENTA_PAGAR_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'contacto_nombre_corto',
+    field: 'contacto_numero_identificacion',
+    headerKey: 'entities.cuentaPagar.columns.identificacion',
+    type: 'text',
+    width: '130px',
+  },
+  {
+    // `contacto_nombre`, no `contacto_nombre_corto`: es lo que devuelve el
+    // informe. Con el nombre viejo la columna salía vacía.
+    field: 'contacto_nombre',
     headerKey: 'entities.cuentaPagar.columns.contacto',
     type: 'text',
   },
@@ -102,7 +109,12 @@ export const CUENTA_PAGAR_FILTER_FIELDS: readonly FilterField[] = [
     type: 'string',
   },
   {
-    name: 'contacto_nombre_corto',
+    // TODO(backend): sin confirmar. El valor anterior (`contacto_nombre_corto`)
+    // no existe en la respuesta del informe, así que estaba mal con cualquier
+    // criterio; se alinea al nombre que sí devuelve. Si la whitelist usara rutas
+    // ORM sería `contacto__nombre_corto`. Un filtro fuera de la whitelist no da
+    // error: devuelve el informe sin filtrar.
+    name: 'contacto_nombre',
     displayNameKey: 'entities.cuentaPagar.columns.contacto',
     type: 'string',
   },
