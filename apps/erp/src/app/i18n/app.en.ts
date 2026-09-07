@@ -4902,7 +4902,19 @@ export const en: AppDict = {
         },
       },
     },
-    auxiliarContacto: { name: 'Ledger by contact' },
+    auxiliarContacto: {
+      name: 'Ledger by contact',
+      empty: {
+        notGenerated: {
+          title: 'Report not generated yet',
+          sub: 'Pick the period and the accounts, then generate to see each contact entries.',
+        },
+        noData: {
+          title: 'No activity in the period',
+          sub: 'No account in the range moved between those dates. Try widening the period or unchecking “only accounts with balance”.',
+        },
+      },
+    },
     conciliacion: {
       name: 'Bank reconciliation',
       columns: {

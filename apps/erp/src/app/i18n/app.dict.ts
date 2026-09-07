@@ -3780,7 +3780,13 @@ export interface AppDict
         noData: { title: string; sub: string };
       };
     };
-    auxiliarContacto: { name: string };
+    auxiliarContacto: {
+      name: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
     conciliacion: {
       name: string;
       columns: { id: string; fechaDesde: string; fechaHasta: string; cuentaBanco: string };

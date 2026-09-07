@@ -4965,7 +4965,19 @@ export const es: AppDict = {
         },
       },
     },
-    auxiliarContacto: { name: 'Auxiliar contacto' },
+    auxiliarContacto: {
+      name: 'Auxiliar contacto',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver los asientos de cada tercero.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta del rango movió entre esas fechas. Probá ampliar el periodo o desmarcar «solo cuentas con saldo».',
+        },
+      },
+    },
     conciliacion: {
       name: 'Conciliación',
       columns: {

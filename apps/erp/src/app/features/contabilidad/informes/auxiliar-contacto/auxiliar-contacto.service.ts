@@ -1,34 +1,19 @@
 import { Injectable } from '@angular/core';
-import { InformeCuentasService } from '../../shared/informe-cuentas.service';
-import type {
-  InformeCuentasMovimientoParams,
-  SaldoCuentaContactoRow,
-} from '../../shared/informe-cuentas.types';
-
-/**
- * Endpoint del informe. Sirve la consulta y el Excel, discriminados por una
- * bandera en el body. **No sirve PDF**: el ERP anterior tenía ese método
- * comentado, así que la página no ofrece el botón.
- *
- * Ojo con el nombre: la pantalla se llama "auxiliar por contacto" pero su
- * endpoint dice `tercero`. Es el mismo concepto, igual que en el balance.
- */
-export const AUXILIAR_CONTACTO_ENDPOINT = '/contabilidad/movimiento/informe-auxiliar-tercero/';
+import { MovimientoInformeService } from '../../shared/movimiento-informe.service';
+import type { InformeAuxiliarContactoRow, InformeId } from '../../shared/movimiento-informe.types';
 
 /**
  * Servicio HTTP del informe **Auxiliar por contacto**.
  *
- * Toda la mecánica (POST con `{ parametros }`, respuesta `{ registros }` sin
- * paginar) vive en `InformeCuentasService`; acá solo se declara el endpoint.
+ * Toda la mecánica —las tres acciones sobre `/contabilidad/movimiento-informe/`,
+ * el body común, la paginación por query params— vive en
+ * `MovimientoInformeService`; acá solo se declara el discriminador.
  *
- * **Supuestos pendientes de confirmar con backend**: el path, que acepte los
- * parámetros `contacto`, `numero` y `comprobante`, y si el endpoint sirve PDF
- * (el legacy no lo pedía).
+ * Bajo cada auxiliar del plan va **cada tercero seguido de sus asientos**, a
+ * diferencia del auxiliar general, que agrupa primero todos los terceros y
+ * después todos los movimientos.
  */
 @Injectable({ providedIn: 'root' })
-export class AuxiliarContactoService extends InformeCuentasService<
-  SaldoCuentaContactoRow,
-  InformeCuentasMovimientoParams
-> {
-  protected readonly endpoint = AUXILIAR_CONTACTO_ENDPOINT;
+export class AuxiliarContactoService extends MovimientoInformeService<InformeAuxiliarContactoRow> {
+  protected readonly informe: InformeId = 'auxiliar_contacto';
 }

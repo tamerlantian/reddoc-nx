@@ -25,9 +25,13 @@ Estado (2026-09-04): el **balance de prueba** migró al contrato nuevo
 Estado (2026-09-07): el schema del backend **cambió** después de esa migración —columnas
 renombradas, jerarquía nueva con `tipo`, sin `incluir_cierre`— así que el balance de prueba se
 realineó y lo común se extrajo a `shared/movimiento-informe.*`. Sobre esa base migró también el
-**auxiliar general**, el **balance de prueba por contacto** y el **auxiliar de cuenta**. Ver §0.
-Los otros 5 informes siguen sobre `InformeCuentasService` y todo lo que dicen §1–§4 sobre ellos
-sigue vigente (§5 quedó cerrado al migrar).
+**auxiliar general**, el **balance de prueba por contacto**, el **auxiliar de cuenta** y el
+**auxiliar por contacto**. Ver §0. Con eso migraron **los cinco informes jerárquicos** y quedaron
+sin uso la tabla `<app-saldos-cuenta-table>` y los tipos de fila de la familia vieja, que se
+borraron.
+
+Los **4 informes planos** que quedan (base, certificado de retención y los dos estados financieros)
+siguen sobre `InformeCuentasService`; §1–§4 sobre ellos sigue vigente y §5 quedó cerrado.
 
 ---
 
@@ -181,10 +185,13 @@ nombre, su archivo y qué bloques de columnas enciende (`showContacto`, `showMov
       pantalla enciende la columna del id para que al menos se pueda buscar en la consulta de
       movimientos (que lista por `id`), pero es una columna técnica: quien lee un auxiliar busca el
       comprobante y el número, que el `auxiliar_general` sí trae. Preguntar si es intencional.
-- [ ] Migrar los **5 informes restantes**, que ya tienen su valor en el enum: `auxiliar_contacto`,
-      `bases`, `certificado_retencion`, `estado_resultados` y `estado_situacion_financiera`. Los
-      cuatro últimos son **planos** (sin jerarquía, subtotales ni `solo_con_saldo`), así que la tabla
-      compartida necesitará un modo sin `tipo` antes de servirlos.
+      **Aplica igual a `auxiliar_contacto`**, que tiene el mismo hueco.
+- [ ] Migrar los **4 informes planos** que quedan: `bases`, `certificado_retencion`,
+      `estado_resultados` y `estado_situacion_financiera`. No recorren el plan de cuentas, así que
+      no tienen jerarquía, subtotales ni `solo_con_saldo`: la tabla compartida necesita un modo sin
+      `tipo` antes de servirlos, y `bases` y `certificado_retencion` traen además columnas propias
+      (`base`, `base_retenido`, `retenido`). Cuando migren, se borra entera la familia vieja
+      (`informe-cuentas.*` y `<app-informe-cuentas-params>`).
 
 ---
 
@@ -279,17 +286,17 @@ No son deudas, son mejoras que el informe original tampoco tenía:
 
 ## 4. Mapa de los informes portados
 
-| Informe                        | Endpoint                               | Parámetros                              | Tabla                         | PDF |
-| ------------------------------ | -------------------------------------- | --------------------------------------- | ----------------------------- | --- |
-| Balance de prueba              | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
-| Balance de prueba por contacto | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
-| Auxiliar de cuenta             | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
-| Auxiliar por contacto          | `informe-auxiliar-tercero/`            | completos + contacto/número/comprobante | saldos + tercero, sin totales | no  |
-| Auxiliar general               | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
-| Base                           | `informe-base/`                        | rango + `contacto_id`                   | propia (base gravable)        | no  |
-| Certificado de retención       | `informe-certificado-retencion/`       | rango + `contacto_id`                   | propia (retenciones)          | sí  |
-| Estado de resultados           | `informe-estado-resultados/`           | solo periodo                            | estados financieros           | no  |
-| Estado de situación financiera | `informe-estado-situacion-financiera/` | solo periodo                            | estados financieros           | no  |
+| Informe                        | Endpoint                               | Parámetros                | Tabla                         | PDF |
+| ------------------------------ | -------------------------------------- | ------------------------- | ----------------------------- | --- |
+| Balance de prueba              | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Balance de prueba por contacto | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Auxiliar de cuenta             | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Auxiliar por contacto          | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Auxiliar general               | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
+| Base                           | `informe-base/`                        | rango + `contacto_id`     | propia (base gravable)        | no  |
+| Certificado de retención       | `informe-certificado-retencion/`       | rango + `contacto_id`     | propia (retenciones)          | sí  |
+| Estado de resultados           | `informe-estado-resultados/`           | solo periodo              | estados financieros           | no  |
+| Estado de situación financiera | `informe-estado-situacion-financiera/` | solo periodo              | estados financieros           | no  |
 
 > "Completos" = periodo + rango de cuentas + las dos banderas.
 

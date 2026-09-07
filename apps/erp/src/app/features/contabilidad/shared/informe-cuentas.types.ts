@@ -2,8 +2,19 @@ import type { FormControl, FormGroup } from '@angular/forms';
 import type { ErpSelectOption } from '@reddoc/core';
 
 /**
- * Piezas comunes de los **informes contables de saldos por cuenta**
- * (balance de prueba, auxiliar de cuenta, y los que sigan).
+ * Piezas comunes de la familia **vieja** de informes contables, la que pide
+ * `{ parametros }` a `/contabilidad/movimiento/informe-*`.
+ *
+ * Le quedan **cuatro** consumidores: *base*, *certificado de retención* y los
+ * dos *estados financieros*. Los cinco informes que recorren el plan de cuentas
+ * ya migraron a `/contabilidad/movimiento-informe/` (ver `movimiento-informe.*`
+ * y `PENDIENTES.md` §0), y con ellos se fueron de acá los tipos de fila y la
+ * tabla compartida, que quedaron sin uso.
+ *
+ * Los cuatro que quedan son los **planos**: no recorren el plan de cuentas, así
+ * que no tienen jerarquía ni subtotales. Cuando migren, este archivo y sus
+ * hermanos (`informe-cuentas.service.ts`, `informe-cuentas-page.base.ts`,
+ * `informe-cuentas.utils.ts` y `<app-informe-cuentas-params>`) se borran enteros.
  *
  * Todos comparten la misma forma, distinta a la del resto de listados del ERP:
  *
@@ -52,56 +63,6 @@ export interface InformeCuentasParams extends InformeCuentasRangoParams {
 }
 
 /**
- * Fila de saldos: una cuenta contable con su saldo inicial, el movimiento del
- * periodo y el saldo final.
- *
- * `nivel` indica la profundidad en el plan de cuentas (clase, grupo, cuenta,
- * subcuenta…). Los informes originales no lo usaban para pintar jerarquía;
- * queda disponible por si se quiere indentar más adelante.
- */
-export interface SaldoCuentaRow {
-  readonly id: number;
-  readonly codigo: string | null;
-  readonly nombre: string | null;
-  readonly nivel: number | null;
-  /** Saldo al día anterior a `fecha_desde`. */
-  readonly saldo_anterior: number | null;
-  /** Movimiento débito del periodo. */
-  readonly debito: number | null;
-  /** Movimiento crédito del periodo. */
-  readonly credito: number | null;
-  /** Saldo al cierre de `fecha_hasta`. */
-  readonly saldo_actual: number | null;
-}
-
-/**
- * Fila de los informes que abren el saldo **por tercero**: la misma cuenta
- * aparece una vez por cada contacto con movimiento en ella.
- */
-export interface SaldoCuentaContactoRow extends SaldoCuentaRow {
-  readonly contacto_numero_identificacion: string | null;
-  readonly contacto_nombre_corto: string | null;
-}
-
-/**
- * Fila de los auxiliares: baja al **movimiento** que produjo el saldo, así que
- * suma el documento que lo originó.
- */
-export interface SaldoCuentaMovimientoRow extends SaldoCuentaContactoRow {
-  readonly comprobante_nombre: string | null;
-  readonly numero: number | string | null;
-  /** Fecha del movimiento (`yyyy-MM-dd`). */
-  readonly fecha: string | null;
-}
-
-/**
- * Lo que acepta la tabla compartida: una fila de saldos que **puede** traer los
- * datos del tercero y del movimiento. Qué columnas se pintan lo decide el
- * informe (por bloques), no la fila.
- */
-export type SaldoCuentaTableRow = SaldoCuentaRow & Partial<SaldoCuentaMovimientoRow>;
-
-/**
  * Rango + tercero, **sin** las dos banderas. Lo usan los informes que trabajan a
  * nivel de línea (*base*, *certificado de retención*), donde cierre y "solo
  * cuentas con movimiento" no aplican.
@@ -112,17 +73,6 @@ export type SaldoCuentaTableRow = SaldoCuentaRow & Partial<SaldoCuentaMovimiento
  */
 export interface InformeCuentasRangoContactoParams extends InformeCuentasRangoParams {
   readonly contacto_id: number | null;
-}
-
-/** Parámetros de los informes que además acotan por un tercero. */
-export interface InformeCuentasContactoParams extends InformeCuentasParams {
-  readonly contacto: number | null;
-}
-
-/** Parámetros de los auxiliares: además del tercero, acotan por documento. */
-export interface InformeCuentasMovimientoParams extends InformeCuentasContactoParams {
-  readonly numero: number | null;
-  readonly comprobante: number | null;
 }
 
 /**
