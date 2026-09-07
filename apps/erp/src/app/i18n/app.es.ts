@@ -4925,7 +4925,19 @@ export const es: AppDict = {
         },
       },
     },
-    balancePruebaContacto: { name: 'Balance de prueba por contacto' },
+    balancePruebaContacto: {
+      name: 'Balance de prueba por contacto',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver los saldos por tercero.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta del rango movió entre esas fechas. Probá ampliar el periodo o desmarcar «solo cuentas con saldo».',
+        },
+      },
+    },
     auxiliarCuenta: { name: 'Auxiliar cuenta' },
     auxiliarGeneral: {
       name: 'Auxiliar general',

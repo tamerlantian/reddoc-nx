@@ -4862,7 +4862,19 @@ export const en: AppDict = {
         },
       },
     },
-    balancePruebaContacto: { name: 'Trial balance by contact' },
+    balancePruebaContacto: {
+      name: 'Trial balance by contact',
+      empty: {
+        notGenerated: {
+          title: 'Report not generated yet',
+          sub: 'Pick the period and the accounts, then generate to see balances by contact.',
+        },
+        noData: {
+          title: 'No activity in the period',
+          sub: 'No account in the range moved between those dates. Try widening the period or unchecking “only accounts with balance”.',
+        },
+      },
+    },
     auxiliarCuenta: { name: 'Account ledger' },
     auxiliarGeneral: {
       name: 'General ledger',

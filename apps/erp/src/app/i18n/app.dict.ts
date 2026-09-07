@@ -3755,7 +3755,14 @@ export interface AppDict
         noData: { title: string; sub: string };
       };
     };
-    balancePruebaContacto: { name: string };
+    balancePruebaContacto: {
+      name: string;
+      /** Empty state propio, igual que el resto de la familia nueva. */
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
     auxiliarCuenta: { name: string };
     auxiliarGeneral: {
       name: string;
