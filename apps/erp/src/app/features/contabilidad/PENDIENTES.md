@@ -20,19 +20,23 @@ Estado (2026-07-29): portados el **asiento contable** (documento tipo 13, §6), 
 **movimientos** (§9) y la **conciliación bancaria** (§10).
 
 Estado (2026-09-04): el **balance de prueba** migró al contrato nuevo
-(`/contabilidad/movimiento-informe/`) y salió de la familia vieja. Ver §0. Los otros 8 informes
-siguen sobre `InformeCuentasService` y todo lo que dicen §1–§5 sobre ellos sigue vigente.
+(`/contabilidad/movimiento-informe/`) y salió de la familia vieja. Ver §0.
+
+Estado (2026-09-07): el schema del backend **cambió** después de esa migración —columnas
+renombradas, jerarquía nueva con `tipo`, sin `incluir_cierre`— así que el balance de prueba se
+realineó y lo común se extrajo a `shared/movimiento-informe.*`. Sobre esa base migró también el
+**auxiliar general**. Ver §0. Los otros 7 informes siguen sobre `InformeCuentasService` y todo lo
+que dicen §1–§5 sobre ellos sigue vigente.
 
 ---
 
-## 0. Balance de prueba — contrato nuevo (ya no es un supuesto)
+## 0. Familia nueva de informes — `/contabilidad/movimiento-informe/`
 
-Confirmado contra el **schema del tenant**: `GET https://reddocapi.uk/api/schema/` con el header
-`X-Tenant: <slug>` sirve el OpenAPI del contenedor (sin el header cae al schema público, donde
-`/contabilidad/*` no existe). Ahí está declarado todo lo de abajo; no hace falta suponer nada.
+Confirmado contra el **schema del contenedor**: `GET https://reddocapi.uk/api/contenedor/schema/`
+sirve el OpenAPI con todas las rutas del tenant. Ahí está declarado todo lo de abajo.
 
-`/contabilidad/movimiento-informe/` es el **punto único de informes agregados** sobre el movimiento
-contable. Tres acciones con el **mismo body**:
+Es el **punto único de informes agregados** sobre el movimiento contable. Tres acciones con el
+**mismo body**:
 
 | Acción     | Qué devuelve                                   |
 | ---------- | ---------------------------------------------- |
@@ -44,11 +48,10 @@ Body (`InformeContabilidadRequestRequest`):
 
 ```json
 {
-  "informe": "balance_prueba",
+  "informe": "auxiliar_general",
   "fecha_desde": "2026-09-01",
   "fecha_hasta": "2026-09-30",
   "solo_con_saldo": true,
-  "incluir_cierre": false,
   "filtros": [
     { "propiedad": "cuenta__codigo", "operador": ">=", "valor": "1105" },
     { "propiedad": "cuenta__codigo", "operador": "<=", "valor": "1199", "operador_logico": "AND" }
@@ -56,39 +59,123 @@ Body (`InformeContabilidadRequestRequest`):
 }
 ```
 
-Lo que dice el backend y define la página:
+Lo que dice el backend y define las páginas:
 
-- `informe`, `fecha_desde` y `fecha_hasta` son **obligatorios**. `informe` es un enum: hoy solo
-  `balance_prueba`, así que los otros 8 informes todavía no tienen a dónde migrar.
+- `informe`, `fecha_desde` y `fecha_hasta` son **obligatorios**. El enum `informe` ya trae los
+  **nueve**: `balance_prueba`, `balance_prueba_contacto`, `auxiliar_cuenta`, `auxiliar_contacto`,
+  `auxiliar_general`, `bases`, `certificado_retencion`, `estado_resultados` y
+  `estado_situacion_financiera`. Los 7 que faltan pueden migrar cuando se quiera.
+- Cinco son **jerárquicos** (los del plan de cuentas) y cuatro son **planos**, sin jerarquía,
+  subtotales ni `solo_con_saldo`.
 - Los `filtros` son los **dinámicos genéricos** del ERP y se aplican **antes de agrupar**, así que
-  acotan por igual el saldo anterior y el movimiento del rango.
-- **No acepta `ordenamientos`**: el informe sale siempre por código de cuenta. Sobre un queryset
-  agrupado, ordenar por un campo fuera del `GROUP BY` cambiaría el agrupado en silencio y devolvería
-  una fila por movimiento sin que nadie lo note.
-- `solo_con_saldo` (default **`true`**) omite las cuentas que no movieron en el rango y llegan con
-  saldo anterior en cero. Reemplaza a `cuenta_con_movimiento`.
-- `incluir_cierre` **se manda igual**, aunque el schema no lo declare y el backend hoy lo ignore:
-  está confirmado que lo va a soportar (backend, 2026-09-04). Mandarlo desde ya evita tener que
-  volver a la pantalla cuando lo implementen.
-- **No hay PDF** en esta familia. El botón se apagó con `[showPdf]="false"`.
+  acotan por igual el saldo anterior, el movimiento del rango y el detalle.
+- **No acepta `ordenamientos`**: el informe sale siempre por código de cuenta. Dentro de una cuenta
+  el orden lo fija el informe, y reordenar por encima despegaría el detalle de su cuenta.
+- `solo_con_saldo` (default del backend: **`false`**) omite las cuentas que quedan en ceros en las
+  cuatro columnas, con su detalle. El front lo arranca en `true` y lo manda siempre explícito.
+- **No hay PDF** en esta familia. El botón se apaga con `[showPdf]="false"`.
 
-Columnas de la fila (`ConMovimientoInformeBalance`), todas los montos como **string decimal**:
-`cuenta_id`, `cuenta_codigo`, `cuenta_nombre`, `saldo_anterior_debito`, `saldo_anterior_credito`,
-`saldo_anterior`, `debito`, `credito`, `saldo_final_debito`, `saldo_final_credito`, `saldo_final`.
-La tabla pinta la **vista compacta** (los netos); el desglose débito/crédito de saldo anterior y
-final queda para el Excel.
+### Las filas vienen **jerarquizadas**
 
-| #   | Decisión                                                                     | Por qué                                                                                                                                                                             |
-| --- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | El informe **sale** de `InformeCuentasService` / `InformeCuentasPageBase`    | La base de la familia asume `{ parametros }` y el informe entero en una respuesta. Acá pagina y los totales vienen aparte: quedarse en la base obligaba a agujerearla por dentro    |
-| 2   | Tabla propia (`<app-balance-prueba-table>`), no `<app-saldos-cuenta-table>`  | El contrato renombró todas las columnas (`cuenta_codigo`, `saldo_final`…) y manda strings. Compartir la tabla sería un mapper de ida y vuelta para nada                             |
-| 3   | Panel de parámetros propio                                                   | El contrato renombró la segunda bandera (`cuenta_con_movimiento` → `solo_con_saldo`, ahora encendida por defecto). El panel compartido la ata por `formControlName` al nombre viejo |
-| 4   | Los totales del pie salen de `totales/`, no de sumar las filas               | Con el informe paginado, sumar lo recibido daría el total de la página. Justo el chequeo de cuadre es lo que no puede mentir                                                        |
-| 5   | `operador_logico` se sumó a `FilterCondition`/`BackendFilter` en `libs/core` | Es del contrato general de `lista/` (AND por defecto, evaluación secuencial), no de este informe. Se emite solo cuando la condición lo declara                                      |
-| 6   | El rango de cuentas lee `option.codigo` del selector                         | El filtro viaja por `cuenta__codigo`. `<app-cuenta-select>` ya expone el código suelto, así que acá no se recorta de la etiqueta como en los informes de §1.3                       |
+Es lo que más condiciona la pantalla. `lista/` no devuelve una lista plana de cuentas: intercala las
+filas de subtotal de clase, grupo y cuenta antes de cada auxiliar, y después su detalle. El campo
+**`tipo`** es lo único que las distingue:
 
-**Queda pendiente**: que backend sume el PDF (o confirmar que no va), y el resto del enum `informe`
-para migrar los otros 8.
+| `tipo`                                  | Qué es                                                     |
+| --------------------------------------- | ---------------------------------------------------------- |
+| `CLASE`, `GRUPO`, `CUENTA`, `SUBCUENTA` | Subtotales del plan. `cuenta_id` viene en `null`           |
+| `AUXILIAR`                              | La cuenta de movimiento. **La única que trae `cuenta_id`** |
+| `TERCERO`, `MOVIMIENTO`                 | El detalle que cuelga del auxiliar, según el informe       |
+
+Dos consecuencias que ya costaron un bug cada una:
+
+1. **No se puede trackear por `cuenta_id`** en el `@for`: los subtotales lo traen `null` y Angular
+   rechaza las claves duplicadas. Va `track $index`.
+2. **No se pueden sumar las filas** para sacar totales: los subtotales y el detalle están hechos de
+   los auxiliares, así que sumarlo todo multiplicaría el balance. Por eso `totales/` existe y suma
+   **solo las de tipo `AUXILIAR`**.
+
+### Columnas por informe
+
+Los montos siempre como **string decimal** (`"120600.000000"`); `formatCop` los normaliza.
+
+| Informe                   | Campos de `lista/`                               |
+| ------------------------- | ------------------------------------------------ |
+| `balance_prueba`          | `tipo, cuenta_id, codigo, nombre` + los 4 saldos |
+| `balance_prueba_contacto` | + `contacto_id, identificacion, contacto`        |
+| `auxiliar_cuenta`         | balance + `movimiento_id`                        |
+| `auxiliar_contacto`       | contacto + `movimiento_id`                       |
+| `auxiliar_general`        | + `comprobante, numero, fecha`                   |
+
+Los 4 saldos son `saldo_anterior`, `debito`, `credito`, `saldo_final`. `totales/` devuelve esos
+mismos cuatro.
+
+### Cómo está implementado
+
+Lo común vive en `shared/movimiento-informe.*` y sirve a los dos informes ya migrados:
+
+| Pieza                             | Qué aporta                                                      |
+| --------------------------------- | --------------------------------------------------------------- |
+| `movimiento-informe.types.ts`     | `InformeId`, `InformeFilaTipo`, las tres filas, totales, params |
+| `movimiento-informe.service.ts`   | Base: las 3 acciones. Un informe = declarar su `informe`        |
+| `movimiento-informe.utils.ts`     | Formulario, filtros del rango de cuentas, body                  |
+| `movimiento-informe-page.base.ts` | Generar, paginar, Excel, `generated`, `paramsStale`, migas      |
+| `<app-movimiento-informe-params>` | Periodo + rango de cuentas + `solo_con_saldo`, con `ng-content` |
+| `<app-movimiento-informe-table>`  | La jerarquía marcada por `tipo`, totales, paginador             |
+
+Un informe de esta familia son ~30 líneas: el servicio con su discriminador y la página con su
+nombre, su archivo y qué bloques de columnas enciende (`showContacto`, `showMovimiento`).
+
+### Decisiones
+
+| #   | Decisión                                                                     | Por qué                                                                                                                                                                                |
+| --- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | La familia **sale** de `InformeCuentasService` / `InformeCuentasPageBase`    | La base vieja asume `{ parametros }` y el informe entero en una respuesta. Acá pagina y los totales vienen aparte                                                                      |
+| 2   | Tabla propia, no `<app-saldos-cuenta-table>`                                 | El contrato renombró las columnas, manda strings y **suma la jerarquía**, que aquella tabla no sabe pintar                                                                             |
+| 3   | Panel de parámetros propio                                                   | El panel viejo ata por `formControlName` dos banderas que acá no existen (`incluir_cierre` y `cuenta_con_movimiento`)                                                                  |
+| 4   | Los totales del pie salen de `totales/`, no de sumar las filas               | Con el informe paginado _y_ con subtotales intercalados, sumar lo que se ve mentiría dos veces                                                                                         |
+| 5   | `operador_logico` se sumó a `FilterCondition`/`BackendFilter` en `libs/core` | Es del contrato general de `lista/` (AND por defecto, evaluación secuencial), no de este informe                                                                                       |
+| 6   | El rango de cuentas lee `option.codigo` del selector                         | El filtro viaja por `cuenta__codigo`. `<app-cuenta-select>` ya expone el código suelto                                                                                                 |
+| 7   | Se quitó `incluir_cierre` de la pantalla                                     | Ya no está en el request del schema y el backend **decidió** el tratamiento: los asientos de cierre entran al saldo anterior pero nunca al rango ni al detalle. Un checkbox ahí mentía |
+| 8   | Auxiliar general también exige **mismo año**                                 | El contrato nuevo le calcula `saldo_anterior` contra la apertura del ejercicio, cosa que el informe del ERP anterior no hacía                                                          |
+
+### Queda pendiente
+
+- [ ] **Confirmar la forma de la fila de `auxiliar_general` contra el API real.** El schema solo
+      declara `ConMovimientoInformeBalance` (drf-spectacular emitió únicamente el serializer por
+      defecto), así que los nombres `contacto_id`, `identificacion`, `contacto`, `movimiento_id`,
+      `comprobante`, `numero` y `fecha` salen de la tabla que pasó backend, no del OpenAPI. Ninguno
+      aparece en el schema.
+- [x] **La whitelist de `campos_filtrables` del informe** — confirmada con backend (2026-09-07):
+
+      | Parámetro   | `propiedad`      | Operador |
+      | ----------- | ---------------- | -------- |
+      | Contacto    | `contacto_id`    | `=`      |
+      | Número      | `numero`         | `=`      |
+      | Comprobante | `comprobante_id` | `=`      |
+
+      **El informe declara su propia whitelist y no espeja la de
+      `/contabilidad/movimiento/lista/`**, aunque filtren el mismo queryset. Se intentó deducirla de
+      allá (`contacto__numero_identificacion`, `comprobante__nombre`) y no funciona: acá las
+      relaciones van por **id con sufijo `_id`**.
+
+      Ojo con la asimetría, que es la trampa real: al **escribir** un movimiento las FK van **sin**
+      sufijo (`contacto`, `comprobante`, `cuenta`, como las declara `ConMovimiento` en el schema),
+      pero al **filtrar** este informe llevan `_id`. Y la cuenta no sigue ninguna de las dos: va por
+      la ruta ORM `cuenta__codigo`, porque el rango se acota por código y no por id. La lista es
+      explícita, no un patrón — una entrada nueva hay que preguntarla, no inferirla.
+
+      Todo vive en `INFORME_FILTER_FIELD` (`shared/movimiento-informe.utils.ts`) y está fijado por
+      `movimiento-informe.utils.spec.ts`, que compara el body emitido contra el ejemplo de backend.
+
+- [ ] **Si `limit` se respeta.** Backend habló de "25 por página, `?page=N`" y solo mencionó `page`;
+      el front manda además `limit` y la tabla ofrece el dropdown 10/25/50/100. Si el endpoint lo
+      ignora, el dropdown no hace nada.
+- [ ] **Paginar un árbol.** Con 25 filas por página, la página 2 puede empezar a mitad de una cuenta,
+      sin las filas de subtotal que le dan contexto. Falta decidir si se resuelve en el front
+      (repetir la cabecera del auxiliar en curso) o si backend puede paginar por auxiliar.
+- [ ] Que backend sume el PDF, o confirmar que no va.
+- [ ] Migrar los **7 informes restantes**, que ya tienen su valor en el enum.
 
 ---
 
@@ -119,7 +206,8 @@ Comunes: `fecha_desde`, `fecha_hasta`, `incluir_cierre`, `cuenta_con_movimiento`
 `cuenta_hasta`, `cuenta_codigo_desde`, `cuenta_codigo_hasta`. El balance por contacto suma
 `contacto` (id).
 
-El auxiliar general y el auxiliar por contacto suman `contacto`, `numero` y `comprobante`.
+El auxiliar por contacto suma `contacto`, `numero` y `comprobante`. (El **auxiliar general** ya no
+está en esta familia: migró al contrato nuevo, ver §0.)
 
 **El informe _base_ declara menos y nombra distinto**: solo periodo, rango de cuentas y el tercero,
 que manda como **`contacto_id`** — es el único que usa el sufijo; el resto lo llama `contacto` a
@@ -184,11 +272,11 @@ No son deudas, son mejoras que el informe original tampoco tenía:
 
 | Informe                        | Endpoint                               | Parámetros                              | Tabla                         | PDF |
 | ------------------------------ | -------------------------------------- | --------------------------------------- | ----------------------------- | --- |
-| Balance de prueba              | `movimiento-informe/` (§0)             | periodo + banderas + filtros            | propia (paginada + totales)   | no  |
+| Balance de prueba              | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
 | Balance de prueba por contacto | `informe-balance-prueba-tercero/`      | completos + `contacto`                  | saldos + tercero, sin totales | sí  |
 | Auxiliar de cuenta             | `informe-auxiliar-cuenta/`             | completos                               | saldos                        | sí  |
 | Auxiliar por contacto          | `informe-auxiliar-tercero/`            | completos + contacto/número/comprobante | saldos + tercero, sin totales | no  |
-| Auxiliar general               | `informe-auxiliar-general/`            | completos + contacto/número/comprobante | saldos + tercero + movimiento | no  |
+| Auxiliar general               | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
 | Base                           | `informe-base/`                        | rango + `contacto_id`                   | propia (base gravable)        | no  |
 | Certificado de retención       | `informe-certificado-retencion/`       | rango + `contacto_id`                   | propia (retenciones)          | sí  |
 | Estado de resultados           | `informe-estado-resultados/`           | solo periodo                            | estados financieros           | no  |
@@ -217,7 +305,10 @@ Indicios de que allá quedó a medio hacer:
 
 Se portó **lo que hace**, no lo que promete el nombre. Si el auxiliar debe mostrar movimientos, es
 un cambio de alcance a definir con backend: qué devuelve realmente `informe-auxiliar-cuenta/`.
-Lo mismo aplica probablemente a _auxiliar por tercero_ y _auxiliar general_.
+Lo mismo aplica probablemente a _auxiliar por tercero_.
+
+En el contrato nuevo esto **ya está resuelto**: `auxiliar_cuenta` declara `movimiento_id` y
+`auxiliar_general` baja a comprobante, número y fecha. Migrarlos cierra el pendiente (§0).
 
 ---
 

@@ -4866,6 +4866,11 @@ export const es: AppDict = {
     informeCuentas: {
       generar: 'Generar',
       descuadre: 'El informe no cuadra',
+      groups: {
+        periodo: 'Periodo',
+        cuentas: 'Plan de cuentas',
+        documento: 'Documento',
+      },
       paramsStale: 'Cambiaste los parámetros — generá de nuevo',
       params: {
         fechaDesde: 'Fecha desde',
@@ -4876,9 +4881,12 @@ export const es: AppDict = {
         contacto: 'Contacto',
         contactoPlaceholder: 'Todos los contactos',
         numero: 'Número',
+        numeroPlaceholder: 'Todos los números',
         comprobante: 'Comprobante',
+        comprobantePlaceholder: 'Todos los comprobantes',
         incluirCierre: 'Incluir cierre',
         soloConMovimiento: 'Solo cuentas con movimiento',
+        soloConSaldo: 'Solo cuentas con saldo',
       },
       validation: {
         rangoInvertido: 'La fecha desde no puede ser mayor a la fecha hasta.',
@@ -4906,7 +4914,6 @@ export const es: AppDict = {
     },
     balancePrueba: {
       name: 'Balance de prueba',
-      params: { soloConSaldo: 'Solo cuentas con saldo' },
       empty: {
         notGenerated: {
           title: 'Todavía no generaste el informe',
@@ -4920,7 +4927,19 @@ export const es: AppDict = {
     },
     balancePruebaContacto: { name: 'Balance de prueba por contacto' },
     auxiliarCuenta: { name: 'Auxiliar cuenta' },
-    auxiliarGeneral: { name: 'Auxiliar general' },
+    auxiliarGeneral: {
+      name: 'Auxiliar general',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver el detalle.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta del rango movió entre esas fechas. Probá ampliar el periodo o desmarcar «solo cuentas con saldo».',
+        },
+      },
+    },
     auxiliarContacto: { name: 'Auxiliar contacto' },
     conciliacion: {
       name: 'Conciliación',

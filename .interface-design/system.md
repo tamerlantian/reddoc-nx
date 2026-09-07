@@ -550,9 +550,84 @@ tabular-nums`. La **suma al pie**, tras `border-t-2 border-[rgba(20,48,73,0.12)]
 - **El parámetro recalculado sale de la propia respuesta** (`gen_asistente_datos_iniciales`), no de
   releer el endpoint de parámetros.
 
+## Regla: `<p-datepicker>` va siempre con `[fluid]="true"`
+
+Sin `fluid` el datepicker es `inline-flex` y **conserva su ancho intrínseco**: el input (~177px) más
+el botón del ícono (~40px) dan unos **217px** que no dependen del contenedor. En un campo más
+angosto el grupo desborda por la derecha, y si algún ancestro lleva `overflow: hidden` —cualquier
+recuadro con `border-radius`— lo que se recorta es justo **el botón del calendario**.
+
+El síntoma se reporta como dos cosas distintas ("los campos se ven pegados" + "no tiene el ícono")
+pero es una sola causa: contenido desbordado y recortado, no un problema de espaciado. Antes de
+tocar `gap` o `padding`, comprobar que el control declara `fluid`.
+
+Es la convención del ERP: 56 de los 62 usos ya lo pasan. Quedan sin él —mismo bug latente, no
+reportado todavía— `descontabilizar-modal`, `cuenta-cobrar-corte-list`,
+`generar-documento-modal` y `generar-nomina-electronica-modal`.
+
+Vale igual para cualquier control de PrimeNG con adorno lateral (`p-inputnumber` con botones,
+`p-inputgroup`): el ancho lo tiene que poner el contenedor, no el control.
+
+## Patrón: panel de parámetros de un informe (recuadro en bandas)
+
+`features/contabilidad/shared/components/movimiento-informe-params/` — para una pantalla de
+**consultar → resultado** donde hay que elegir varios parámetros antes de generar. Lo comparten el
+balance de prueba y el auxiliar general.
+
+El error a evitar (y que hubo): tirar todos los campos en un
+`grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr))` sobre el cuerpo de la card. Con 4
+campos se sostiene; con 8 se cae por tres motivos a la vez, y ninguno se arregla con espaciado:
+
+- **Sin agrupación**, periodo / rango de cuentas / filtros de documento son tres preguntas
+  distintas que se leen como una fila indiferenciada.
+- **`auto-fit` parte los pares**: según el ancho, «hasta» cae en otra fila que «desde». Un rango
+  partido en dos filas deja de leerse como rango. **Los dos extremos de un rango van siempre en la
+  misma fila**, y eso descarta `auto-fit` para este panel.
+- **Sin recuadro** los campos flotan, mientras la tabla sí tiene el suyo. La asimetría es lo que se
+  lee como "desordenado".
+
+La forma:
+
+- **Recuadro hermano del de la tabla** — mismo `border: 1px solid rgba(20 48 73 / 0.12)` y
+  `radius: 12px` que `.list-shell__table`. Dos piezas de la misma familia dentro de la card, no una
+  pieza y un montón de campos sueltos.
+- **Una banda por pregunta**, separadas por el filete estándar `rgba(20 48 73 / 0.08)`. Cada banda
+  lleva su **micro-encabezado arriba** y los campos debajo — el mismo `group-label` del app-switcher
+  y de la ficha de detalle (uppercase `0.65rem/600`, muted, `opacity .7`), que se distingue de la
+  etiqueta de campo por caja y peso, **nunca por color**.
+- **Las bandas de "qué cubre el informe" comparten fila** (periodo · plan de cuentas): a partir de
+  `1024px` van lado a lado con filete **vertical** entre ellas, y por debajo se apilan con filete
+  horizontal. Se probó el encabezado en una **columna a la izquierda** (`7.5rem` fija) y se descartó
+  al ponerlas lado a lado: dos columnas de encabezado se comen el ancho que necesitan los campos y
+  el par de fechas vuelve a envolver.
+- **El reparto de la fila es `flex: 1 1 0`, no `auto`:** con `auto` la banda de tres controles se
+  come a la de dos y las columnas dejan de leerse como pares.
+- **El filete de apilado va sobre los hijos directos del recuadro** (`> * + *`), no sobre la clase
+  de banda: dentro de una fila los hermanos se separan en **vertical**, y una regla por clase
+  alcanzaría los dos casos y pintaría un borde de más.
+- **Campos acotados** — `flex: 1 1 9rem; max-width: 15rem`. Sin `max-width` un rango de dos campos
+  se estira hasta los extremos y vuelve a dejar de leerse como par. La base es `9rem` y no `11rem`
+  porque con dos grupos repartiéndose la fila, `11rem` hace envolver el par de fechas justo en el
+  ancho donde entra la vista de dos columnas.
+- **Las banderas no son campos etiquetados.** Un checkbox metido en una celda de la grilla queda
+  huérfano; va al final de la banda a la que pertenece semánticamente (`solo_con_saldo` cuenta
+  "qué cuentas entran", así que vive en la banda del plan de cuentas), alineado contra el alto del
+  input.
+- **La botonera cierra el recuadro** como banda de pie: definir la consulta y lanzarla son el mismo
+  gesto. Como fila suelta debajo se lee como si perteneciera a la tabla.
+- **Los campos proyectados por `ng-content` los alcanza `:host ::ng-deep`** (son descendientes DOM
+  del contenedor de campos), así el informe que aporta parámetros propios no repite medidas ni el
+  estilo de etiqueta. Repetir `.informe-params__label` en el scss de cada página fue la duplicación
+  del panel anterior.
+- **Banda vacía = no se pinta**, y por eso su visibilidad es un `input` y no una detección del
+  `ng-content`: una banda sin contenido igual costaría su filete y su encabezado (ver la regla de
+  la ranura).
+- **Apilado bajo 768px:** el encabezado de grupo pasa arriba de sus campos y los campos sueltan su
+  `max-width`.
+
 ## Patrón: informe paginado con totales de cuadre (tabla propia)
 
-`features/contabilidad/informes/balance-prueba/components/balance-prueba-table/` — cuando un
+`features/contabilidad/shared/components/movimiento-informe-table/` — cuando un
 informe **pagina** pero necesita una **fila de totales** que cubra el resultado entero.
 `<lib-data-table>` no la cubre, así que la tabla es propia; lo que **no** puede ser propio es el
 lenguaje visual, o el informe se lee como una isla dentro del ERP.
@@ -593,6 +668,15 @@ pointer-events:none`), no se parpadea la tabla entera. **No se atenúa el empty 
   nada que refrescar y el spinner del botón ya lo dice.
 - **Guard del paginador:** PrimeNG reemite `onPageChange` al reprogramarle `first`/`rows`; sin
   `if (page === page() && pageSize === pageSize()) return;` cada respuesta dispara otra consulta.
+- **Jerarquía aplanada:** el backend intercala filas de subtotal (clase, grupo, cuenta) antes de
+  cada cuenta de movimiento, y un campo `tipo` es lo único que las distingue. Pintarlas todas iguales
+  hace **leer los importes duplicados**, porque cada subtotal está hecho de las filas que vienen
+  debajo. `tipo` decide **peso y fondo** — subtotal en `600` sobre `rgba(19 38 60 / 0.035)`, detalle
+  en muted — y **no sangría**: código y nombre arrancan todos en el mismo borde para poder escanear
+  la columna de códigos de arriba abajo. La profundidad ya la dice el propio código de cuenta
+  (`1` → `13` → `1355` → `135515`), así que indentar la repetía y descuadraba la lectura.
+- **No trackear por el id de la entidad** en el `@for`: las filas de subtotal traen `cuenta_id` en
+  `null` y Angular rechaza las claves duplicadas. Va `track $index`.
 - **Sass:** las declaraciones sueltas van **antes** de cualquier regla anidada (`&--x`,
   `&::-webkit-scrollbar`) o el build tira `mixed-decls`.
 

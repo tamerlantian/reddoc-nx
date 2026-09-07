@@ -1,31 +1,20 @@
 import { Injectable } from '@angular/core';
-import { InformeCuentasService } from '../../shared/informe-cuentas.service';
-import type {
-  InformeCuentasMovimientoParams,
-  SaldoCuentaMovimientoRow,
-} from '../../shared/informe-cuentas.types';
-
-/**
- * Endpoint del informe. Sirve la consulta y el Excel, discriminados por una
- * bandera en el body. **No sirve PDF**: el ERP anterior tenía ese método
- * comentado, así que la página no ofrece el botón.
- */
-export const AUXILIAR_GENERAL_ENDPOINT = '/contabilidad/movimiento/informe-auxiliar-general/';
+import { MovimientoInformeService } from '../../shared/movimiento-informe.service';
+import type { InformeId, InformeMovimientoRow } from '../../shared/movimiento-informe.types';
 
 /**
  * Servicio HTTP del informe **Auxiliar general**.
  *
- * Toda la mecánica (POST con `{ parametros }`, respuesta `{ registros }` sin
- * paginar) vive en `InformeCuentasService`; acá solo se declara el endpoint.
+ * Toda la mecánica —las tres acciones sobre `/contabilidad/movimiento-informe/`,
+ * el body común, la paginación por query params— vive en
+ * `MovimientoInformeService`; acá solo se declara el discriminador.
  *
- * **Supuestos pendientes de confirmar con backend**: el path, que acepte los
- * parámetros `contacto`, `numero` y `comprobante`, y si el endpoint sirve PDF
- * (el legacy no lo pedía).
+ * Es el más detallado de los cinco informes jerárquicos: bajo cada auxiliar del
+ * plan vienen primero sus **terceros** y después todos sus **movimientos**, con
+ * comprobante, número y fecha. Por eso sus filas son `InformeMovimientoRow`, el
+ * tipo más ancho de la familia.
  */
 @Injectable({ providedIn: 'root' })
-export class AuxiliarGeneralService extends InformeCuentasService<
-  SaldoCuentaMovimientoRow,
-  InformeCuentasMovimientoParams
-> {
-  protected readonly endpoint = AUXILIAR_GENERAL_ENDPOINT;
+export class AuxiliarGeneralService extends MovimientoInformeService<InformeMovimientoRow> {
+  protected readonly informe: InformeId = 'auxiliar_general';
 }

@@ -2,36 +2,36 @@ import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ListShellComponent } from '@reddoc/feature-base';
-import { ErpContactoSelectComponent } from '@reddoc/ui';
-import type { ErpSelectOption } from '@reddoc/core';
-import { InformeCuentasPageBase } from '../../../../shared/informe-cuentas-page.base';
-import type {
-  InformeCuentasMovimientoParams,
-  SaldoCuentaMovimientoRow,
-} from '../../../../shared/informe-cuentas.types';
+import { ErpApiAutocompleteComponent, ErpContactoSelectComponent } from '@reddoc/ui';
+import type { ErpSelectOption, FilterCondition } from '@reddoc/core';
+import { MovimientoInformePageBase } from '../../../../shared/movimiento-informe-page.base';
+import type { InformeMovimientoRow } from '../../../../shared/movimiento-informe.types';
+import { buildFiltrosDetalle } from '../../../../shared/movimiento-informe.utils';
 import { InformeCuentasActionsComponent } from '../../../../shared/components/informe-cuentas-actions/informe-cuentas-actions.component';
-import { InformeCuentasParamsComponent } from '../../../../shared/components/informe-cuentas-params/informe-cuentas-params.component';
-import { SaldosCuentaTableComponent } from '../../../../shared/components/saldos-cuenta-table/saldos-cuenta-table.component';
+import { MovimientoInformeParamsComponent } from '../../../../shared/components/movimiento-informe-params/movimiento-informe-params.component';
+import { MovimientoInformeTableComponent } from '../../../../shared/components/movimiento-informe-table/movimiento-informe-table.component';
 import { AuxiliarGeneralService } from '../../auxiliar-general.service';
+
+/** Master de comprobantes contables, para el selector con búsqueda. */
+const COMPROBANTE_ENDPOINT = '/contabilidad/comprobante/seleccionar/';
 
 /**
  * Informe **Auxiliar general** del módulo Contabilidad.
  *
- * El primero de la familia que baja al **movimiento**: cada fila es un
- * documento que tocó una cuenta —comprobante, número y fecha— con su tercero y
- * el saldo corrido. Es lo que uno espera de un auxiliar, y lo que el *auxiliar
- * de cuenta* del ERP anterior prometía sin cumplir (ver `PENDIENTES.md`, §5).
+ * El más detallado de la familia: sobre el mismo esqueleto del balance de
+ * prueba —el plan de cuentas con el movimiento de un rango— cuelga de cada
+ * auxiliar primero sus **terceros** y después todos sus **movimientos**, con
+ * comprobante, número y fecha. Es lo que uno espera de un auxiliar, y lo que el
+ * *auxiliar de cuenta* del ERP anterior prometía sin cumplir.
  *
- * Tres parámetros propios sobre los comunes: **contacto**, **número** de
- * documento y **comprobante**. Van como controles aparte del formulario
- * compartido y se proyectan en el panel de parámetros.
+ * Comparte todo con el balance de prueba salvo tres cosas: el discriminador del
+ * informe, las cinco columnas de detalle (`showContacto` + `showMovimiento`) y
+ * los tres parámetros propios de abajo.
  *
- * Dos cosas heredadas del original que conviene no "corregir" sin preguntar:
- *
- * - **Sin PDF.** Su método `imprimir()` estaba comentado entero, así que el
- *   botón no hacía nada. Acá directamente no se ofrece.
- * - **No exige que las fechas caigan en el mismo año**, a diferencia del balance
- *   de prueba: al listar movimientos no hay saldo de apertura que cuadrar.
+ * Exige que **ambas fechas caigan en el mismo año** (lo hereda de la base). No
+ * es la regla del ERP anterior —aquel auxiliar solo validaba el orden—, pero el
+ * contrato nuevo calcula `saldo_anterior` también acá, contra la apertura del
+ * ejercicio: un rango a caballo entre dos años daría un informe que no cuadra.
  */
 @Component({
   selector: 'app-auxiliar-general',
@@ -41,42 +41,56 @@ import { AuxiliarGeneralService } from '../../auxiliar-general.service';
     InputNumberModule,
     ListShellComponent,
     ErpContactoSelectComponent,
-    InformeCuentasParamsComponent,
+    ErpApiAutocompleteComponent,
+    MovimientoInformeParamsComponent,
     InformeCuentasActionsComponent,
-    SaldosCuentaTableComponent,
+    MovimientoInformeTableComponent,
   ],
   templateUrl: './auxiliar-general.component.html',
   styleUrl: './auxiliar-general.component.scss',
 })
-export class AuxiliarGeneralComponent extends InformeCuentasPageBase<
-  SaldoCuentaMovimientoRow,
-  InformeCuentasMovimientoParams
-> {
+export class AuxiliarGeneralComponent extends MovimientoInformePageBase<InformeMovimientoRow> {
   protected readonly service = inject(AuxiliarGeneralService);
   protected readonly archivo = 'auxiliar-general';
 
+  protected readonly comprobanteEndpoint = COMPROBANTE_ENDPOINT;
+
   /**
    * Parámetros propios, fuera del `FormGroup` compartido —que solo declara los
-   * comunes— y sumados en `buildParams()`.
+   * comunes— y traducidos a filtros dinámicos en `extraFilters()`.
    *
-   * `comprobante` es un número porque así lo pedía el ERP anterior (un input
-   * numérico suelto). Lo natural sería un selector del master de comprobantes,
-   * pero ese master todavía no existe en este ERP.
+   * Los tres son **selectores o números concretos**, no texto libre: el filtro
+   * viaja con `=` contra el movimiento, así que un nombre tecleado a medias no
+   * traería nada. El comprobante era un input numérico suelto en el ERP
+   * anterior porque su master no existía todavía; ahora sí, y se elige.
    */
   protected readonly contacto = new FormControl<ErpSelectOption | null>(null);
   protected readonly numero = new FormControl<number | null>(null);
-  protected readonly comprobante = new FormControl<number | null>(null);
+  protected readonly comprobante = new FormControl<ErpSelectOption | null>(null);
+
+  constructor() {
+    super();
+    // Los tres también dejan viejo el informe ya generado. Va acá y no en la
+    // base porque los campos de la subclase recién existen a esta altura.
+    this.watchParam(this.contacto);
+    this.watchParam(this.numero);
+    this.watchParam(this.comprobante);
+  }
 
   protected get nombre(): string {
     return this.t().entities.auxiliarGeneral.name;
   }
 
-  protected override buildParams(): InformeCuentasMovimientoParams {
-    return {
-      ...super.buildParams(),
-      contacto: this.contacto.value?.id ?? null,
+  /** Los dos textos del estado vacío, propios de este informe. */
+  protected get empty() {
+    return this.t().entities.auxiliarGeneral.empty;
+  }
+
+  protected override extraFilters(): readonly FilterCondition[] {
+    return buildFiltrosDetalle({
+      contacto: this.contacto.value,
       numero: this.numero.value,
       comprobante: this.comprobante.value,
-    };
+    });
   }
 }

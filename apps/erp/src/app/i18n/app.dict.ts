@@ -3693,6 +3693,12 @@ export interface AppDict
     informeCuentas: {
       generar: string;
       descuadre: string;
+      /** Micro-encabezados de las bandas del panel de parámetros. */
+      groups: {
+        periodo: string;
+        cuentas: string;
+        documento: string;
+      };
       /** Aviso: los parámetros cambiaron y lo que se ve quedó viejo. */
       paramsStale: string;
       params: {
@@ -3704,9 +3710,13 @@ export interface AppDict
         contacto: string;
         contactoPlaceholder: string;
         numero: string;
+        numeroPlaceholder: string;
         comprobante: string;
+        comprobantePlaceholder: string;
         incluirCierre: string;
         soloConMovimiento: string;
+        /** Familia nueva: el contrato renombró `cuenta_con_movimiento`. */
+        soloConSaldo: string;
       };
       validation: {
         rangoInvertido: string;
@@ -3735,7 +3745,6 @@ export interface AppDict
     };
     balancePrueba: {
       name: string;
-      params: { soloConSaldo: string };
       /**
        * Empty state propio (título + pista), que es la forma canónica del ERP.
        * Los otros 8 informes siguen con las dos líneas sueltas de
@@ -3748,7 +3757,14 @@ export interface AppDict
     };
     balancePruebaContacto: { name: string };
     auxiliarCuenta: { name: string };
-    auxiliarGeneral: { name: string };
+    auxiliarGeneral: {
+      name: string;
+      /** Empty state propio, igual que el balance de prueba (misma tabla). */
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
     auxiliarContacto: { name: string };
     conciliacion: {
       name: string;

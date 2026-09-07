@@ -4802,6 +4802,11 @@ export const en: AppDict = {
     },
     informeCuentas: {
       generar: 'Generate',
+      groups: {
+        periodo: 'Period',
+        cuentas: 'Chart of accounts',
+        documento: 'Document',
+      },
       descuadre: 'Report does not balance',
       paramsStale: 'You changed the parameters — generate again',
       params: {
@@ -4813,9 +4818,12 @@ export const en: AppDict = {
         contacto: 'Contact',
         contactoPlaceholder: 'All contacts',
         numero: 'Number',
+        numeroPlaceholder: 'All numbers',
         comprobante: 'Voucher',
+        comprobantePlaceholder: 'All vouchers',
         incluirCierre: 'Include closing entries',
         soloConMovimiento: 'Only accounts with activity',
+        soloConSaldo: 'Only accounts with balance',
       },
       validation: {
         rangoInvertido: 'The start date cannot be later than the end date.',
@@ -4843,7 +4851,6 @@ export const en: AppDict = {
     },
     balancePrueba: {
       name: 'Trial balance',
-      params: { soloConSaldo: 'Only accounts with balance' },
       empty: {
         notGenerated: {
           title: 'Report not generated yet',
@@ -4857,7 +4864,19 @@ export const en: AppDict = {
     },
     balancePruebaContacto: { name: 'Trial balance by contact' },
     auxiliarCuenta: { name: 'Account ledger' },
-    auxiliarGeneral: { name: 'General ledger' },
+    auxiliarGeneral: {
+      name: 'General ledger',
+      empty: {
+        notGenerated: {
+          title: 'Report not generated yet',
+          sub: 'Pick the period and the accounts, then generate to see the detail.',
+        },
+        noData: {
+          title: 'No activity in the period',
+          sub: 'No account in the range moved between those dates. Try widening the period or unchecking “only accounts with balance”.',
+        },
+      },
+    },
     auxiliarContacto: { name: 'Ledger by contact' },
     conciliacion: {
       name: 'Bank reconciliation',
