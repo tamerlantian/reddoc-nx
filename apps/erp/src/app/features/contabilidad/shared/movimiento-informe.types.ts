@@ -183,6 +183,21 @@ export interface InformeBasesRow
 }
 
 /**
+ * Fila del **certificado de retención**: lo que se le retuvo a cada tercero,
+ * agrupado por cuenta de retención.
+ *
+ * Plano y **el más angosto de los nueve**: identidad de cuenta, tercero y dos
+ * importes. No es un corte contable sino un resumen fiscal, así que no tiene
+ * saldos ni referencia al asiento.
+ */
+export interface InformeCertificadoRow extends InformeFilaIdentidad, InformeContactoExtra {
+  /** Base sobre la que se calculó la retención. */
+  readonly base_retenido: string;
+  /** Valor retenido. */
+  readonly retenido: string;
+}
+
+/**
  * Lo que acepta la tabla compartida: la identidad de la fila más **cualquier**
  * combinación de montos y de columnas opcionales. Qué se pinta lo decide el
  * informe —los montos como dato, el resto por bloques—, no la fila.

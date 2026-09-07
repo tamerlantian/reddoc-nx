@@ -4903,6 +4903,8 @@ export const es: AppDict = {
         movimiento: 'Asiento',
         detalle: 'Detalle',
         base: 'Base',
+        baseRetenido: 'Base retenida',
+        retenido: 'Retenido',
         saldoAnterior: 'Saldo anterior',
         debito: 'Débito',
         credito: 'Crédito',
@@ -5170,13 +5172,15 @@ export const es: AppDict = {
     estadoSituacionFinanciera: { name: 'Estado situación financiera' },
     certificadoRetencion: {
       name: 'Certificado retención',
-      columns: {
-        identificacion: 'Identificación',
-        contacto: 'Contacto',
-        cuenta: 'Cuenta',
-        cuentaNombre: 'Nombre de la cuenta',
-        baseRetenido: 'Base retenida',
-        retenido: 'Retenido',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y el tercero, y generá para ver lo retenido.',
+        },
+        noData: {
+          title: 'Sin retenciones en el periodo',
+          sub: 'No se retuvo nada entre esas fechas para esos parámetros. Probá ampliar el periodo o quitar el tercero.',
+        },
       },
     },
     informeBase: {

@@ -5,16 +5,16 @@ import type { ErpSelectOption } from '@reddoc/core';
  * Piezas comunes de la familia **vieja** de informes contables, la que pide
  * `{ parametros }` a `/contabilidad/movimiento/informe-*`.
  *
- * Le quedan **cuatro** consumidores: *base*, *certificado de retención* y los
- * dos *estados financieros*. Los cinco informes que recorren el plan de cuentas
- * ya migraron a `/contabilidad/movimiento-informe/` (ver `movimiento-informe.*`
- * y `PENDIENTES.md` §0), y con ellos se fueron de acá los tipos de fila y la
- * tabla compartida, que quedaron sin uso.
+ * Le quedan **dos** consumidores: los dos *estados financieros*, que solo mandan
+ * el periodo. Todo lo demás ya migró a `/contabilidad/movimiento-informe/` (ver
+ * `movimiento-informe.*` y `PENDIENTES.md` §0), y con ello se fueron de acá los
+ * tipos de fila, la tabla compartida y los parámetros con tercero.
  *
- * Los cuatro que quedan son los **planos**: no recorren el plan de cuentas, así
- * que no tienen jerarquía ni subtotales. Cuando migren, este archivo y sus
- * hermanos (`informe-cuentas.service.ts`, `informe-cuentas-page.base.ts`,
- * `informe-cuentas.utils.ts` y `<app-informe-cuentas-params>`) se borran enteros.
+ * Cuando migren esos dos, este archivo y sus hermanos
+ * (`informe-cuentas.service.ts`, `informe-cuentas-page.base.ts`,
+ * `informe-cuentas.utils.ts` y `<app-informe-cuentas-params>`) se borran enteros
+ * — y con ellos `InformeCuentasParams`, `buildRangoParams` y compañía, que hoy
+ * solo se sostienen entre sí.
  *
  * Todos comparten la misma forma, distinta a la del resto de listados del ERP:
  *
@@ -60,19 +60,6 @@ export interface InformeCuentasParams extends InformeCuentasRangoParams {
   readonly incluir_cierre: boolean;
   /** Ocultar las cuentas que no tuvieron movimiento en el rango. */
   readonly cuenta_con_movimiento: boolean;
-}
-
-/**
- * Rango + tercero, **sin** las dos banderas. Lo usan los informes que trabajan a
- * nivel de línea (*base*, *certificado de retención*), donde cierre y "solo
- * cuentas con movimiento" no aplican.
- *
- * Ojo con el nombre del campo: estos informes mandan `contacto_id`, mientras que
- * los de saldos lo llaman `contacto` a secas. Es del ERP anterior, está
- * pendiente de confirmar con backend.
- */
-export interface InformeCuentasRangoContactoParams extends InformeCuentasRangoParams {
-  readonly contacto_id: number | null;
 }
 
 /**

@@ -30,11 +30,11 @@ realineó y lo común se extrajo a `shared/movimiento-informe.*`. Sobre esa base
 sin uso la tabla `<app-saldos-cuenta-table>` y los tipos de fila de la familia vieja, que se
 borraron.
 
-Migró también el **informe base**, el primero de los planos, y con él la tabla compartida pasó a
-recibir sus **columnas de importe como dato**: los cuatro planos no comparten ninguna entre sí.
+Migraron también el **informe base** —con él la tabla compartida pasó a recibir sus **columnas de
+importe como dato**, porque los cuatro planos no comparten ninguna entre sí— y el **certificado de
+retención**, que **no necesitó ningún cambio en la tabla**: configuración pura.
 
-Los **3 informes planos** que quedan (certificado de retención y los dos estados financieros)
-siguen sobre `InformeCuentasService`; §1–§4 sobre ellos sigue vigente y §5 quedó cerrado.
+Quedan **2**, los dos estados financieros; §1–§4 sobre ellos sigue vigente y §5 quedó cerrado.
 
 ---
 
@@ -189,11 +189,11 @@ nombre, su archivo y qué bloques de columnas enciende (`showContacto`, `showMov
       movimientos (que lista por `id`), pero es una columna técnica: quien lee un auxiliar busca el
       comprobante y el número, que el `auxiliar_general` sí trae. Preguntar si es intencional.
       **Aplica igual a `auxiliar_contacto`**, que tiene el mismo hueco.
-- [ ] Migrar los **3 informes planos** que quedan: `certificado_retencion` (`base_retenido`,
-      `retenido`), `estado_resultados` y `estado_situacion_financiera` (un único `saldo`, más
-      `clase` y `grupo` en vez de la jerarquía). La tabla compartida ya sabe servir planos —
-      `[jerarquia]="false"`, `[descuadre]="false"` y sus montos por dato—, así que falta sumar sus
-      campos a `InformeMontoField` y, en los estados, las dos columnas de ubicación en el plan.
+- [ ] Migrar los **2 estados financieros** (`estado_resultados` y `estado_situacion_financiera`).
+      Son el único caso que todavía le pide algo a la tabla: un único importe `saldo` (que ya sale
+      por `montosDe()`) más **`clase` y `grupo`**, dos columnas de ubicación en el plan que hoy no
+      existen en ningún tipo. Es una bandera de bloque más —la quinta— y con eso la tabla queda
+      cerrada: el enum del backend tiene 9 informes y no viene más variación.
       Cuando migren, se borra entera la familia vieja (`informe-cuentas.*`,
       `<app-informe-cuentas-params>` y `informe-cuentas-page.base.ts`).
 
@@ -298,7 +298,7 @@ No son deudas, son mejoras que el informe original tampoco tenía:
 | Auxiliar por contacto          | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
 | Auxiliar general               | `movimiento-informe/` (§0)             | periodo + rango + filtros | propia (jerárquica, paginada) | no  |
 | Base                           | `movimiento-informe/` (§0)             | periodo + rango + filtros | compartida (plana, paginada)  | no  |
-| Certificado de retención       | `informe-certificado-retencion/`       | rango + `contacto_id`     | propia (retenciones)          | sí  |
+| Certificado de retención       | `movimiento-informe/` (§0)             | periodo + rango + filtros | compartida (plana, paginada)  | no  |
 | Estado de resultados           | `informe-estado-resultados/`           | solo periodo              | estados financieros           | no  |
 | Estado de situación financiera | `informe-estado-situacion-financiera/` | solo periodo              | estados financieros           | no  |
 

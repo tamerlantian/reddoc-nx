@@ -4840,6 +4840,8 @@ export const en: AppDict = {
         movimiento: 'Entry',
         detalle: 'Details',
         base: 'Tax base',
+        baseRetenido: 'Withheld base',
+        retenido: 'Withheld',
         saldoAnterior: 'Opening balance',
         debito: 'Debit',
         credito: 'Credit',
@@ -5106,13 +5108,15 @@ export const en: AppDict = {
     estadoSituacionFinanciera: { name: 'Statement of financial position' },
     certificadoRetencion: {
       name: 'Withholding certificate',
-      columns: {
-        identificacion: 'ID number',
-        contacto: 'Contact',
-        cuenta: 'Account',
-        cuentaNombre: 'Account name',
-        baseRetenido: 'Withholding base',
-        retenido: 'Withheld',
+      empty: {
+        notGenerated: {
+          title: 'Report not generated yet',
+          sub: 'Pick the period and the contact, then generate to see what was withheld.',
+        },
+        noData: {
+          title: 'No withholdings in the period',
+          sub: 'Nothing was withheld between those dates for those parameters. Try widening the period or clearing the contact.',
+        },
       },
     },
     informeBase: {

@@ -3736,6 +3736,9 @@ export interface AppDict
         detalle: string;
         /** Base gravable de la línea — solo el informe base. */
         base: string;
+        /** Los dos importes del certificado de retención. */
+        baseRetenido: string;
+        retenido: string;
         saldoAnterior: string;
         debito: string;
         credito: string;
@@ -3933,13 +3936,9 @@ export interface AppDict
     estadoSituacionFinanciera: { name: string };
     certificadoRetencion: {
       name: string;
-      columns: {
-        identificacion: string;
-        contacto: string;
-        cuenta: string;
-        cuentaNombre: string;
-        baseRetenido: string;
-        retenido: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
       };
     };
     informeBase: {

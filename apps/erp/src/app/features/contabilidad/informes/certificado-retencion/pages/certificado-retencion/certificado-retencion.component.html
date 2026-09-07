@@ -1,34 +1,55 @@
 <!--
   Informe "Certificado de retención".
-  Panel de parámetros compartido sin las dos banderas, con el selector de
-  contacto proyectado, y tabla propia. Con PDF: el certificado se imprime.
+  Migró sin tocar la tabla: sus dos importes entran por `montosDe()` y el resto
+  es `[showContacto]` más jerarquía y descuadre apagados, como todos los planos.
+  Sin `solo_con_saldo`, que el backend ignora en los planos.
 -->
 @let d = t().entities.informeCuentas;
 
 <lib-list-shell [breadcrumb]="breadcrumbItems()" [title]="nombre">
-  <div toolbar class="informe-toolbar">
-    <app-informe-cuentas-params [form]="form" idPrefix="cr" [showFlags]="false">
-      <div class="flex flex-col gap-1.5">
-        <label for="cr-contacto" class="informe-params__label">{{ d.params.contacto }}</label>
-        <lib-contacto-select
-          inputId="cr-contacto"
-          [formControl]="contacto"
-          [placeholder]="d.params.contactoPlaceholder"
-        />
-      </div>
-    </app-informe-cuentas-params>
+  <app-movimiento-informe-params
+    toolbar
+    [form]="form"
+    idPrefix="cr"
+    [showSoloConSaldo]="false"
+    [showDetalle]="true"
+  >
+    <div class="mi-params__field">
+      <label for="cr-contacto" class="mi-params__label">{{ d.params.contacto }}</label>
+      <lib-contacto-select
+        inputId="cr-contacto"
+        [formControl]="contacto"
+        [placeholder]="d.params.contactoPlaceholder"
+      />
+    </div>
 
     <app-informe-cuentas-actions
+      acciones
       [loading]="isLoading()"
       [exportingExcel]="isExportingExcel()"
-      [exportingPdf]="isExportingPdf()"
       [busy]="isBusy()"
       [canExport]="canExport()"
+      [showPdf]="false"
+      [hint]="hint()"
       (generar)="generar()"
       (excel)="exportExcel()"
-      (pdf)="exportPdf()"
     />
-  </div>
+  </app-movimiento-informe-params>
 
-  <app-certificado-retencion-table table [rows]="rows()" [generated]="generated()" />
+  <app-movimiento-informe-table
+    table
+    [rows]="rows()"
+    [amounts]="montos()"
+    [empty]="empty"
+    [totales]="totales()"
+    [loading]="isLoading()"
+    [generated]="generated()"
+    [showContacto]="true"
+    [jerarquia]="false"
+    [descuadre]="false"
+    [totalCount]="totalCount()"
+    [page]="page()"
+    [pageSize]="pageSize()"
+    (pageChange)="onPageChange($event)"
+  />
 </lib-list-shell>
