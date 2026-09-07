@@ -25,8 +25,9 @@ Estado (2026-09-04): el **balance de prueba** migró al contrato nuevo
 Estado (2026-09-07): el schema del backend **cambió** después de esa migración —columnas
 renombradas, jerarquía nueva con `tipo`, sin `incluir_cierre`— así que el balance de prueba se
 realineó y lo común se extrajo a `shared/movimiento-informe.*`. Sobre esa base migró también el
-**auxiliar general** y el **balance de prueba por contacto**. Ver §0. Los otros 6 informes siguen
-sobre `InformeCuentasService` y todo lo que dicen §1–§5 sobre ellos sigue vigente.
+**auxiliar general**, el **balance de prueba por contacto** y el **auxiliar de cuenta**. Ver §0.
+Los otros 5 informes siguen sobre `InformeCuentasService` y todo lo que dicen §1–§4 sobre ellos
+sigue vigente (§5 quedó cerrado al migrar).
 
 ---
 
@@ -175,10 +176,15 @@ nombre, su archivo y qué bloques de columnas enciende (`showContacto`, `showMov
       sin las filas de subtotal que le dan contexto. Falta decidir si se resuelve en el front
       (repetir la cabecera del auxiliar en curso) o si backend puede paginar por auxiliar.
 - [ ] Que backend sume el PDF, o confirmar que no va.
-- [ ] Migrar los **6 informes restantes**, que ya tienen su valor en el enum: `auxiliar_cuenta`,
-      `auxiliar_contacto`, `bases`, `certificado_retencion`, `estado_resultados` y
-      `estado_situacion_financiera`. Los cuatro últimos son **planos** (sin jerarquía, subtotales ni
-      `solo_con_saldo`), así que la tabla compartida necesitará un modo sin `tipo` antes de servirlos.
+- [ ] **Que `auxiliar_cuenta` sume `comprobante` y `numero`.** Hoy sus filas de detalle solo traen
+      `movimiento_id`, así que un asiento se identifica por su id de base de datos y nada más. La
+      pantalla enciende la columna del id para que al menos se pueda buscar en la consulta de
+      movimientos (que lista por `id`), pero es una columna técnica: quien lee un auxiliar busca el
+      comprobante y el número, que el `auxiliar_general` sí trae. Preguntar si es intencional.
+- [ ] Migrar los **5 informes restantes**, que ya tienen su valor en el enum: `auxiliar_contacto`,
+      `bases`, `certificado_retencion`, `estado_resultados` y `estado_situacion_financiera`. Los
+      cuatro últimos son **planos** (sin jerarquía, subtotales ni `solo_con_saldo`), así que la tabla
+      compartida necesitará un modo sin `tipo` antes de servirlos.
 
 ---
 
@@ -277,7 +283,7 @@ No son deudas, son mejoras que el informe original tampoco tenía:
 | ------------------------------ | -------------------------------------- | --------------------------------------- | ----------------------------- | --- |
 | Balance de prueba              | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
 | Balance de prueba por contacto | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
-| Auxiliar de cuenta             | `informe-auxiliar-cuenta/`             | completos                               | saldos                        | sí  |
+| Auxiliar de cuenta             | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
 | Auxiliar por contacto          | `informe-auxiliar-tercero/`            | completos + contacto/número/comprobante | saldos + tercero, sin totales | no  |
 | Auxiliar general               | `movimiento-informe/` (§0)             | periodo + rango + filtros               | propia (jerárquica, paginada) | no  |
 | Base                           | `informe-base/`                        | rango + `contacto_id`                   | propia (base gravable)        | no  |
@@ -292,7 +298,7 @@ Para agregar uno nuevo de esta familia: declarar el servicio con su endpoint
 componer en la plantilla `<app-informe-cuentas-params>` (con los campos extra por `ng-content`),
 `<app-informe-cuentas-actions>` y la tabla que corresponda.
 
-## 5. Duda funcional abierta: el auxiliar de cuenta
+## 5. ~~Duda funcional abierta: el auxiliar de cuenta~~ — cerrada al migrar (§0)
 
 El informe original de **auxiliar de cuenta** devuelve y pinta **exactamente las mismas columnas de
 saldos que el balance de prueba**. De un "auxiliar" uno esperaría el **detalle de movimientos** por
@@ -306,12 +312,12 @@ Indicios de que allá quedó a medio hacer:
   `modelo: 'ConMovimiento'`, `filtros`, `limite`… en vez de `{ parametros }`).
 - Quedó un `console.log` en el método de consulta.
 
-Se portó **lo que hace**, no lo que promete el nombre. Si el auxiliar debe mostrar movimientos, es
-un cambio de alcance a definir con backend: qué devuelve realmente `informe-auxiliar-cuenta/`.
-Lo mismo aplica probablemente a _auxiliar por tercero_.
+Se portó **lo que hace**, no lo que promete el nombre.
 
-En el contrato nuevo esto **ya está resuelto**: `auxiliar_cuenta` declara `movimiento_id` y
-`auxiliar_general` baja a comprobante, número y fecha. Migrarlos cierra el pendiente (§0).
+**Resuelto (2026-09-07)**: el contrato nuevo sí sirve el detalle —`auxiliar_cuenta` cuelga una fila
+por asiento de cada auxiliar del plan— y la pantalla ya migró, así que el auxiliar por fin es un
+auxiliar. Queda un resto: esas filas solo traen `movimiento_id`, sin comprobante ni número (ver el
+pendiente en §0). Lo mismo aplicaba a _auxiliar por tercero_, que todavía no migra.
 
 ---
 

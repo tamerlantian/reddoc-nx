@@ -96,6 +96,15 @@ export class MovimientoInformeTableComponent {
    */
   readonly showMovimiento = input<boolean>(false);
 
+  /**
+   * Intercala el **id del asiento**. Es la única forma de identificar una fila
+   * de detalle en el auxiliar de cuenta, que no trae comprobante ni número; con
+   * el id se puede buscar el asiento en la consulta de movimientos, que también
+   * lista por `id`. Los auxiliares que sí traen comprobante y número no lo
+   * encienden: ahí el id sería una columna técnica de más.
+   */
+  readonly showMovimientoId = input<boolean>(false);
+
   readonly totalCount = input<number>(0);
   readonly page = input<number>(0);
   readonly pageSize = input<number>(25);
@@ -107,7 +116,11 @@ export class MovimientoInformeTableComponent {
 
   /** Cantidad de columnas — la usa el `colspan` del estado vacío. */
   protected readonly columnCount = computed(
-    () => 6 + (this.showContacto() ? 2 : 0) + (this.showMovimiento() ? 3 : 0),
+    () =>
+      6 +
+      (this.showContacto() ? 2 : 0) +
+      (this.showMovimiento() ? 3 : 0) +
+      (this.showMovimientoId() ? 1 : 0),
   );
 
   /**

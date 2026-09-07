@@ -3730,6 +3730,8 @@ export interface AppDict
         comprobante: string;
         numero: string;
         fecha: string;
+        /** Id del asiento — solo el auxiliar de cuenta, que no trae comprobante. */
+        movimiento: string;
         saldoAnterior: string;
         debito: string;
         credito: string;
@@ -3763,7 +3765,13 @@ export interface AppDict
         noData: { title: string; sub: string };
       };
     };
-    auxiliarCuenta: { name: string };
+    auxiliarCuenta: {
+      name: string;
+      empty: {
+        notGenerated: { title: string; sub: string };
+        noData: { title: string; sub: string };
+      };
+    };
     auxiliarGeneral: {
       name: string;
       /** Empty state propio, igual que el balance de prueba (misma tabla). */

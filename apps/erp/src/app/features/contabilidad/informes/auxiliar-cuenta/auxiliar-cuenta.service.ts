@@ -1,23 +1,19 @@
 import { Injectable } from '@angular/core';
-import { InformeCuentasService } from '../../shared/informe-cuentas.service';
-import type { SaldoCuentaRow } from '../../shared/informe-cuentas.types';
-
-/**
- * Endpoint del informe. El mismo path sirve las tres operaciones —consultar,
- * Excel y PDF— discriminadas por una bandera en el body.
- */
-export const AUXILIAR_CUENTA_ENDPOINT = '/contabilidad/movimiento/informe-auxiliar-cuenta/';
+import { MovimientoInformeService } from '../../shared/movimiento-informe.service';
+import type { InformeAuxiliarCuentaRow, InformeId } from '../../shared/movimiento-informe.types';
 
 /**
  * Servicio HTTP del informe **Auxiliar de cuenta**.
  *
- * Toda la mecánica (POST con `{ parametros }`, respuesta `{ registros }` sin
- * paginar) vive en `InformeCuentasService`; acá solo se declara el endpoint.
+ * Toda la mecánica —las tres acciones sobre `/contabilidad/movimiento-informe/`,
+ * el body común, la paginación por query params— vive en
+ * `MovimientoInformeService`; acá solo se declara el discriminador.
  *
- * **Supuesto pendiente de confirmar con backend**: el path, y sobre todo la
- * forma de la fila — ver la nota de la página sobre qué devuelve este informe.
+ * Bajo cada auxiliar del plan cuelga una fila por asiento del rango, sin abrir
+ * por tercero. Sus filas son las más angostas de los tres auxiliares: sobre las
+ * del balance solo suman `movimiento_id`.
  */
 @Injectable({ providedIn: 'root' })
-export class AuxiliarCuentaService extends InformeCuentasService<SaldoCuentaRow> {
-  protected readonly endpoint = AUXILIAR_CUENTA_ENDPOINT;
+export class AuxiliarCuentaService extends MovimientoInformeService<InformeAuxiliarCuentaRow> {
+  protected readonly informe: InformeId = 'auxiliar_cuenta';
 }

@@ -4837,6 +4837,7 @@ export const en: AppDict = {
         comprobante: 'Voucher',
         numero: 'Number',
         fecha: 'Date',
+        movimiento: 'Entry',
         saldoAnterior: 'Opening balance',
         debito: 'Debit',
         credito: 'Credit',
@@ -4875,7 +4876,19 @@ export const en: AppDict = {
         },
       },
     },
-    auxiliarCuenta: { name: 'Account ledger' },
+    auxiliarCuenta: {
+      name: 'Account ledger',
+      empty: {
+        notGenerated: {
+          title: 'Report not generated yet',
+          sub: 'Pick the period and the accounts, then generate to see each account entries.',
+        },
+        noData: {
+          title: 'No activity in the period',
+          sub: 'No account in the range moved between those dates. Try widening the period or unchecking “only accounts with balance”.',
+        },
+      },
+    },
     auxiliarGeneral: {
       name: 'General ledger',
       empty: {

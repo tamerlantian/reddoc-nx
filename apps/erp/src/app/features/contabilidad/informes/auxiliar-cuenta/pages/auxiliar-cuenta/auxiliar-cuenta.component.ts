@@ -1,47 +1,54 @@
 import { Component, inject } from '@angular/core';
 import { ListShellComponent } from '@reddoc/feature-base';
-import { InformeCuentasPageBase } from '../../../../shared/informe-cuentas-page.base';
-import type { SaldoCuentaRow } from '../../../../shared/informe-cuentas.types';
+import { MovimientoInformePageBase } from '../../../../shared/movimiento-informe-page.base';
+import type { InformeAuxiliarCuentaRow } from '../../../../shared/movimiento-informe.types';
 import { InformeCuentasActionsComponent } from '../../../../shared/components/informe-cuentas-actions/informe-cuentas-actions.component';
-import { InformeCuentasParamsComponent } from '../../../../shared/components/informe-cuentas-params/informe-cuentas-params.component';
-import { SaldosCuentaTableComponent } from '../../../../shared/components/saldos-cuenta-table/saldos-cuenta-table.component';
+import { MovimientoInformeParamsComponent } from '../../../../shared/components/movimiento-informe-params/movimiento-informe-params.component';
+import { MovimientoInformeTableComponent } from '../../../../shared/components/movimiento-informe-table/movimiento-informe-table.component';
 import { AuxiliarCuentaService } from '../../auxiliar-cuenta.service';
 
 /**
  * Informe **Auxiliar de cuenta** del módulo Contabilidad.
  *
- * Mismos parámetros y misma tabla que el balance de prueba; cambia el endpoint.
- * A diferencia de aquel, **no** exige que las dos fechas caigan en el mismo año
- * (el informe original solo validaba el orden), así que hereda el validador de
- * rango por defecto de la base.
+ * El plan de cuentas con **una fila por asiento** del rango colgando de cada
+ * auxiliar, sin abrir por tercero. Para eso están el balance por contacto (que
+ * abre por tercero pero no baja al asiento) y el auxiliar general (que hace las
+ * dos cosas).
  *
- * ⚠️ **Ojo con el alcance funcional.** El informe original de esta pantalla
- * devuelve y pinta exactamente las mismas columnas de saldos que el balance de
- * prueba, cuando lo que uno esperaría de un "auxiliar" es el **detalle de
- * movimientos** de cada cuenta (comprobante, número, fecha, detalle, débito,
- * crédito, saldo corrido). Todo apunta a que allá quedó a medio hacer: su
- * formulario declara controles `comprobante`, `cuenta` y `contacto` que la
- * plantilla nunca renderiza, y su botón de PDF manda un cuerpo distinto al de
- * Excel. Se portó lo que **hace**, no lo que promete el nombre; si el auxiliar
- * debe mostrar movimientos, es un cambio de alcance a definir con el backend.
+ * **Migrar arregla lo que esta pantalla prometía y no hacía.** La versión
+ * anterior pintaba exactamente las mismas columnas de saldos que el balance de
+ * prueba —el endpoint viejo no devolvía movimientos— y quedó portada así a
+ * propósito, anotada como hueco en `PENDIENTES.md` §5. El contrato nuevo sí
+ * sirve el detalle, así que el auxiliar por fin es un auxiliar.
+ *
+ * ⚠️ **Sus filas de detalle solo se identifican por `movimiento_id`**: este
+ * informe no trae comprobante, número ni fecha (sí el auxiliar general). Por eso
+ * la tabla enciende la columna del id, que al menos permite buscar el asiento en
+ * la consulta de movimientos, que lista por `id`. Si backend puede sumar
+ * comprobante y número acá, esa columna técnica sobra — ver `PENDIENTES.md` §0.
  */
 @Component({
   selector: 'app-auxiliar-cuenta',
   standalone: true,
   imports: [
     ListShellComponent,
-    InformeCuentasParamsComponent,
+    MovimientoInformeParamsComponent,
     InformeCuentasActionsComponent,
-    SaldosCuentaTableComponent,
+    MovimientoInformeTableComponent,
   ],
   templateUrl: './auxiliar-cuenta.component.html',
   styleUrl: './auxiliar-cuenta.component.scss',
 })
-export class AuxiliarCuentaComponent extends InformeCuentasPageBase<SaldoCuentaRow> {
+export class AuxiliarCuentaComponent extends MovimientoInformePageBase<InformeAuxiliarCuentaRow> {
   protected readonly service = inject(AuxiliarCuentaService);
   protected readonly archivo = 'auxiliar-cuenta';
 
   protected get nombre(): string {
     return this.t().entities.auxiliarCuenta.name;
+  }
+
+  /** Los dos textos del estado vacío, propios de este informe. */
+  protected get empty() {
+    return this.t().entities.auxiliarCuenta.empty;
   }
 }

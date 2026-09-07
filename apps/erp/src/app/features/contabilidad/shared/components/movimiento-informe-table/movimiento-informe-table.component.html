@@ -12,6 +12,9 @@
           <th class="mi-table__th w-32 text-left" scope="col">{{ d.columns.identificacion }}</th>
           <th class="mi-table__th min-w-[10rem] text-left" scope="col">{{ d.columns.contacto }}</th>
         }
+        @if (showMovimientoId()) {
+          <th class="mi-table__th w-28 text-right" scope="col">{{ d.columns.movimiento }}</th>
+        }
         @if (showMovimiento()) {
           <th class="mi-table__th w-32 text-left" scope="col">{{ d.columns.comprobante }}</th>
           <th class="mi-table__th w-24 text-right" scope="col">{{ d.columns.numero }}</th>
@@ -41,6 +44,9 @@
           @if (showContacto()) {
             <td class="mi-table__td tabular-nums">{{ fila.row.identificacion }}</td>
             <td class="mi-table__td whitespace-normal">{{ fila.row.contacto }}</td>
+          }
+          @if (showMovimientoId()) {
+            <td class="mi-table__td text-right tabular-nums">{{ fila.row.movimiento_id }}</td>
           }
           @if (showMovimiento()) {
             <td class="mi-table__td">{{ fila.row.comprobante }}</td>
@@ -89,6 +95,9 @@
           </td>
           @if (showContacto()) {
             <td class="mi-table__tf" colspan="2"></td>
+          }
+          @if (showMovimientoId()) {
+            <td class="mi-table__tf"></td>
           }
           @if (showMovimiento()) {
             <td class="mi-table__tf" colspan="3"></td>

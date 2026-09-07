@@ -80,9 +80,36 @@ export interface InformeContactoRow extends InformeSaldosRow {
   readonly contacto: string | null;
 }
 
-/** Fila de los auxiliares: baja al **movimiento** que produjo el saldo. */
-export interface InformeMovimientoRow extends InformeContactoRow {
+/**
+ * Referencia al asiento que originó la fila. La traen los tres auxiliares en sus
+ * filas de tipo `MOVIMIENTO`; en los subtotales y en las de tipo `TERCERO` viene
+ * `null`.
+ */
+export interface InformeMovimientoRef {
   readonly movimiento_id: number | null;
+}
+
+/**
+ * Fila del **auxiliar de cuenta**: el plan de cuentas con una fila por asiento
+ * del rango colgando de cada auxiliar.
+ *
+ * Es lo mínimo que puede ser una fila de detalle: identifica el asiento **solo
+ * por su id**, sin comprobante, número ni fecha. Ver la nota de la página sobre
+ * ese hueco.
+ */
+export interface InformeAuxiliarCuentaRow extends InformeSaldosRow, InformeMovimientoRef {}
+
+/**
+ * Fila del **auxiliar por contacto**: cada tercero seguido de sus asientos, así
+ * que suma la referencia al movimiento sobre las columnas del tercero.
+ */
+export interface InformeAuxiliarContactoRow extends InformeContactoRow, InformeMovimientoRef {}
+
+/**
+ * Fila del **auxiliar general**, la más ancha de la familia: sobre las del
+ * auxiliar por contacto suma cómo se identifica el asiento de cara al usuario.
+ */
+export interface InformeMovimientoRow extends InformeAuxiliarContactoRow {
   readonly comprobante: string | null;
   readonly numero: number | string | null;
   /** Fecha del movimiento (`yyyy-MM-dd`). */

@@ -4900,6 +4900,7 @@ export const es: AppDict = {
         comprobante: 'Comprobante',
         numero: 'Número',
         fecha: 'Fecha',
+        movimiento: 'Asiento',
         saldoAnterior: 'Saldo anterior',
         debito: 'Débito',
         credito: 'Crédito',
@@ -4938,7 +4939,19 @@ export const es: AppDict = {
         },
       },
     },
-    auxiliarCuenta: { name: 'Auxiliar cuenta' },
+    auxiliarCuenta: {
+      name: 'Auxiliar cuenta',
+      empty: {
+        notGenerated: {
+          title: 'Todavía no generaste el informe',
+          sub: 'Elegí el periodo y las cuentas, y generá para ver los asientos de cada cuenta.',
+        },
+        noData: {
+          title: 'Sin movimientos en el periodo',
+          sub: 'Ninguna cuenta del rango movió entre esas fechas. Probá ampliar el periodo o desmarcar «solo cuentas con saldo».',
+        },
+      },
+    },
     auxiliarGeneral: {
       name: 'Auxiliar general',
       empty: {
