@@ -90,32 +90,25 @@ export const CUENTA_COBRAR_COLUMNS: readonly ColumnDef[] = [
   },
 ];
 
-/** Campos por los que se puede filtrar (columnas descriptivas; no los montos calculados). */
+/**
+ * Campos por los que se puede filtrar.
+ *
+ * Tres y nada más: el documento se busca por su **id** o su **número**, y el
+ * tercero por su **id**. Se dejaron fuera fecha, tipo de documento y las
+ * búsquedas por texto del contacto — quien usa este informe llega con el
+ * documento o el tercero en la mano, no explorando.
+ *
+ * El tercero va por `contacto_id` y no por nombre: es la convención confirmada
+ * para las FK en los filtros de informes, y evita depender de cómo esté escrito
+ * el nombre.
+ */
 export const CUENTA_COBRAR_FILTER_FIELDS: readonly FilterField[] = [
   { name: 'id', displayNameKey: 'entities.cuentaCobrar.columns.id', type: 'number' },
-  { name: 'numero', displayNameKey: 'entities.cuentaCobrar.columns.numero', type: 'string' },
-  { name: 'fecha', displayNameKey: 'entities.cuentaCobrar.columns.fecha', type: 'date' },
+  { name: 'numero', displayNameKey: 'entities.cuentaCobrar.columns.numero', type: 'number' },
   {
-    name: 'documento_tipo_id',
-    displayNameKey: 'entities.cuentaCobrar.columns.documentoTipo',
+    name: 'contacto_id',
+    displayNameKey: 'entities.cuentaCobrar.columns.contactoId',
     type: 'number',
-  },
-  {
-    name: 'documento_tipo_nombre',
-    displayNameKey: 'entities.cuentaCobrar.columns.documentoTipo',
-    type: 'string',
-  },
-  {
-    // TODO(backend): sin confirmar, igual que en cuentas por pagar. El valor
-    // anterior no existe en la respuesta del informe.
-    name: 'contacto_nombre',
-    displayNameKey: 'entities.cuentaCobrar.columns.contacto',
-    type: 'string',
-  },
-  {
-    name: 'contacto_numero_identificacion',
-    displayNameKey: 'entities.cuentaCobrar.columns.identificacion',
-    type: 'string',
   },
 ];
 

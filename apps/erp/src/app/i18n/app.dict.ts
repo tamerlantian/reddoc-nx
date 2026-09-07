@@ -4209,6 +4209,7 @@ export interface AppDict
         fechaVence: string;
         identificacion: string;
         contacto: string;
+        contactoId: string;
         subtotal: string;
         impuesto: string;
         total: string;
@@ -4245,6 +4246,7 @@ export interface AppDict
         fechaVence: string;
         identificacion: string;
         contacto: string;
+        contactoId: string;
         subtotal: string;
         impuesto: string;
         total: string;

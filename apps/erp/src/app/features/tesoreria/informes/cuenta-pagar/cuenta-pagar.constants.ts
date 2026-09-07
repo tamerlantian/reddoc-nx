@@ -93,35 +93,25 @@ export const CUENTA_PAGAR_COLUMNS: readonly ColumnDef[] = [
   },
 ];
 
-/** Campos por los que se puede filtrar (columnas descriptivas; no los montos calculados). */
+/**
+ * Campos por los que se puede filtrar.
+ *
+ * Tres y nada más: el documento se busca por su **id** o su **número**, y el
+ * tercero por su **id**. Se dejaron fuera fecha, tipo de documento y las
+ * búsquedas por texto del contacto — quien usa este informe llega con el
+ * documento o el tercero en la mano, no explorando.
+ *
+ * El tercero va por `contacto_id` y no por nombre: es la convención confirmada
+ * para las FK en los filtros de informes, y evita depender de cómo esté escrito
+ * el nombre.
+ */
 export const CUENTA_PAGAR_FILTER_FIELDS: readonly FilterField[] = [
   { name: 'id', displayNameKey: 'entities.cuentaPagar.columns.id', type: 'number' },
-  { name: 'numero', displayNameKey: 'entities.cuentaPagar.columns.numero', type: 'string' },
-  { name: 'fecha', displayNameKey: 'entities.cuentaPagar.columns.fecha', type: 'date' },
+  { name: 'numero', displayNameKey: 'entities.cuentaPagar.columns.numero', type: 'number' },
   {
-    name: 'documento_tipo_id',
-    displayNameKey: 'entities.cuentaPagar.columns.documentoTipo',
+    name: 'contacto_id',
+    displayNameKey: 'entities.cuentaPagar.columns.contactoId',
     type: 'number',
-  },
-  {
-    name: 'documento_tipo_nombre',
-    displayNameKey: 'entities.cuentaPagar.columns.documentoTipo',
-    type: 'string',
-  },
-  {
-    // TODO(backend): sin confirmar. El valor anterior (`contacto_nombre_corto`)
-    // no existe en la respuesta del informe, así que estaba mal con cualquier
-    // criterio; se alinea al nombre que sí devuelve. Si la whitelist usara rutas
-    // ORM sería `contacto__nombre_corto`. Un filtro fuera de la whitelist no da
-    // error: devuelve el informe sin filtrar.
-    name: 'contacto_nombre',
-    displayNameKey: 'entities.cuentaPagar.columns.contacto',
-    type: 'string',
-  },
-  {
-    name: 'contacto_numero_identificacion',
-    displayNameKey: 'entities.cuentaPagar.columns.identificacion',
-    type: 'string',
   },
 ];
 
