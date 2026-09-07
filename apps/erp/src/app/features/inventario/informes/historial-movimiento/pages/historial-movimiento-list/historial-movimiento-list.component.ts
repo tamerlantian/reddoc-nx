@@ -8,7 +8,6 @@ import {
   ToastService,
   type FilterCondition,
   type ListQuery,
-  type SortSpec,
 } from '@reddoc/core';
 import {
   DataFilterModalComponent,
@@ -60,7 +59,6 @@ export class HistorialMovimientoListComponent {
   protected readonly isLoading = signal(false);
   protected readonly currentPage = signal(0);
   protected readonly pageSize = signal(25);
-  protected readonly sort = signal<readonly SortSpec[]>([]);
   protected readonly activeFilters = signal<readonly FilterCondition[]>(
     this.filterStorage.read(HISTORIAL_MOVIMIENTO_FILTERS_STORAGE_KEY),
   );
@@ -98,12 +96,6 @@ export class HistorialMovimientoListComponent {
     this.loadList();
   }
 
-  protected onSortChange(sort: readonly SortSpec[]): void {
-    this.sort.set(sort);
-    this.currentPage.set(0);
-    this.loadList();
-  }
-
   protected openFilters(): void {
     this.filtersVisible.set(true);
   }
@@ -127,7 +119,9 @@ export class HistorialMovimientoListComponent {
   private loadList(): void {
     const query: ListQuery = {
       filters: this.activeFilters(),
-      sort: this.sort(),
+      // El informe no se ordena desde la tabla: `excel/` no acepta
+      // `ordenamientos`, así que pantalla y archivo saldrían distintos.
+      sort: [],
       page: this.currentPage(),
       pageSize: this.pageSize(),
     };

@@ -1,18 +1,20 @@
 /**
- * Fila del informe **Existencias** (`POST /general/item/lista/`).
+ * Fila del informe **Existencias**
+ * (`POST /inventario/informe/lista/`, `informe: 'existencia'`).
  *
- * Es un ítem del master de General enriquecido con sus saldos de inventario.
- * El informe solo mira los ítems que manejan inventario (`inventario = true`,
- * filtro implícito del servicio), así que la fila no repite ese flag.
+ * **Verificado contra el schema** (`InvExistenciaInforme`): una fila por ítem con
+ * el saldo consolidado de todos los almacenes.
  *
- * **Supuesto pendiente de confirmar con backend**: que `existencia`, `remision`
- * y `disponible` viajen en el listado del ítem. En el ERP legacy salían del
- * `GET general/item/` plano; puede que el API nuevo los exponga solo bajo el
- * serializador `informe_existencia`. Si fuera así, el fix es local: mandar
- * `serializador` en el body de `ExistenciaService.list`.
+ * Los tres saldos son los **del ítem**, no los de un almacén: quien mueve
+ * inventario escribe en la misma transacción la fila del almacén y el acumulado
+ * del ítem, y este informe lee el segundo. Abrirlo por almacén es
+ * `existencia_almacen`.
  *
- * Convención del backend: los ids viajan como `number`; las cantidades como
- * `string` con cola de decimales (`"12.000000"`) o `number` según el campo.
+ * Acá no hay costo: cantidades y nada más. La valorización es
+ * `inventario_valorizado`, que es este mismo informe con las columnas de costo.
+ *
+ * Convención del backend: las cantidades viajan como `string` decimal
+ * (`"12.000000"`).
  */
 export interface Existencia {
   readonly id: number;
@@ -20,9 +22,13 @@ export interface Existencia {
   readonly nombre: string | null;
   readonly referencia: string | null;
   /** Unidades en almacén. */
-  readonly existencia: number | string | null;
+  readonly existencia: string | null;
   /** Unidades comprometidas en remisiones (salidas pendientes de facturar). */
-  readonly remision: number | string | null;
+  readonly remision: string | null;
   /** Existencia menos remisión: lo que realmente se puede comprometer. */
-  readonly disponible: number | string | null;
+  readonly disponible: string | null;
+  /** El saldo quedó en negativo — se sacó más de lo que había registrado. */
+  readonly negativo: boolean;
+  /** El ítem está inactivo pero todavía tiene saldo. */
+  readonly inactivo: boolean;
 }

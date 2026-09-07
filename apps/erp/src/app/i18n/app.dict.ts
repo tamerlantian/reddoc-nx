@@ -4135,6 +4135,8 @@ export interface AppDict
         existencia: string;
         remision: string;
         disponible: string;
+        negativo: string;
+        inactivo: string;
       };
     };
     existenciaAlmacen: {
@@ -4170,11 +4172,13 @@ export interface AppDict
         documentoTipo: string;
         fecha: string;
         contacto: string;
+        almacen: string;
+        itemCodigo: string;
+        detalle: string;
         item: string;
         cantidad: string;
         costo: string;
         precio: string;
-        subtotal: string;
       };
     };
     ventaItem: {

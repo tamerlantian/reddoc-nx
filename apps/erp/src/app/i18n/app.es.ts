@@ -5410,6 +5410,8 @@ export const es: AppDict = {
         existencia: 'Existencia',
         remision: 'Remisión',
         disponible: 'Disponible',
+        negativo: 'Negativo',
+        inactivo: 'Inactivo',
       },
     },
     existenciaAlmacen: {
@@ -5445,11 +5447,13 @@ export const es: AppDict = {
         documentoTipo: 'Tipo',
         fecha: 'Fecha',
         contacto: 'Contacto',
+        almacen: 'Almacén',
+        itemCodigo: 'Código',
+        detalle: 'Detalle',
         item: 'Ítem',
         cantidad: 'Cantidad',
         costo: 'Costo',
         precio: 'Precio',
-        subtotal: 'Subtotal',
       },
     },
     ventaItem: {
