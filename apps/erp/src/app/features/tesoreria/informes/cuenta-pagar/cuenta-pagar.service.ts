@@ -15,7 +15,7 @@ import type { CuentaPagar } from './cuenta-pagar.model';
  */
 export const CUENTA_PAGAR_INFORME = 'pagar_pendiente';
 
-/** Endpoint del informe (acciones: `lista/`, `exportar/`). */
+/** Endpoint del informe (acciones: `lista/`, `excel/`). */
 export const CUENTA_PAGAR_ENDPOINT = '/general/documento-informe/';
 
 /**
@@ -35,7 +35,7 @@ export class CuentaPagarService extends BaseHttpService {
   private readonly resourcePath = CUENTA_PAGAR_ENDPOINT;
 
   /** URL absoluta de la acción de exportar (la usa `FileDownloadService`). */
-  readonly exportUrl = `${CUENTA_PAGAR_ENDPOINT}exportar/`;
+  readonly exportUrl = `${CUENTA_PAGAR_ENDPOINT}excel/`;
 
   list(query: ListQuery): Observable<PaginatedResponse<CuentaPagar>> {
     return this.post<PaginatedResponse<CuentaPagar>>(

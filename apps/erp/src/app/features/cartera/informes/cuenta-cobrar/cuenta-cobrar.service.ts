@@ -15,7 +15,7 @@ import type { CuentaCobrar } from './cuenta-cobrar.model';
  */
 export const CUENTA_COBRAR_INFORME = 'cobrar_pendiente';
 
-/** Endpoint del informe (acciones: `lista/`, `exportar/`). */
+/** Endpoint del informe (acciones: `lista/`, `excel/`). */
 export const CUENTA_COBRAR_ENDPOINT = '/general/documento-informe/';
 
 /**
@@ -35,7 +35,7 @@ export class CuentaCobrarService extends BaseHttpService {
   private readonly resourcePath = CUENTA_COBRAR_ENDPOINT;
 
   /** URL absoluta de la acción de exportar (la usa `FileDownloadService`). */
-  readonly exportUrl = `${CUENTA_COBRAR_ENDPOINT}exportar/`;
+  readonly exportUrl = `${CUENTA_COBRAR_ENDPOINT}excel/`;
 
   list(query: ListQuery): Observable<PaginatedResponse<CuentaCobrar>> {
     return this.post<PaginatedResponse<CuentaCobrar>>(
