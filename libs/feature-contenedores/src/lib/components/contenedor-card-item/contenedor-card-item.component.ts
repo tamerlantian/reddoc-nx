@@ -32,7 +32,7 @@ export class ContenedorCardItemComponent {
   readonly renew = output<void>();
   readonly menuOpen = output<Event>();
 
-  readonly avatarLabel = computed(() => getInitials(this.contenedor().nombre));
+  readonly avatarLabel = computed(() => getInitials(this.contenedor().cliente_nombre));
 
   readonly frecuenciaLabel = computed(() => {
     const map: Record<string, string> = { P: 'Prueba', M: 'Mensual', A: 'Anual' };

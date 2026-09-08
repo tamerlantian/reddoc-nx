@@ -4,7 +4,7 @@ import { accesosDisponibles, buildAccesoFlags, readModuleAccessFlags } from './c
 const CONTENEDOR = {
   cliente_id: 13,
   schema_name: 'seguridad',
-  nombre: 'Seguridad',
+  cliente_nombre: 'Seguridad',
   activo: true,
   propietario: true,
   acceso_venta: true,

@@ -8,7 +8,7 @@ import {
 } from '../services/base-http.service';
 import type { PaginatedResponse } from '../models/pagination.model';
 import {
-  Contenedor,
+  ContenedorDetalle,
   ContenedorInvitacionesPendientesResponse,
   ContenedorMembersResponse,
   ContenedoresResponse,
@@ -27,6 +27,9 @@ export interface UpdateContenedorRequest {
   correo?: string;
 }
 
+/** Lo que devuelve el `PATCH`: el eco de los tres campos editables, nada más. */
+export type UpdateContenedorResponse = Required<UpdateContenedorRequest>;
+
 @Injectable({ providedIn: 'root' })
 export class ContenedorService extends BaseHttpService {
   // Endpoints en el schema público (/contenedor/, /seguridad/usuario…): sin X-Tenant.
@@ -36,18 +39,23 @@ export class ContenedorService extends BaseHttpService {
     return this.get<ContenedoresResponse>('/contenedor/cliente/lista-usuario/');
   }
 
-  getContenedor(id: number): Observable<Contenedor> {
-    return this.get<Contenedor & { id?: number }>(`/contenedor/cliente/${id}/`).pipe(
-      map((r) => ({ ...r, cliente_id: r.cliente_id ?? r.id ?? id })),
-    );
+  /**
+   * Ficha de la empresa. Otro serializer que el de la lista: `id`/`nombre` sin
+   * el prefijo del FK, con `celular` y `correo`, sin accesos ni suscripción.
+   */
+  getContenedor(id: number): Observable<ContenedorDetalle> {
+    return this.get<ContenedorDetalle>(`/contenedor/cliente/${id}/`);
   }
 
-  createContenedor(payload: CreateContenedorRequest): Observable<unknown> {
-    return this.post('/contenedor/cliente/', payload);
+  createContenedor(payload: CreateContenedorRequest): Observable<ContenedorDetalle> {
+    return this.post<ContenedorDetalle>('/contenedor/cliente/', payload);
   }
 
-  updateContenedor(id: number, payload: UpdateContenedorRequest): Observable<Contenedor> {
-    return this.patch<Contenedor>(`/contenedor/cliente/${id}/`, payload);
+  updateContenedor(
+    id: number,
+    payload: UpdateContenedorRequest,
+  ): Observable<UpdateContenedorResponse> {
+    return this.patch<UpdateContenedorResponse>(`/contenedor/cliente/${id}/`, payload);
   }
 
   deleteContenedor(id: number): Observable<unknown> {

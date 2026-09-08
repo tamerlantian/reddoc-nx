@@ -1,6 +1,6 @@
 import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
-import { Contenedor, I18nService } from '@reddoc/core';
+import { ContenedorDetalle, I18nService } from '@reddoc/core';
 import { ContenedorCreateFormComponent } from './contenedor-create-form.component';
 import { ContenedorCreationOverlayComponent } from '../creation-overlay/contenedor-creation-overlay.component';
 import type { ContenedoresTranslationsHost } from '../../i18n';
@@ -18,7 +18,7 @@ export class ContenedoresCreateDialogComponent {
   protected readonly t = this.i18n.t;
 
   readonly visible = input<boolean>(false);
-  readonly contenedor = input<Contenedor | null>(null);
+  readonly contenedor = input<ContenedorDetalle | null>(null);
   readonly visibleChange = output<boolean>();
   readonly created = output<void>();
   readonly updated = output<void>();

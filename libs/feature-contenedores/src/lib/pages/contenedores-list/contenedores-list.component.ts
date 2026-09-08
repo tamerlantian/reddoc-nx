@@ -8,6 +8,7 @@ import { MenuItem } from 'primeng/api';
 import {
   AUTH_SERVICE,
   Contenedor,
+  ContenedorDetalle,
   ContenedorService,
   ENVIRONMENT,
   getInitials,
@@ -68,7 +69,7 @@ export class ContenedoresListComponent {
   readonly showEdit = signal(false);
   readonly showDelete = signal(false);
   readonly showInvite = signal(false);
-  readonly contenedorToEdit = signal<Contenedor | null>(null);
+  readonly contenedorToEdit = signal<ContenedorDetalle | null>(null);
   readonly contenedorToDelete = signal<Contenedor | null>(null);
   readonly contenedorToInvite = signal<Contenedor | null>(null);
 
@@ -96,7 +97,7 @@ export class ContenedoresListComponent {
     if (!q) return this.contenedores();
     return this.contenedores().filter(
       (c) =>
-        c.nombre.toLowerCase().includes(q) ||
+        c.cliente_nombre.toLowerCase().includes(q) ||
         c.schema_name.toLowerCase().includes(q) ||
         c.dominio.toLowerCase().includes(q),
     );

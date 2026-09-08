@@ -150,14 +150,22 @@ export interface ContenedorAccesoFlags {
   acceso_turno?: boolean;
 }
 
+/**
+ * Una empresa del usuario, tal como la lista `/contenedor/cliente/lista-usuario/`
+ * (serializer `CtnClienteListaUsuario`).
+ *
+ * La fila **no es el cliente**: es la membresía del usuario en él, con el FK
+ * aplanado. Por eso el id y el nombre llegan con el prefijo del FK
+ * (`cliente_id`, `cliente_nombre`) y no como `id`/`nombre`, que es lo que
+ * devuelve la ficha (`ContenedorDetalle`). Los datos de contacto de la empresa
+ * —`celular`, `correo`— **no viajan acá**: solo en la ficha.
+ */
 export interface Contenedor extends ContenedorAccesoFlags {
   cliente_id: number;
   schema_name: string;
-  nombre: string;
+  cliente_nombre: string;
   activo: boolean;
   dominio: string;
-  celular?: string;
-  correo?: string;
   suscripcion_id?: number;
   suscripcion_fecha_fin?: string;
   suscripcion_frecuencia?: 'P' | 'M' | 'A';
@@ -175,6 +183,26 @@ export interface Contenedor extends ContenedorAccesoFlags {
 }
 
 export type ContenedoresResponse = PaginatedResponse<Contenedor>;
+
+/**
+ * Ficha de una empresa (`GET /contenedor/cliente/{id}/`, serializer
+ * `CtnCliente`). Es el shape que alimenta el formulario de edición.
+ *
+ * Otro serializer que el de la lista, no un supraconjunto: acá el cliente es el
+ * recurso, así que el id es `id` y el nombre `nombre` —sin el prefijo del FK—,
+ * están `celular` y `correo`, y **no** vienen `dominio`, `propietario`, las
+ * flags `acceso_*` ni la suscripción.
+ */
+export interface ContenedorDetalle {
+  readonly id: number;
+  readonly schema_name: string;
+  readonly nombre: string;
+  readonly celular: string;
+  readonly correo: string;
+  readonly activo: boolean;
+  /** Alta de la empresa, `yyyy-MM-ddTHH:mm:ss`. */
+  readonly fecha_creacion: string | null;
+}
 
 export interface CreateContenedorRequest {
   nombre: string;
