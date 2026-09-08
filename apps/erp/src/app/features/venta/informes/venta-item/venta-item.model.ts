@@ -23,7 +23,7 @@ export interface VentaItem {
   readonly documento_tipo_nombre: string | null;
   readonly contacto_id: number | null;
   readonly contacto_numero_identificacion: string | null;
-  readonly contacto_nombre: string | null;
+  readonly contacto_nombre_corto: string | null;
   readonly item_id: number | null;
   readonly item_nombre: string | null;
   /** Cantidad de la línea (string decimal, p. ej. `"1.000000"`). */

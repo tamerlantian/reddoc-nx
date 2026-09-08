@@ -12,7 +12,7 @@
  *
  * **Supuestos pendientes de confirmar con backend** (portados del legacy):
  *  - Las banderas `estado_electronico*` viajan en la fila del listado.
- *  - El empleado llega como `contacto_nombre`, la convención de
+ *  - El empleado llega como `contacto_nombre_corto`, la convención de
  *    `DocumentoListRowBase` que ya usan las otras dos utilidades. El legacy lo
  *    leía como `contacto_nombre_corto`.
  */
@@ -29,7 +29,7 @@ export interface EnviarNominaElectronicaRow {
   readonly id: number;
   readonly numero: string | null;
   readonly fecha: string | null;
-  readonly contacto_nombre: string | null;
+  readonly contacto_nombre_corto: string | null;
   readonly total: string | null;
   readonly estado_electronico_enviado: boolean;
 }

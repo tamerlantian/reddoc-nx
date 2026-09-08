@@ -18,7 +18,7 @@ export interface PendienteFacturar {
   readonly documento_tipo_id: number | null;
   readonly documento_tipo_nombre: string | null;
   readonly contacto_id: number | null;
-  readonly contacto_nombre: string | null;
+  readonly contacto_nombre_corto: string | null;
   readonly item_id: number | null;
   readonly item_nombre: string | null;
   readonly puesto_id: number | null;

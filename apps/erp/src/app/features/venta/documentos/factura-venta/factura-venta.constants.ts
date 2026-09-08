@@ -14,7 +14,7 @@ export const METODO_PAGO_ENDPOINT = '/general/metodo-pago/seleccionar/';
  * la factura es comercial (ítem/cantidad/precio) y no las trae.
  *
  * Los `field` mapean el shape canónico del endpoint `general/documento/lista/`
- * (`DocumentoListRowBase`): identificación como `tercero_numero_identificacion`,
+ * (`DocumentoListRowBase`): identificación como `contacto_numero_identificacion`,
  * montos `currency` y estados como flags booleanos.
  */
 export const FACTURA_VENTA_COLUMNS: readonly ColumnDef[] = [
@@ -38,13 +38,13 @@ export const FACTURA_VENTA_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: 'entities.facturaVenta.columns.identificacion',
     type: 'text',
     width: '140px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.facturaVenta.columns.contacto',
     type: 'text',
   },

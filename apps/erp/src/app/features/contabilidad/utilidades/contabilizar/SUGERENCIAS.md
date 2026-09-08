@@ -113,8 +113,8 @@ al comparar contra producción.
   `estado_contabilizado=false`, `estado_aprobado=true`, `documento_tipo__contabilidad=true`.
 - El catálogo de tipos: se consume `general/documento-tipo/seleccionar/?contabilidad=True` (el legacy
   usaba `documento_tipo` con guion bajo).
-- El tercero se lee como `contacto_nombre`, la convención del resto de utilidades del ERP; el legacy
-  lo tipaba `contacto_nombre_corto`.
+- El tercero se lee como `contacto_nombre_corto`, la convención del resto de utilidades del ERP
+  (confirmado contra el schema del backend, 2026-09-08).
 - Si `descontabilizar/` valida algo del lado del servidor (periodo cerrado, documento ya usado en un
   cierre) o si acepta cualquier id sin chequear. Importa para saber cuánta protección tiene que
   poner el front.

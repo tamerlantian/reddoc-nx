@@ -29,7 +29,7 @@ export const COLUMNS: readonly ColumnDef[] = [
   },
   { field: 'numero', headerKey: `${I18N}.columns.numero`, type: 'text', width: '110px' },
   { field: 'fecha', headerKey: `${I18N}.columns.fecha`, type: 'date', width: '110px' },
-  { field: 'contacto_nombre', headerKey: `${I18N}.columns.contacto`, type: 'text' },
+  { field: 'contacto_nombre_corto', headerKey: `${I18N}.columns.contacto`, type: 'text' },
   {
     field: 'subtotal',
     headerKey: `${I18N}.columns.subtotal`,

@@ -15,7 +15,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FieldErrorComponent, FocusInvalidDirective, PhoneInputComponent } from '@reddoc/ui';
 import {
   AUTH_SERVICE,
-  Contenedor,
+  ContenedorDetalle,
   ContenedorService,
   FormErrorService,
   I18nService,
@@ -49,7 +49,7 @@ export class ContenedorCreateFormComponent {
 
   protected readonly t = this.i18n.t;
 
-  readonly contenedor = input<Contenedor | null>(null);
+  readonly contenedor = input<ContenedorDetalle | null>(null);
   readonly created = output<void>();
   readonly updated = output<void>();
   readonly cancelled = output<void>();
@@ -95,7 +95,7 @@ export class ContenedorCreateFormComponent {
         nombre: c.nombre,
         schema_name: c.schema_name,
         celular: normalizarCelular(c.celular),
-        correo: c.correo ?? '',
+        correo: c.correo,
       });
       this.form.controls.schema_name.disable();
     });
@@ -109,7 +109,7 @@ export class ContenedorCreateFormComponent {
     if (this.isEditMode() && c) {
       const { nombre, celular, correo } = this.form.getRawValue();
       this.contenedorService
-        .updateContenedor(c.cliente_id, {
+        .updateContenedor(c.id, {
           nombre: nombre ?? '',
           celular: celular ?? undefined,
           correo: correo ?? undefined,

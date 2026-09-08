@@ -31,13 +31,13 @@ export const NOTA_AJUSTE_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: 'entities.notaAjuste.columns.identificacion',
     type: 'text',
     width: '140px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.notaAjuste.columns.proveedor',
     type: 'text',
   },

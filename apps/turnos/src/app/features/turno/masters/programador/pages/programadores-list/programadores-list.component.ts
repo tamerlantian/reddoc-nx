@@ -153,10 +153,6 @@ export class ProgramadoresListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateTo('detalle', (row as Programador).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

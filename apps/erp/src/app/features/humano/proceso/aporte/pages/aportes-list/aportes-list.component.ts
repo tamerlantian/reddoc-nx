@@ -129,10 +129,6 @@ export class AportesListComponent {
     this.loadList();
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateTo('detalle', (row as Aporte).id);
-  }
-
   protected onRowAction(event: RowActionInvokedEvent): void {
     if (event.actionId === 'view') this.navigateTo('detalle', (event.row as Aporte).id);
   }

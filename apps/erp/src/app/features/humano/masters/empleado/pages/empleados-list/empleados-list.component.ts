@@ -186,10 +186,6 @@ export class EmpleadosListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateTo('detalle', (row as Empleado).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

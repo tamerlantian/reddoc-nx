@@ -30,12 +30,8 @@ export interface CuentaCobrar {
   readonly fecha_vence: string | null;
   readonly contacto_id: number | null;
   readonly contacto_numero_identificacion: string | null;
-  /**
-   * Nombre del tercero. **Es `contacto_nombre`, no `contacto_nombre_corto`**:
-   * este informe aplana el documento con el nombre completo. El campo estaba
-   * mal nombrado y por eso la columna salía vacía.
-   */
-  readonly contacto_nombre: string | null;
+  /** Nombre corto del tercero, aplanado desde el documento. */
+  readonly contacto_nombre_corto: string | null;
   /** Base gravable del documento. */
   readonly subtotal: string | null;
   /** Descuento aplicado al documento. */

@@ -179,10 +179,6 @@ export class PuestosListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateToDetail((row as Puesto).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

@@ -27,25 +27,24 @@ export const CONTABILIDAD_DIALOG_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'comprobante__nombre',
+    field: 'comprobante_nombre',
     headerKey: 'entities.movimientoContable.columns.comprobante',
     type: 'text',
     width: '140px',
   },
   {
-    field: 'contacto__nombre_corto',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.movimientoContable.columns.contacto',
     type: 'text',
   },
   {
-    field: 'cuenta__codigo',
+    field: 'cuenta_codigo',
     headerKey: 'entities.movimientoContable.columns.cuenta',
     type: 'text',
     width: '110px',
   },
   {
-    // El backend lo llama `grupo`; en este ERP el concepto es el centro de costo.
-    field: 'grupo__nombre',
+    field: 'centro_costo_nombre',
     headerKey: 'entities.movimientoContable.columns.centroCosto',
     type: 'text',
     width: '150px',

@@ -148,10 +148,6 @@ export class AlmacenesListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.nav.ir('detalle', (row as Almacen).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

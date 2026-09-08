@@ -167,10 +167,6 @@ export class FormasPagoListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateTo('detalle', (row as FormaPago).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

@@ -4,7 +4,16 @@ import type { ImportMaster } from '@erp/core/components/import-dialog/import-dia
 import { IMPORT_MASTERS_ALL } from '@erp/core/components/import-dialog/import-masters.constant';
 
 export const CONTRATOS_FILTERS_STORAGE_KEY = 'contratos:filters:v1';
-export const CONTRATOS_QUICK_SEARCH_FIELD = 'contacto_nombre';
+
+/**
+ * Campo de la búsqueda rápida. Va como **ruta ORM** (`contacto__nombre_corto`)
+ * porque el término viaja como un filtro más al backend, y la whitelist de
+ * `campos_filtrables` del contrato no acepta el alias plano del serializer
+ * (`contacto_nombre_corto` responde «Propiedad no permitida»). Esa es la
+ * asimetría de siempre: la **columna** lee el JSON y va plana, el **filtro**
+ * viaja al ORM y va con doble guion bajo.
+ */
+export const CONTRATOS_QUICK_SEARCH_FIELD = 'contacto__nombre_corto';
 
 /**
  * Id del tipo de contrato indefinido (sin fecha de fin). Cuando el tipo
@@ -51,7 +60,7 @@ export function esTipoCotizanteAprendiz(id: number | null | undefined): boolean 
 export const CONTRATO_LIST_PATH = ['humano', 'contratos'] as const;
 
 export const CONTRATOS_COLUMNS: readonly ColumnDef[] = [
-  { field: 'contacto_nombre', headerKey: 'entities.contrato.columns.empleado', type: 'text' },
+  { field: 'contacto_nombre_corto', headerKey: 'entities.contrato.columns.empleado', type: 'text' },
   {
     field: 'contrato_tipo_nombre',
     headerKey: 'entities.contrato.columns.contratoTipo',
@@ -76,7 +85,11 @@ export const CONTRATOS_COLUMNS: readonly ColumnDef[] = [
 ];
 
 export const CONTRATOS_FILTER_FIELDS: readonly FilterField[] = [
-  { name: 'contacto_nombre', displayNameKey: 'entities.contrato.columns.empleado', type: 'string' },
+  {
+    name: 'contacto__nombre_corto',
+    displayNameKey: 'entities.contrato.columns.empleado',
+    type: 'string',
+  },
   { name: 'fecha_desde', displayNameKey: 'entities.contrato.columns.fechaDesde', type: 'date' },
   { name: 'fecha_hasta', displayNameKey: 'entities.contrato.columns.fechaHasta', type: 'date' },
   { name: 'salario', displayNameKey: 'entities.contrato.columns.salario', type: 'number' },

@@ -28,7 +28,7 @@ export interface DocumentoElectronicoRow {
   readonly id: number;
   readonly numero: string | null;
   readonly fecha: string | null;
-  readonly contacto_nombre: string | null;
+  readonly contacto_nombre_corto: string | null;
   readonly total: string | null;
   readonly estado_electronico: boolean;
   readonly estado_electronico_enviado: boolean;

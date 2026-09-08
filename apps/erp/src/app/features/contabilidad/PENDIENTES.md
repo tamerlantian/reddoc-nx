@@ -339,32 +339,37 @@ pendiente en §0). Lo mismo aplicaba a _auxiliar por tercero_, que todavía no m
 
 ---
 
-## 5.1 Consulta de movimientos: cuatro columnas que no leen nada (2026-09-07)
+## 5.1 Consulta de movimientos: cuatro columnas que no leían nada (2026-09-07) — **corregido 2026-09-08**
 
-Detectado al revisar de dónde salía la confusión entre _grupo_ y _centro de costo_; **no se tocó**,
-es otra pantalla y otro alcance.
+Detectado al revisar de dónde salía la confusión entre _grupo_ y _centro de costo_.
 
-`movimiento.constants.ts` declara las columnas de la tabla con **rutas ORM** (`a__b`), pero
+`movimiento.constants.ts` declaraba las columnas de la tabla con **rutas ORM** (`a__b`), pero
 `<lib-data-table>` resuelve el valor con `row[field]` **plano**, y el serializer `ConMovimiento`
-devuelve los campos con un solo guion bajo. Ninguna de estas cuatro coincide:
+devuelve los campos con un solo guion bajo. Ninguna de estas cuatro coincidía:
 
-| La columna usa           | El serializer devuelve |
-| ------------------------ | ---------------------- |
-| `comprobante__nombre`    | `comprobante_nombre`   |
-| `cuenta__codigo`         | `cuenta_codigo`        |
-| `grupo__nombre`          | `centro_costo_nombre`  |
-| `contacto__nombre_corto` | `contacto_nombre`      |
+| La columna usaba         | El serializer devuelve  |
+| ------------------------ | ----------------------- |
+| `comprobante__nombre`    | `comprobante_nombre`    |
+| `cuenta__codigo`         | `cuenta_codigo`         |
+| `grupo__nombre`          | `centro_costo_nombre`   |
+| `contacto__nombre_corto` | `contacto_nombre_corto` |
 
-Las cuatro deberían salir **vacías**. Encaja con que el módulo nunca se ejercitó contra
-`reddocapi.uk`. Ojo: **los `__` sí corresponden en `MOVIMIENTO_FILTER_FIELDS`** —ahí son rutas ORM y
-el backend las espera así—, el problema es solo en `MOVIMIENTO_COLUMNS`, que es lectura del JSON.
+Las cuatro salían **vacías**. Encajaba con que el módulo nunca se ejercitó contra `reddocapi.uk`.
+Ya están renombradas contra el schema, en `MOVIMIENTO_COLUMNS`, en `CONTABILIDAD_DIALOG_COLUMNS`
+—el diálogo del documento lee el mismo recurso— y en la interfaz `Movimiento` de
+`core/contabilidad`. El filtro por centro de costo pasó de `grupo__nombre` a `centro_costo__nombre`.
 
-Además `grupo__nombre` conserva un nombre que el backend ya cambió: hoy es `centro_costo`. El aviso
-estaba escrito en el propio archivo («si el backend renombró el campo, esta cadena es el fix»).
+Ojo: **los `__` sí corresponden en `MOVIMIENTO_FILTER_FIELDS`** —ahí son rutas ORM y el backend las
+espera así—; el problema era solo en las columnas, que son lectura del JSON.
 
 **No confundir con el `grupo` de los estados financieros**, que es el segundo nivel del plan de
 cuentas (`ConCuenta.cuenta_grupo`), no el centro de costo. Son dos cosas distintas con el mismo
 nombre.
+
+**Sin verificar todavía**: el ordenamiento. `ColumnDef` no tiene `sortField`, así que el `field`
+sirve para leer la fila **y** para ordenar; las columnas de comprobante, cuenta y centro de costo
+son `sortable` y ahora mandan el alias plano. Si el backend solo ordena por ruta ORM, hay que
+separar los dos usos.
 
 ---
 
@@ -590,13 +595,13 @@ Si `importar-ejemplo/` no existe, el botón de plantilla del diálogo queda muer
 
 #### Campos de la fila
 
-`id`, `numero`, `fecha`, `comprobante__nombre`, `contacto__nombre_corto`, `cuenta__codigo`,
-`grupo__nombre`, `debito`, `credito`, `base`, `detalle` — con doble guion bajo, tal como los aplana
-el serializador `lista`. Salen del mapeo del legacy, no de una respuesta real.
+`id`, `numero`, `fecha`, `comprobante_nombre`, `contacto_nombre_corto`, `cuenta_codigo`,
+`centro_costo_nombre`, `debito`, `credito`, `base`, `detalle` — con **un solo** guion bajo, los
+alias del serializer `ConMovimiento` (verificados contra el schema, 2026-09-08). Estaban tipados
+con doble guion bajo, portados del mapeo del legacy; ver §5.1.
 
-⚠️ **`grupo__nombre` es el centro de costo** (ver §2, punto 0). Se rotula "Centro de costo" pero el
-nombre del campo se conserva porque es el que espera la API. Si el backend lo renombró, esa cadena
-—en `movimiento.constants.ts`, columna y filtro— es el fix.
+⚠️ **`centro_costo_nombre` es el centro de costo** (ver §2, punto 0), que el ERP anterior llamaba
+`grupo`. El filtro sí va como ruta ORM: `centro_costo__nombre`.
 
 ### 9.2 Decisiones tomadas
 

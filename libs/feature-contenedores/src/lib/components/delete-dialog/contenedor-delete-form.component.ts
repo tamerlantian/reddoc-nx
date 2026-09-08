@@ -28,7 +28,9 @@ export class ContenedorDeleteFormComponent {
   readonly confirmValue = signal('');
   readonly confirmTouched = signal(false);
 
-  readonly canDelete = computed(() => this.confirmValue().trim() === this.contenedor()?.nombre);
+  readonly canDelete = computed(
+    () => this.confirmValue().trim() === this.contenedor()?.cliente_nombre,
+  );
 
   onConfirmInput(event: Event): void {
     this.confirmValue.set((event.target as HTMLInputElement).value);

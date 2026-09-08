@@ -46,7 +46,7 @@ interface PagoView {
 interface CabeceraView {
   readonly numero: string | null;
   readonly cliente: string | null;
-  /** Identificación del contacto (`tercero_numero_identificacion` del read). */
+  /** Identificación del contacto (`contacto_numero_identificacion` del read). */
   readonly identificacion: string | null;
   readonly fecha: Date | null;
   readonly fechaVence: Date | null;
@@ -288,8 +288,8 @@ export class PosDocumentoDetailComponent implements OnInit {
           const fv = posDocumentoToFormValue(read);
           this.cabecera.set({
             numero: read.numero ?? null,
-            cliente: read.contacto_nombre ?? null,
-            identificacion: read.tercero_numero_identificacion ?? null,
+            cliente: read.contacto_nombre_corto ?? null,
+            identificacion: read.contacto_numero_identificacion ?? null,
             fecha: fv.fecha ?? null,
             fechaVence: fv.fecha_vence ?? null,
             plazoPago: read.plazo_pago_nombre ?? null,

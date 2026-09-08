@@ -37,7 +37,7 @@ import { AfectacionModalComponent } from '@erp/core/module-config/components/afe
 interface CabeceraView {
   readonly numero: string | null;
   readonly contacto: string | null;
-  /** Identificación del contacto (`tercero_numero_identificacion` del read). */
+  /** Identificación del contacto (`contacto_numero_identificacion` del read). */
   readonly identificacion: string | null;
   readonly fecha: Date | null;
   readonly sector: string | null;
@@ -270,8 +270,8 @@ export class ServicioDocumentoDetailComponent implements OnInit {
           const fv = servicioDocumentoToFormValue(read);
           this.cabecera.set({
             numero: read.numero ?? null,
-            contacto: read.contacto_nombre ?? null,
-            identificacion: read.tercero_numero_identificacion ?? null,
+            contacto: read.contacto_nombre_corto ?? null,
+            identificacion: read.contacto_numero_identificacion ?? null,
             fecha: fv.fecha ?? null,
             sector: fv.sector?.nombre ?? read.sector_nombre ?? null,
             estrato: fv.estrato ?? null,

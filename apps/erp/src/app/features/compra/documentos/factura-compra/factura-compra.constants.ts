@@ -11,7 +11,7 @@ export const METODO_PAGO_ENDPOINT = '/general/metodo-pago/seleccionar/';
  * Mismo set canónico de `DocumentoListRowBase` que los documentos de venta
  * (id, número, fecha, identificación del proveedor, desglose de montos y flags
  * de estado). Los `field` mapean el shape del endpoint `general/documento/lista/`:
- * identificación como `tercero_numero_identificacion`, montos `currency` y
+ * identificación como `contacto_numero_identificacion`, montos `currency` y
  * estados como flags booleanos.
  */
 export const FACTURA_COMPRA_COLUMNS: readonly ColumnDef[] = [
@@ -35,13 +35,13 @@ export const FACTURA_COMPRA_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: 'entities.facturaCompra.columns.identificacion',
     type: 'text',
     width: '140px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.facturaCompra.columns.proveedor',
     type: 'text',
   },

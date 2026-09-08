@@ -202,10 +202,6 @@ export class ContactosListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateToDetail((row as Contacto).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

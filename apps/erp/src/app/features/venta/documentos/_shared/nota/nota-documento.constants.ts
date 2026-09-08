@@ -31,12 +31,12 @@ export function buildNotaColumns(i18nNamespace: string): readonly ColumnDef[] {
     { field: 'numero', headerKey: `${ns}.numero`, type: 'text', width: '130px' },
     { field: 'fecha', headerKey: `${ns}.fecha`, type: 'date', width: '110px' },
     {
-      field: 'tercero_numero_identificacion',
+      field: 'contacto_numero_identificacion',
       headerKey: `${ns}.identificacion`,
       type: 'text',
       width: '140px',
     },
-    { field: 'contacto_nombre', headerKey: `${ns}.contacto`, type: 'text' },
+    { field: 'contacto_nombre_corto', headerKey: `${ns}.contacto`, type: 'text' },
     {
       field: 'subtotal',
       headerKey: `${ns}.subtotal`,

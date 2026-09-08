@@ -144,10 +144,6 @@ export class ConciliacionesListComponent {
     this.selectedRows.set(rows as Conciliacion[]);
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateTo('detalle', (row as Conciliacion).id);
-  }
-
   protected onRowAction(event: RowActionInvokedEvent): void {
     const conciliacion = event.row as Conciliacion;
     switch (event.actionId) {

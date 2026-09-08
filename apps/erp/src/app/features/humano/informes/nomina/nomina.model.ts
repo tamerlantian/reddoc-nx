@@ -11,7 +11,7 @@
  * documento. Por eso la columna `fecha` se rotula "Desde".
  *
  * **Supuestos pendientes de confirmar con backend**: el empleado llega como
- * `tercero_numero_identificacion` / `contacto_nombre`, siguiendo la convención
+ * `contacto_numero_identificacion` / `contacto_nombre_corto`, siguiendo la convención
  * de `DocumentoListRowBase` que ya usan los demás listados de documento del
  * ERP. El legacy los tipaba como `contacto__…`; si el API nuevo mantiene esos
  * nombres, el fix es local: este archivo y `nomina.constants.ts`.
@@ -23,8 +23,8 @@ export interface NominaInforme {
   readonly fecha: string | null;
   /** Fin del periodo liquidado. */
   readonly fecha_hasta: string | null;
-  readonly tercero_numero_identificacion: string | null;
-  readonly contacto_nombre: string | null;
+  readonly contacto_numero_identificacion: string | null;
+  readonly contacto_nombre_corto: string | null;
   /** Salario base del contrato al momento de liquidar. */
   readonly salario: number | string | null;
   readonly devengado: number | string | null;

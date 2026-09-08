@@ -24,7 +24,7 @@ export interface Contrato {
   readonly contrato_tipo: number | null;
   readonly contrato_tipo_nombre: string | null;
   readonly contacto: number | null;
-  readonly contacto_nombre: string | null;
+  readonly contacto_nombre_corto: string | null;
   /**
    * Cédula del empleado, para el addon del autocomplete en edición y la ficha
    * del detalle. Opcional a propósito: es un campo del **contacto**, no del

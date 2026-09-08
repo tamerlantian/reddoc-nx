@@ -21,7 +21,9 @@
         >
           {{ t().contenedores.invite.title }}
           @if (contenedor()) {
-            <span class="ml-1 text-brand-muted font-semibold">· {{ contenedor()?.nombre }}</span>
+            <span class="ml-1 text-brand-muted font-semibold"
+              >· {{ contenedor()?.cliente_nombre }}</span
+            >
           }
         </h2>
         <p class="m-0 text-[0.75rem] tracking-[0.01em] text-brand-muted">

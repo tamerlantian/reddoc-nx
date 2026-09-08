@@ -179,10 +179,6 @@ export class TurnosListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateToDetail((row as Turno).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

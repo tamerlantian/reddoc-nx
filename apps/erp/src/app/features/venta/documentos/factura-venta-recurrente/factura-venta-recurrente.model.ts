@@ -21,7 +21,7 @@ export interface FacturaVentaRecurrenteRead extends DocumentoReadBase {
   /** Número (consecutivo) del documento que asigna el backend. */
   readonly numero: string | null;
   /** Identificación del cliente, resuelta por el backend desde el contacto. */
-  readonly tercero_numero_identificacion?: string | null;
+  readonly contacto_numero_identificacion?: string | null;
   readonly plazo_pago: number | null;
   readonly plazo_pago_nombre?: string | null;
   readonly sede: number | null;

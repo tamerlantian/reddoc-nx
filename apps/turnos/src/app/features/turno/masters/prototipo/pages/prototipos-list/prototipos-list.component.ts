@@ -125,10 +125,6 @@ export class PrototiposListComponent {
     if (event.actionId === 'view') this.navigateToDetail((event.row as Prototipo).id);
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateToDetail((row as Prototipo).id);
-  }
-
   protected onRefresh(): void {
     this.loadList();
   }

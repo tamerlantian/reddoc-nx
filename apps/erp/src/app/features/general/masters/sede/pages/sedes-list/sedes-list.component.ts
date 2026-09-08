@@ -157,10 +157,6 @@ export class SedesListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.nav.ir('detalle', (row as Sede).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

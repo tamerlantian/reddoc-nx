@@ -44,13 +44,13 @@ export const NOMINA_INFORME_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: `${I18N}.columns.identificacion`,
     type: 'text',
     width: '130px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: `${I18N}.columns.empleado`,
     type: 'text',
   },

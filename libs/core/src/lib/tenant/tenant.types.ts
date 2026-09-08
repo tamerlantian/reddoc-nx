@@ -14,12 +14,15 @@ export const LAST_TENANT_KEY = 'reddoc-last-tenant';
  * siempre vienen: el primero identifica al contenedor en los endpoints del
  * schema público, el segundo dice si el usuario administra esta empresa.
  *
+ * El nombre es `cliente_nombre` —con el prefijo del FK— porque esa fila es la
+ * membresía del usuario, no el cliente; la ficha lo llama `nombre`.
+ *
  * Hereda los `acceso_*` por lo mismo: vienen en la misma respuesta y son lo que
  * decide qué módulos se le muestran al usuario en este contenedor.
  */
 export interface ContenedorAccess extends ContenedorAccesoFlags {
   schema_name: string;
-  nombre: string;
+  cliente_nombre: string;
   activo: boolean;
   cliente_id: number;
   propietario: boolean;

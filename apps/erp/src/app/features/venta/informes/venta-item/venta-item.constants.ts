@@ -40,7 +40,11 @@ export const VENTA_ITEM_COLUMNS: readonly ColumnDef[] = [
     type: 'text',
     width: '130px',
   },
-  { field: 'contacto_nombre', headerKey: 'entities.ventaItem.columns.contacto', type: 'text' },
+  {
+    field: 'contacto_nombre_corto',
+    headerKey: 'entities.ventaItem.columns.contacto',
+    type: 'text',
+  },
   {
     field: 'item_id',
     headerKey: 'entities.ventaItem.columns.itemId',
@@ -98,7 +102,7 @@ export const VENTA_ITEM_FILTER_FIELDS: readonly FilterField[] = [
   { name: 'item_id', displayNameKey: 'entities.ventaItem.columns.itemId', type: 'number' },
   { name: 'item_nombre', displayNameKey: 'entities.ventaItem.columns.item', type: 'string' },
   {
-    name: 'contacto_nombre',
+    name: 'contacto_nombre_corto',
     displayNameKey: 'entities.ventaItem.columns.contacto',
     type: 'string',
   },

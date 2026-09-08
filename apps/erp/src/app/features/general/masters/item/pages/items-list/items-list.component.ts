@@ -201,10 +201,6 @@ export class ItemsListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateToDetail((row as Item).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

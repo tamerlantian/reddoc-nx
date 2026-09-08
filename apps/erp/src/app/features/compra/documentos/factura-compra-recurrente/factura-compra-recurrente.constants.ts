@@ -35,13 +35,13 @@ export const FACTURA_COMPRA_RECURRENTE_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: 'entities.facturaCompraRecurrente.columns.identificacion',
     type: 'text',
     width: '140px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.facturaCompraRecurrente.columns.proveedor',
     type: 'text',
   },

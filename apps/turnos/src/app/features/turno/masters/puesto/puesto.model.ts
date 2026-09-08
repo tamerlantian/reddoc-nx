@@ -24,7 +24,7 @@ export interface Puesto {
   /** Nombre legible del FK ciudad — presente en la respuesta de getById(). */
   readonly ciudad_nombre?: string | null;
   /** Nombre legible del FK contacto — presente en la respuesta de getById(). */
-  readonly contacto_nombre?: string | null;
+  readonly contacto_nombre_corto?: string | null;
   /** Nombre legible del FK centro de costo — presente en la respuesta de getById(). */
   readonly centro_costo_nombre?: string | null;
   /** Nombre legible del FK programador — presente en la respuesta de getById(). */

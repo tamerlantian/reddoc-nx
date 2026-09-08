@@ -30,7 +30,7 @@ import type { CierreRead } from '../../cierre.model';
 interface CabeceraView {
   readonly numero: string | null;
   readonly contacto: string | null;
-  /** Identificación del contacto (`tercero_numero_identificacion` del read). */
+  /** Identificación del contacto (`contacto_numero_identificacion` del read). */
   readonly identificacion: string | null;
   readonly fecha: Date | null;
   readonly centroCosto: string | null;
@@ -246,8 +246,8 @@ export class CierreDetailComponent implements OnInit {
           const fv = cierreToFormValue(read);
           this.cabecera.set({
             numero: read.numero ?? null,
-            contacto: read.contacto_nombre ?? null,
-            identificacion: read.tercero_numero_identificacion ?? null,
+            contacto: read.contacto_nombre_corto ?? null,
+            identificacion: read.contacto_numero_identificacion ?? null,
             fecha: fv.fecha ?? null,
             centroCosto: fv.centro_costo?.nombre ?? read.centro_costo_nombre ?? null,
             comentario: read.comentario ?? null,

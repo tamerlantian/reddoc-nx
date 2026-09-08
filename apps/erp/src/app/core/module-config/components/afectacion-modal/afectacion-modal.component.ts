@@ -50,7 +50,7 @@ interface AfectacionDocumentoRead {
   readonly id?: number | null;
   readonly numero?: string | null;
   readonly fecha?: string | null;
-  readonly contacto_nombre?: string | null;
+  readonly contacto_nombre_corto?: string | null;
   readonly documento_tipo_nombre?: string | null;
   /** FK al documento de referencia (origen). Algunos serializadores lo exponen con `_id`. */
   readonly documento_referencia?: number | null;

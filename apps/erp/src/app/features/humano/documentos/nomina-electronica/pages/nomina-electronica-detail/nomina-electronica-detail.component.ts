@@ -15,7 +15,12 @@ import {
   formatCop,
   type DocumentoEstados,
 } from '@reddoc/core';
-import { BreadcrumbComponent, DataTableComponent, type BreadcrumbItem } from '@reddoc/feature-base';
+import {
+  BreadcrumbComponent,
+  DataTableComponent,
+  type BreadcrumbItem,
+  type RowActionInvokedEvent,
+} from '@reddoc/feature-base';
 import { ENTITY_DATA_GATEWAY } from '@erp/core/module-config';
 import type { DocumentEntityConfig } from '@erp/core/module-config';
 import { DocumentDetailActionsComponent } from '@erp/core/module-config/components/document-detail-actions/document-detail-actions.component';
@@ -26,6 +31,7 @@ import {
   DIAN_DOCUMENT_URL,
   NOMINA_ELECTRONICA_DETALLE_COLUMNS,
   NOMINA_ELECTRONICA_ORIGEN_COLUMNS,
+  NOMINA_ELECTRONICA_ORIGEN_ROW_ACTIONS,
 } from '../../nomina-electronica.constants';
 import {
   CAPACIDADES_VACIAS,
@@ -95,6 +101,7 @@ export class NominaElectronicaDetailComponent implements OnInit {
   protected readonly notFound = signal(false);
 
   protected readonly origenColumns = NOMINA_ELECTRONICA_ORIGEN_COLUMNS;
+  protected readonly origenRowActions = NOMINA_ELECTRONICA_ORIGEN_ROW_ACTIONS;
   protected readonly detalleColumns = NOMINA_ELECTRONICA_DETALLE_COLUMNS;
   protected readonly formatAmount = formatCop;
 
@@ -171,14 +178,16 @@ export class NominaElectronicaDetailComponent implements OnInit {
   }
 
   /**
-   * Abre la nómina origen sobre la que se hizo clic.
+   * Abre la nómina origen de la fila.
    *
-   * El ERP anterior pintaba esta tabla inerte; acá la fila lleva a su ficha, que
-   * es la pregunta natural al mirar de qué se compone el consolidado.
+   * El ERP anterior pintaba esta tabla inerte; acá se llega a la ficha, que es
+   * la pregunta natural al mirar de qué se compone el consolidado. Va en el ojo
+   * y no en el click de la fila, como en el resto de las tablas.
    */
-  protected onOrigenClick(row: unknown): void {
+  protected onOrigenAction(event: RowActionInvokedEvent): void {
+    if (event.actionId !== 'view') return;
     const slug = this.tenant.currentSlug();
-    const nomina = row as NominaElectronicaOrigen;
+    const nomina = event.row as NominaElectronicaOrigen;
     if (!slug || !nomina?.id) return;
     void this.router.navigate(['/t', slug, 'humano', ...NOMINA_DETALLE_PATH, nomina.id]);
   }

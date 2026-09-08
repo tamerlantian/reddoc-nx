@@ -8,7 +8,7 @@ import type { DocumentoReadBase } from './documento.types';
  */
 export type DocumentoContactoRead = Pick<
   DocumentoReadBase,
-  'contacto' | 'contacto_nombre' | 'tercero_numero_identificacion'
+  'contacto' | 'contacto_nombre_corto' | 'contacto_numero_identificacion'
 >;
 
 /**
@@ -25,6 +25,6 @@ export function documentoContactoToOption(read: DocumentoContactoRead): ErpSelec
   if (read.contacto == null) return null;
   return {
     id: read.contacto,
-    nombre: buildContactoLabel(read.tercero_numero_identificacion, read.contacto_nombre),
+    nombre: buildContactoLabel(read.contacto_numero_identificacion, read.contacto_nombre_corto),
   };
 }

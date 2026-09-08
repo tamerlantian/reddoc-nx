@@ -192,10 +192,6 @@ export class UsuariosListComponent {
     this.selectedRows.set(rows as ContenedorMember[]);
   }
 
-  protected onRowClick(row: unknown): void {
-    this.verDetalle(row as ContenedorMember);
-  }
-
   protected onRowAction(event: RowActionInvokedEvent): void {
     const usuario = event.row as ContenedorMember;
     switch (event.actionId) {
