@@ -50,9 +50,7 @@ export const CUENTA_PAGAR_COLUMNS: readonly ColumnDef[] = [
     width: '130px',
   },
   {
-    // `contacto_nombre`, no `contacto_nombre_corto`: es lo que devuelve el
-    // informe. Con el nombre viejo la columna salía vacía.
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.cuentaPagar.columns.contacto',
     type: 'text',
   },

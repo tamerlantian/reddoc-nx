@@ -36,7 +36,7 @@ import type { EgresoRead } from '../../egreso.model';
 interface CabeceraView {
   readonly numero: string | null;
   readonly proveedor: string | null;
-  /** Identificación del contacto (`tercero_numero_identificacion` del read). */
+  /** Identificación del contacto (`contacto_numero_identificacion` del read). */
   readonly identificacion: string | null;
   readonly fecha: Date | null;
   readonly cuentaBanco: string | null;
@@ -254,8 +254,8 @@ export class EgresoDetailComponent implements OnInit {
           const pv = egresoToFormValue(read);
           this.cabecera.set({
             numero: read.numero ?? null,
-            proveedor: read.contacto_nombre ?? null,
-            identificacion: read.tercero_numero_identificacion ?? null,
+            proveedor: read.contacto_nombre_corto ?? null,
+            identificacion: read.contacto_numero_identificacion ?? null,
             fecha: pv.fecha ?? null,
             cuentaBanco: pv.cuenta_banco?.nombre ?? read.cuenta_banco_nombre ?? null,
             comentario: read.comentario ?? null,

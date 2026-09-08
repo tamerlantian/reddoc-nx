@@ -20,12 +20,12 @@ export const SEGURIDAD_SOCIAL_COLUMNS: readonly ColumnDef[] = [
   { field: 'fecha', headerKey: `${I18N}.columns.desde`, type: 'date', width: '110px' },
   { field: 'fecha_hasta', headerKey: `${I18N}.columns.hasta`, type: 'date', width: '110px' },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: `${I18N}.columns.identificacion`,
     type: 'text',
     width: '140px',
   },
-  { field: 'contacto_nombre', headerKey: `${I18N}.columns.empleado`, type: 'text' },
+  { field: 'contacto_nombre_corto', headerKey: `${I18N}.columns.empleado`, type: 'text' },
   {
     field: 'salario',
     headerKey: `${I18N}.columns.salario`,

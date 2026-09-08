@@ -31,7 +31,7 @@ export const MOVIMIENTO_COLUMNS: readonly ColumnDef[] = [
     sortable: true,
   },
   {
-    field: 'comprobante__nombre',
+    field: 'comprobante_nombre',
     headerKey: 'entities.movimientoContable.columns.comprobante',
     type: 'text',
     width: '150px',
@@ -45,20 +45,19 @@ export const MOVIMIENTO_COLUMNS: readonly ColumnDef[] = [
     sortable: true,
   },
   {
-    field: 'contacto__nombre_corto',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.movimientoContable.columns.contacto',
     type: 'text',
   },
   {
-    field: 'cuenta__codigo',
+    field: 'cuenta_codigo',
     headerKey: 'entities.movimientoContable.columns.cuenta',
     type: 'text',
     width: '120px',
     sortable: true,
   },
   {
-    // El backend lo llama `grupo`; en este ERP el concepto es el centro de costo.
-    field: 'grupo__nombre',
+    field: 'centro_costo_nombre',
     headerKey: 'entities.movimientoContable.columns.centroCosto',
     type: 'text',
     width: '160px',
@@ -97,8 +96,8 @@ export const MOVIMIENTO_COLUMNS: readonly ColumnDef[] = [
  * (`MOVIMIENTO_FILTERS`). Los valores (débito, crédito, base) quedan fuera: allá
  * tampoco se filtraban.
  *
- * ⚠️ `grupo__nombre` conserva el nombre del backend aunque la etiqueta diga
- * "centro de costo": si el backend renombró el campo, esta cadena es el fix.
+ * Acá los nombres sí van con **doble guion bajo**: son rutas ORM que el backend
+ * resuelve contra el modelo, no las claves del JSON que leen las columnas.
  */
 export const MOVIMIENTO_FILTER_FIELDS: readonly FilterField[] = [
   { name: 'id', displayNameKey: 'entities.movimientoContable.columns.id', type: 'number' },
@@ -110,7 +109,7 @@ export const MOVIMIENTO_FILTER_FIELDS: readonly FilterField[] = [
     type: 'string',
   },
   {
-    name: 'grupo__nombre',
+    name: 'centro_costo__nombre',
     displayNameKey: 'entities.movimientoContable.columns.centroCosto',
     type: 'string',
   },

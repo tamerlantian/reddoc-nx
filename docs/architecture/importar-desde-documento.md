@@ -200,7 +200,7 @@ que solo lee `count` + `results`):
       "numero": null, // número del documento origen (puede venir null)
       "fecha": "2026-06-01",
       "contacto_id": 231,
-      "contacto_nombre": "CONSORCIO RUTA 40",
+      "contacto_nombre_corto": "CONSORCIO RUTA 40",
       "item_nombre": "Servicio Vigilancia Movil IVA 16%",
       "cantidad": "1.000000", // decimal como string
       "total": "16456457.000000", // decimal como string (valor línea)
@@ -222,7 +222,7 @@ interface LineaPendienteApi {
   readonly numero: number | null; // número del documento origen
   readonly fecha: string; // ISO 'YYYY-MM-DD'
   readonly contacto_id: number;
-  readonly contacto_nombre: string;
+  readonly contacto_nombre_corto: string;
   readonly item_nombre: string; // ⚠️ NO trae item_id
   readonly cantidad: string;
   readonly total: string;

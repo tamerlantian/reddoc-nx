@@ -44,13 +44,13 @@ export function buildPosColumns(i18nNamespace: string): readonly ColumnDef[] {
       width: '110px',
     },
     {
-      field: 'tercero_numero_identificacion',
+      field: 'contacto_numero_identificacion',
       headerKey: `${ns}.identificacion`,
       type: 'text',
       width: '140px',
     },
     {
-      field: 'contacto_nombre',
+      field: 'contacto_nombre_corto',
       headerKey: `${ns}.contacto`,
       type: 'text',
     },

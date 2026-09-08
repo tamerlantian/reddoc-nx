@@ -17,12 +17,12 @@ export const NOMINA_ELECTRONICA_COLUMNS: readonly ColumnDef[] = [
   { field: 'numero', headerKey: `${I18N}.columns.numero`, type: 'text', width: '110px' },
   { field: 'fecha', headerKey: `${I18N}.columns.fecha`, type: 'date', width: '110px' },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: `${I18N}.columns.identificacion`,
     type: 'text',
     width: '140px',
   },
-  { field: 'contacto_nombre', headerKey: `${I18N}.columns.empleado`, type: 'text' },
+  { field: 'contacto_nombre_corto', headerKey: `${I18N}.columns.empleado`, type: 'text' },
   {
     field: 'base_cotizacion',
     headerKey: `${I18N}.columns.baseCotizacion`,

@@ -37,7 +37,7 @@ import type { FacturaVentaRecurrenteRead } from '../../factura-venta-recurrente.
 /** Cabecera legible de la factura recurrente para la ficha (solo lo que trae `getById`). */
 interface CabeceraView {
   readonly cliente: string | null;
-  /** Identificación del cliente (`tercero_numero_identificacion` del read). */
+  /** Identificación del cliente (`contacto_numero_identificacion` del read). */
   readonly identificacion: string | null;
   readonly plazoPago: string | null;
   readonly sede: string | null;
@@ -182,8 +182,8 @@ export class FacturaVentaRecurrenteDetailComponent implements OnInit {
         next: ({ cabecera, lineas, asesores }) => {
           const read = cabecera as FacturaVentaRecurrenteRead;
           this.cabecera.set({
-            cliente: read.contacto_nombre ?? null,
-            identificacion: read.tercero_numero_identificacion ?? null,
+            cliente: read.contacto_nombre_corto ?? null,
+            identificacion: read.contacto_numero_identificacion ?? null,
             plazoPago: read.plazo_pago_nombre ?? null,
             sede: read.sede_nombre ?? null,
             almacen: read.almacen_nombre ?? null,

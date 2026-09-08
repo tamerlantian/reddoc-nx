@@ -21,9 +21,8 @@
  * Fila del listado. Subconjunto de la cabecera de documento: identificación,
  * tercero y el desglose fiscal.
  *
- * El empleado/tercero llega como `contacto_nombre` siguiendo la convención de
- * `DocumentoListRowBase` que ya usan las demás utilidades del ERP; el legacy lo
- * tipaba como `contacto_nombre_corto`.
+ * El empleado/tercero llega como `contacto_nombre_corto`, la convención de
+ * `DocumentoListRowBase` que ya usan las demás utilidades del ERP.
  */
 export interface ContabilizarRow {
   readonly id: number;
@@ -31,7 +30,7 @@ export interface ContabilizarRow {
   readonly numero: number | string | null;
   /** Fecha del documento (`yyyy-MM-dd`). */
   readonly fecha: string | null;
-  readonly contacto_nombre: string | null;
+  readonly contacto_nombre_corto: string | null;
   readonly subtotal: number | string | null;
   readonly impuesto: number | string | null;
   readonly total: number | string | null;

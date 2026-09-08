@@ -50,7 +50,7 @@ export const ASIENTO_COLUMNS: readonly ColumnDef[] = [
     width: '140px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.asiento.columns.contacto',
     type: 'text',
   },

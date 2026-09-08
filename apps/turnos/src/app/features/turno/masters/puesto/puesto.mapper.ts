@@ -13,7 +13,7 @@ export function puestoToFormValue(p: Puesto): Partial<PuestoFormRawValue> {
     longitud: p.longitud ?? '',
     comentario: p.comentario ?? '',
     ciudad: p.ciudad != null ? { id: p.ciudad, nombre: p.ciudad_nombre ?? '' } : null,
-    contacto: p.contacto != null ? { id: p.contacto, nombre: p.contacto_nombre ?? '' } : null,
+    contacto: p.contacto != null ? { id: p.contacto, nombre: p.contacto_nombre_corto ?? '' } : null,
     centroCosto:
       p.centro_costo != null ? { id: p.centro_costo, nombre: p.centro_costo_nombre ?? '' } : null,
     programador:

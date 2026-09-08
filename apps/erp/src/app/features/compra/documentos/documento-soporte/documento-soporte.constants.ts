@@ -37,13 +37,13 @@ export const DOCUMENTO_SOPORTE_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: 'entities.documentoSoporte.columns.identificacion',
     type: 'text',
     width: '140px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.documentoSoporte.columns.proveedor',
     type: 'text',
   },

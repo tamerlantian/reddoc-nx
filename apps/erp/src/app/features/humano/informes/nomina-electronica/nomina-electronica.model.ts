@@ -8,7 +8,7 @@
  * por nómina emitida.
  *
  * **Supuestos pendientes de confirmar con backend**: el empleado llega como
- * `tercero_numero_identificacion` / `contacto_nombre`, siguiendo la convención
+ * `contacto_numero_identificacion` / `contacto_nombre_corto`, siguiendo la convención
  * de `DocumentoListRowBase` que ya usan los demás listados de documento del
  * ERP. El legacy los tipaba como `contacto_numero_identificacion` /
  * `contacto_nombre_corto`; si el API nuevo mantiene esos nombres, el fix es
@@ -19,8 +19,8 @@ export interface NominaElectronicaInforme {
   readonly numero: number | string | null;
   /** Fecha de emisión (`yyyy-MM-dd`). */
   readonly fecha: string | null;
-  readonly tercero_numero_identificacion: string | null;
-  readonly contacto_nombre: string | null;
+  readonly contacto_numero_identificacion: string | null;
+  readonly contacto_nombre_corto: string | null;
   /** Contrato que originó la nómina. */
   readonly contrato_id: number | null;
   /** Salario base del contrato al momento de liquidar. */

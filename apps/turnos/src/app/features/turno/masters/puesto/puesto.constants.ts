@@ -26,7 +26,11 @@ export const PUESTOS_COLUMNS: readonly ColumnDef[] = [
     align: 'right',
   },
   { field: 'contacto', headerKey: 'entities.puesto.columns.contacto', type: 'text' },
-  { field: 'contacto_nombre', headerKey: 'entities.puesto.columns.contactoNombre', type: 'text' },
+  {
+    field: 'contacto_nombre_corto',
+    headerKey: 'entities.puesto.columns.contactoNombre',
+    type: 'text',
+  },
   { field: 'nombre', headerKey: 'entities.puesto.columns.nombre', type: 'text' },
   { field: 'direccion', headerKey: 'entities.puesto.columns.direccion', type: 'text' },
   { field: 'celular', headerKey: 'entities.puesto.columns.celular', type: 'text' },

@@ -51,31 +51,28 @@ unificó, se simplifica.
 
 ### 1.2 Nombres de campo del empleado
 
-Los tres informes y el documento leen el empleado como **`tercero_numero_identificacion`** y
-**`contacto_nombre`**, la convención de `DocumentoListRowBase` que ya usan los demás listados del
-ERP. El legacy los tipaba como `contacto__numero_identificacion` / `contacto__nombre_corto`.
-
-Elegí la convención nuestra para no cargar dos en el mismo repo, **pero no está verificado**. Si el
-API responde con los nombres del legacy, el fix es local a `*.model.ts` + `*.constants.ts` de cada
-informe.
+**Resuelto (2026-09-08), verificado contra la respuesta real de `/humano/contrato/lista/`.** El
+empleado se lee como **`contacto_numero_identificacion`** y **`contacto_nombre_corto`**: el backend
+serializa el companion con el prefijo de la FK y el nombre del contacto es `nombre_corto`, no
+`nombre`. Antes el front tipaba `tercero_numero_identificacion` / `contacto_nombre` y las columnas
+salían vacías.
 
 Ojo: los **filtros** sí usan el lookup de Django (`contacto__numero_identificacion`) a propósito —
 el filtro viaja al ORM, la columna viene del serializador. Eso no cambia.
 
 ### 1.2.b Identificación del empleado en los masters de contrato
 
-Pedido a backend (2026-08-25): que el serializador de **contrato** exponga
-`contacto_numero_identificacion` como companion de la FK `contacto`, igual que ya expone
-`contacto_nombre`. Es un campo del **contacto**, no del contrato: no viaja en el payload de
+**Cumplido.** El pedido a backend (2026-08-25) era que el serializador de **contrato** expusiera
+`contacto_numero_identificacion` como companion de la FK `contacto`; ya viene, junto con
+`contacto_nombre_corto`. Es un campo del **contacto**, no del contrato: no viaja en el payload de
 guardado —el contrato solo guarda la FK— y por eso el front solo lo lee.
 
-Sin él, el addon de cédula de `<app-empleado-autocomplete>` sale vacío al **editar** un contrato
-(al crearlo se ve bien, porque ahí la identificación la trae el propio autocomplete desde
-`general/contacto/seleccionar/`), y la ficha del detalle no la puede mostrar.
+Sin él, el addon de cédula de `<app-empleado-autocomplete>` salía vacío al **editar** un contrato
+(al crearlo se veía bien, porque ahí la identificación la trae el propio autocomplete desde
+`general/contacto/seleccionar/`), y la ficha del detalle no la podía mostrar.
 
-El front ya lo lee de forma opcional (`contacto_numero_identificacion?`) con degradado a vacío, así
-que se enciende solo cuando el backend lo agregue. Al confirmarlo, sumar la **columna y el filtro**
-al listado (`contrato.constants.ts`), que quedaron afuera para no publicar una columna vacía.
+Queda pendiente sumar la **columna y el filtro** de identificación al listado
+(`contrato.constants.ts`), que quedaron afuera para no publicar una columna vacía.
 
 Mismo pedido, aún **sin nombre confirmado**, para `novedad` y `adicional`: ambos referencian
 `contrato` y su companion de nombre es `contrato_nombre` (que ya es el nombre del empleado), así que

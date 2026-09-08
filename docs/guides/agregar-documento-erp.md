@@ -68,7 +68,7 @@ Carpeta `features/venta/documentos/nota-credito-venta/` con **3 archivos**:
 
 **`nota-credito-venta.constants.ts`** — columnas y filtros visibles. Los `field` deben
 coincidir con el shape del endpoint `general/documento/` (`numero`, `fecha`,
-`contacto_nombre`, `estado_nombre`, `total`, …):
+`contacto_nombre_corto`, `estado_nombre`, `total`, …):
 
 ```ts
 import type { ColumnDef, FilterField } from '@reddoc/core';
@@ -89,7 +89,7 @@ export const NOTA_CREDITO_VENTA_COLUMNS: readonly ColumnDef[] = [
     sortable: true,
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.notaCreditoVenta.columns.contacto',
     type: 'text',
     sortable: true,

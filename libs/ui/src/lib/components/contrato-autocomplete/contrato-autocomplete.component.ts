@@ -33,14 +33,14 @@ export interface ContratoOption {
 /**
  * Fila cruda del endpoint `humano/contrato/seleccionar/`.
  *
- * Forma real: `{ id, contacto, contacto_nombre, fecha_desde, fecha_hasta,
- * estado_terminado }`. La etiqueta es `contacto_nombre` (nombre del empleado del
+ * Forma real: `{ id, contacto, contacto_nombre_corto, fecha_desde, fecha_hasta,
+ * estado_terminado }`. La etiqueta es `contacto_nombre_corto` (nombre del empleado del
  * contrato). La identificación **no viene** en este endpoint hoy; si el backend
  * la agrega (ej. `contacto_numero_identificacion`), el addon la pinta solo.
  */
 interface ContratoApiRow {
   readonly id: number;
-  readonly contacto_nombre?: string;
+  readonly contacto_nombre_corto?: string;
   readonly contacto_numero_identificacion?: string;
   readonly nombre?: string;
 }
@@ -49,7 +49,7 @@ interface ContratoApiRow {
 function toOption(row: ContratoApiRow): ContratoOption {
   return {
     id: row.id,
-    nombre: row.contacto_nombre ?? row.nombre ?? '',
+    nombre: row.contacto_nombre_corto ?? row.nombre ?? '',
     numero_identificacion: row.contacto_numero_identificacion ?? '',
   };
 }

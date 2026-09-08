@@ -50,7 +50,7 @@ export interface LineaPendienteApi {
   /** Fecha del documento origen, `yyyy-MM-dd`. */
   readonly fecha: string;
   readonly contacto_id: number;
-  readonly contacto_nombre: string;
+  readonly contacto_nombre_corto: string;
   /** Id del ítem de la línea origen. */
   readonly item_id: number;
   /** Nombre del ítem. */

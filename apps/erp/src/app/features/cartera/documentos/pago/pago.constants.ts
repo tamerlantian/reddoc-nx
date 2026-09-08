@@ -41,13 +41,13 @@ export const PAGO_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: 'entities.pago.columns.identificacion',
     type: 'text',
     width: '140px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.pago.columns.cliente',
     type: 'text',
   },

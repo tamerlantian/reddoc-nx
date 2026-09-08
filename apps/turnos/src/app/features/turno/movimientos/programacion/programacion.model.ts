@@ -8,15 +8,15 @@
  * `programacion.constants.ts` (`PROGRAMACION_DOCUMENT_CONFIG`).
  *
  * Por eso el shape mapea el read-model de `general/documento/lista/`: la
- * identificación del tercero llega como `tercero_numero_identificacion` y el
- * contacto como `contacto_nombre`. Solo se tipan los campos que la tabla muestra.
+ * identificación del tercero llega como `contacto_numero_identificacion` y el
+ * contacto como `contacto_nombre_corto`. Solo se tipan los campos que la tabla muestra.
  */
 export interface Programacion {
   readonly id: number;
   readonly numero: string;
   readonly fecha: string;
-  readonly tercero_numero_identificacion: string;
-  readonly contacto_nombre: string;
+  readonly contacto_numero_identificacion: string;
+  readonly contacto_nombre_corto: string;
   readonly horas: number;
   readonly horas_diurnas: number;
   readonly horas_nocturnas: number;

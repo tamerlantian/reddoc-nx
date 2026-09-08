@@ -26,7 +26,7 @@ export interface HistorialMovimiento {
   readonly documento_tipo_id: number | null;
   readonly documento_tipo_nombre: string | null;
   /** Tercero del documento. El informe trae el nombre, sin id ni identificación. */
-  readonly contacto_nombre: string | null;
+  readonly contacto_nombre_corto: string | null;
 
   // ── Qué se movió y dónde ──────────────────────────────────────────────────
   readonly item_id: number | null;

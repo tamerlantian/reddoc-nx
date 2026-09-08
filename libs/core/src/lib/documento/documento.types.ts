@@ -39,8 +39,8 @@ export interface DocumentoListRowBase {
   readonly documento_tipo: number;
   readonly documento_tipo_nombre: string | null;
   readonly contacto: number | null;
-  readonly contacto_nombre: string | null;
-  readonly tercero_numero_identificacion: string | null;
+  readonly contacto_nombre_corto: string | null;
+  readonly contacto_numero_identificacion: string | null;
   readonly resolucion: number | null;
   readonly plazo_pago: number | null;
   readonly asesor: number | null;
@@ -81,13 +81,17 @@ export interface DocumentoEstados {
 export interface DocumentoReadBase extends DocumentoEstados {
   readonly id: number;
   readonly contacto: number | null;
-  /** Nombre del contacto para etiquetar el autocomplete al cargar en edición. */
-  readonly contacto_nombre?: string | null;
+  /**
+   * Nombre corto del contacto, para etiquetar el autocomplete al cargar en
+   * edición. Es `nombre_corto` en el master; el documento lo serializa con el
+   * prefijo del FK, igual que `contacto_numero_identificacion`.
+   */
+  readonly contacto_nombre_corto?: string | null;
   /**
    * Identificación del contacto. Completa la etiqueta del autocomplete en
    * edición (`identificación - nombre`, ver `documentoContactoToOption`).
    */
-  readonly tercero_numero_identificacion?: string | null;
+  readonly contacto_numero_identificacion?: string | null;
   /** Fecha en formato `yyyy-MM-dd`. */
   readonly fecha: string | null;
 }

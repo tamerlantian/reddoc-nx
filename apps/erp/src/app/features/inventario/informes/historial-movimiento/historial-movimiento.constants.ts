@@ -42,7 +42,7 @@ export const HISTORIAL_MOVIMIENTO_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.historialMovimiento.columns.contacto',
     type: 'text',
   },

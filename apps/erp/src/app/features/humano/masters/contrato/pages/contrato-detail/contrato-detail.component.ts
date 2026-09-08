@@ -47,7 +47,7 @@ interface ParametroInicial {
  * Master del módulo Humano (camino B). Carga el contrato por `:id` con
  * `ContratoService.getById` y lo presenta en las mismas tres secciones que el
  * form (datos, remuneración, seguridad social), reutilizando las etiquetas de
- * `form.fields`. La identidad de la ficha es el empleado (`contacto_nombre`);
+ * `form.fields`. La identidad de la ficha es el empleado (`contacto_nombre_corto`);
  * el estado (activo/terminado) se muestra como badge en el encabezado.
  */
 @Component({
@@ -138,7 +138,7 @@ export class ContratoDetailComponent implements OnInit {
         routerLink: slug ? ['/t', slug, ...CONTRATO_LIST_PATH] : undefined,
       },
     ];
-    if (contrato?.contacto_nombre) items.push({ label: contrato.contacto_nombre });
+    if (contrato?.contacto_nombre_corto) items.push({ label: contrato.contacto_nombre_corto });
     return items;
   });
 
@@ -220,7 +220,11 @@ export class ContratoDetailComponent implements OnInit {
           const ref = this.dialog.open(TerminarContratoModalComponent, {
             ...ENTITY_ACTION_DIALOG_DEFAULTS,
             width: '40rem',
-            data: { contratoId: c.id, empleado: c.contacto_nombre, fechaHasta: c.fecha_hasta },
+            data: {
+              contratoId: c.id,
+              empleado: c.contacto_nombre_corto,
+              fechaHasta: c.fecha_hasta,
+            },
           });
           return ref ? ref.onClose : EMPTY;
         }),
@@ -243,7 +247,7 @@ export class ContratoDetailComponent implements OnInit {
             width: '44rem',
             data: {
               contratoId: c.id,
-              empleado: c.contacto_nombre,
+              empleado: c.contacto_nombre_corto,
               fechaUltimoPago: c.fecha_ultimo_pago,
               fechaUltimoPagoPrima: c.fecha_ultimo_pago_prima,
               fechaUltimoPagoCesantia: c.fecha_ultimo_pago_cesantia,

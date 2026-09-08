@@ -86,10 +86,10 @@
                 {{ formatFecha(doc.fecha) }}
               </span>
             </div>
-            @if (doc.contacto_nombre) {
+            @if (doc.contacto_nombre_corto) {
               <div class="flex flex-col gap-0.5">
                 <span class="afectacion__micro-label">{{ a.campos.contacto }}</span>
-                <span class="text-[0.85rem] text-brand-text">{{ doc.contacto_nombre }}</span>
+                <span class="text-[0.85rem] text-brand-text">{{ doc.contacto_nombre_corto }}</span>
               </div>
             }
           </div>
@@ -167,10 +167,10 @@
                 {{ formatFecha(ref.fecha) }}
               </span>
             </div>
-            @if (ref.contacto_nombre) {
+            @if (ref.contacto_nombre_corto) {
               <div class="flex flex-col gap-0.5">
                 <span class="afectacion__micro-label">{{ a.campos.contacto }}</span>
-                <span class="text-[0.85rem] text-brand-text">{{ ref.contacto_nombre }}</span>
+                <span class="text-[0.85rem] text-brand-text">{{ ref.contacto_nombre_corto }}</span>
               </div>
             }
           </div>

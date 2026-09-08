@@ -45,13 +45,13 @@ export const FACTURA_VENTA_RECURRENTE_COLUMNS: readonly ColumnDef[] = [
     width: '110px',
   },
   {
-    field: 'tercero_numero_identificacion',
+    field: 'contacto_numero_identificacion',
     headerKey: 'entities.facturaVentaRecurrente.columns.identificacion',
     type: 'text',
     width: '140px',
   },
   {
-    field: 'contacto_nombre',
+    field: 'contacto_nombre_corto',
     headerKey: 'entities.facturaVentaRecurrente.columns.contacto',
     type: 'text',
   },

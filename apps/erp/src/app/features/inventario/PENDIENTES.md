@@ -57,7 +57,7 @@ almacén.
 
 ```
 id · documento_id · documento_numero · documento_fecha · documento_tipo_id ·
-documento_tipo_nombre · contacto_nombre · item_id · item_codigo · item_nombre ·
+documento_tipo_nombre · contacto_nombre_corto · item_id · item_codigo · item_nombre ·
 almacen_id · almacen_nombre · cantidad · cantidad_operada ·
 operacion_inventario · operacion_remision · costo · precio · detalle
 ```

@@ -31,7 +31,7 @@ const IMPORTAR_DOCUMENTO_COLUMNS: readonly ColumnDef[] = [
     width: '7rem',
   },
   { field: 'fecha', headerKey: 'documentImport.columns.fecha', type: 'date', width: '8rem' },
-  { field: 'contacto_nombre', headerKey: 'documentImport.columns.contacto', type: 'text' },
+  { field: 'contacto_nombre_corto', headerKey: 'documentImport.columns.contacto', type: 'text' },
   { field: 'item_nombre', headerKey: 'documentImport.columns.item', type: 'text' },
   {
     field: 'cantidad',

@@ -97,7 +97,7 @@
        y el nombre del empleado, que ahora también lo es — antes solo existía en
        el título, así que no se podía leer junto al resto. La identidad la dan la
        miga y el `<h1>` accesible. -->
-  <h1 class="sr-only">{{ c.contacto_nombre }}</h1>
+  <h1 class="sr-only">{{ c.contacto_nombre_corto }}</h1>
 
   <!-- ── Información general ──────────────────────────────────────────────────── -->
   <section class="overflow-hidden rounded-xl border border-[rgba(20,48,73,0.1)] bg-brand-surface">
@@ -147,9 +147,9 @@
             <dt class="contrato-detail__label">{{ f.contacto }}</dt>
             <dd
               class="contrato-detail__value"
-              [class.contrato-detail__value--empty]="!c.contacto_nombre"
+              [class.contrato-detail__value--empty]="!c.contacto_nombre_corto"
             >
-              {{ c.contacto_nombre || '—' }}
+              {{ c.contacto_nombre_corto || '—' }}
             </dd>
           </div>
           <div class="flex flex-col gap-0.5">

@@ -19,34 +19,31 @@ export const MOVIMIENTO_SERIALIZADOR = 'informe_movimiento';
  * el diálogo "Contabilidad" de las fichas de detalle (`core/components/
  * contabilidad-dialog`), que muestra las líneas de un solo documento.
  *
- * Los nombres llegan con **doble guion bajo** porque el serializador aplana las
- * relaciones (`contacto__nombre_corto`, `cuenta__codigo`…). Se conservan tal
- * cual: es una consulta de solo lectura, no hay formulario que mapear, y
- * renombrarlos obligaría a un mapper que solo existiría para maquillar.
+ * Los nombres de las relaciones llegan con **un solo** guion bajo
+ * (`contacto_nombre_corto`, `cuenta_codigo`…): son los alias del serializer
+ * `ConMovimiento`, verificados contra el schema del backend (2026-09-08). Se
+ * conservan tal cual: es una consulta de solo lectura, no hay formulario que
+ * mapear, y renombrarlos obligaría a un mapper que solo existiría para maquillar.
  *
- * ⚠️ Contrato **supuesto** a partir del ERP legacy (nombres y tipos), sin
- * verificar contra el backend. Y hay un riesgo concreto: el ERP anterior, sobre
- * este mismo recurso, lee la respuesta con **un solo** guion bajo
- * (`contacto_nombre_corto`, `cuenta_codigo`…). Acá se usa el doble porque así lo
- * declara el listado de movimientos del ERP nuevo, que consulta por `…/lista/`
- * —una ruta que el legacy no tiene—. Si el serializador de `lista/` aplanara
- * como el del listado viejo, estas columnas saldrían vacías; el fix sería
- * renombrarlas acá, en un solo lugar.
+ * Antes estaban tipados con **doble** guion bajo, portados del listado del ERP
+ * nuevo en vez de la respuesta real, y las cuatro columnas de relación salían
+ * vacías. Ojo con la asimetría: los **filtros** de este mismo recurso sí viajan
+ * como rutas ORM con doble guion bajo (ver `MOVIMIENTO_FILTER_FIELDS`).
  */
 export interface Movimiento {
   readonly id: number;
   /** Consecutivo del documento que originó el movimiento. */
   readonly numero: number | null;
   readonly fecha: string | null;
-  readonly comprobante__nombre: string | null;
-  readonly contacto__nombre_corto: string | null;
+  readonly comprobante_nombre: string | null;
+  readonly contacto_nombre_corto: string | null;
   /** Código de la cuenta imputada (no su id). */
-  readonly cuenta__codigo: string | null;
+  readonly cuenta_codigo: string | null;
   /**
-   * Centro de costo. El backend lo llama `grupo` porque así se llamaba en el ERP
-   * anterior; en este ERP el concepto es el centro de costo.
+   * Centro de costo. El ERP anterior lo llamaba `grupo`; el backend de hoy lo
+   * serializa como `centro_costo_nombre`.
    */
-  readonly grupo__nombre: string | null;
+  readonly centro_costo_nombre: string | null;
   readonly debito: string | number | null;
   readonly credito: string | number | null;
   readonly base: string | number | null;

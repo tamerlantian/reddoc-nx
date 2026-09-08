@@ -38,7 +38,7 @@ import type { PedidoClienteRead } from '../../pedido-cliente.model';
 interface CabeceraView {
   readonly numero: string | null;
   readonly cliente: string | null;
-  /** Identificación del contacto (`tercero_numero_identificacion` del read). */
+  /** Identificación del contacto (`contacto_numero_identificacion` del read). */
   readonly identificacion: string | null;
   readonly fecha: Date | null;
   /**
@@ -265,8 +265,8 @@ export class PedidoClienteDetailComponent implements OnInit {
           const read = cabecera as PedidoClienteRead;
           this.cabecera.set({
             numero: read.numero ?? null,
-            cliente: read.contacto_nombre ?? null,
-            identificacion: read.tercero_numero_identificacion ?? null,
+            cliente: read.contacto_nombre_corto ?? null,
+            identificacion: read.contacto_numero_identificacion ?? null,
             fecha: fromIsoDate(read.fecha),
             estados: {
               estado_aprobado: read.estado_aprobado,
