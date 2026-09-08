@@ -21,18 +21,29 @@ import {
   type ListQuery,
   type SortSpec,
 } from '@reddoc/core';
-import { DataTableComponent, type PageChangeEvent } from '@reddoc/feature-base';
+import {
+  DataFilterModalComponent,
+  DataTableComponent,
+  DataToolbarComponent,
+  type PageChangeEvent,
+} from '@reddoc/feature-base';
 import type { AppDict } from '@erp/i18n';
 import { AgregarDocumentoService } from '../../agregar-documento.service';
+import { AGREGAR_DOCUMENTO_FILTER_FIELDS } from '../../agregar-documento.constants';
 import type {
   AgregarDocumentoModalData,
   DocumentoPendienteApi,
 } from '../../agregar-documento.types';
 
-/** Columnas de la tabla de documentos pendientes (solo lectura, selección múltiple). */
+/**
+ * Columnas de la tabla de documentos pendientes (solo lectura, selección
+ * múltiple). La identificación del tercero va antes que su nombre, como en el
+ * resto de los listados. De los montos solo van los tres que deciden un cruce:
+ * cuánto es, cuánto se cruzó y cuánto queda.
+ */
 const AGREGAR_DOCUMENTO_COLUMNS: readonly ColumnDef[] = [
   {
-    field: 'documento_tipo__nombre',
+    field: 'documento_tipo_nombre',
     headerKey: 'documentAdd.columns.tipo',
     type: 'text',
     width: '11rem',
@@ -45,7 +56,13 @@ const AGREGAR_DOCUMENTO_COLUMNS: readonly ColumnDef[] = [
     type: 'date',
     width: '8rem',
   },
-  { field: 'contacto__nombre_corto', headerKey: 'documentAdd.columns.contacto', type: 'text' },
+  {
+    field: 'contacto_numero_identificacion',
+    headerKey: 'documentAdd.filters.identificacion',
+    type: 'text',
+    width: '9rem',
+  },
+  { field: 'contacto_nombre_corto', headerKey: 'documentAdd.columns.contacto', type: 'text' },
   {
     field: 'total',
     headerKey: 'documentAdd.columns.total',
@@ -74,8 +91,8 @@ const DEFAULT_SORT: readonly SortSpec[] = [{ field: 'fecha', direction: 'desc' }
 
 /**
  * Modal de **agregar documento** (cruce de cartera): lista los documentos con
- * saldo pendiente (`POST /general/documento/lista/?serializador=adicionar`) con
- * selección múltiple, paginación y orden. No persiste nada: al confirmar
+ * saldo pendiente (`POST /general/documento/lista/`) con selección múltiple,
+ * paginación y orden. No persiste nada: al confirmar
  * **cierra el diálogo emitiendo las filas seleccionadas**
  * (`DocumentoPendienteApi[]`) por `ref.onClose`; al cancelar emite `null`. La
  * conversión a línea contable y la persistencia las hace el consumidor (la
@@ -83,19 +100,25 @@ const DEFAULT_SORT: readonly SortSpec[] = [{ field: 'fecha', direction: 'desc' }
  *
  * Por defecto acota al contacto de la cabecera; el checkbox "mostrar todos los
  * contactos" quita ese filtro (cruces de terceros distintos al de la cabecera).
+ * Encima de la tabla van los building blocks de los listados
+ * (`<lib-data-toolbar>` + `<lib-data-filter-modal>`), pero sin persistir: los
+ * filtros son de esta búsqueda, no del listado de un módulo.
  *
  * Se abre vía `DialogService.open(...)` con `{ ...ENTITY_ACTION_DIALOG_DEFAULTS }`
  * y `data: AgregarDocumentoModalData`. Se carga **lazy** (`import()` dinámico)
  * para no arrastrar PrimeNG/tabla al bundle inicial.
- *
- * TODO(filtros): la próxima iteración suma filtros de usuario sobre el
- * vocabulario `FilterField` de `@reddoc/core` (número, fecha, tipo, contacto),
- * inyectándolos en `buildQuery()` junto al filtro de contacto.
  */
 @Component({
   selector: 'app-agregar-documento-modal',
   standalone: true,
-  imports: [FormsModule, ButtonModule, CheckboxModule, DataTableComponent],
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DataTableComponent,
+    DataToolbarComponent,
+    DataFilterModalComponent,
+  ],
   templateUrl: './agregar-documento-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -109,6 +132,7 @@ export class AgregarDocumentoModalComponent {
 
   protected readonly t = this.i18n.t;
   protected readonly columns = AGREGAR_DOCUMENTO_COLUMNS;
+  protected readonly filterFields = AGREGAR_DOCUMENTO_FILTER_FIELDS;
 
   /** Datos de entrada del diálogo (contacto a filtrar + familia de cartera). */
   private readonly data = this.dialogConfig.data as AgregarDocumentoModalData | undefined;
@@ -119,6 +143,10 @@ export class AgregarDocumentoModalComponent {
 
   /** Quita el filtro por contacto: lista pendientes de todos los terceros. */
   protected readonly mostrarTodosLosContactos = signal(false);
+
+  /** Filtros que arma el usuario; efímeros (no se guardan en localStorage). */
+  protected readonly activeFilters = signal<readonly FilterCondition[]>([]);
+  protected readonly filtersVisible = signal(false);
 
   protected readonly items = signal<readonly DocumentoPendienteApi[]>([]);
   protected readonly totalCount = signal(0);
@@ -152,6 +180,22 @@ export class AgregarDocumentoModalComponent {
     this.selected.set(rows as DocumentoPendienteApi[]);
   }
 
+  protected openFilters(): void {
+    this.filtersVisible.set(true);
+  }
+
+  protected onFiltersApply(filters: readonly FilterCondition[]): void {
+    this.activeFilters.set(filters);
+    this.page.set(0);
+    this.load();
+  }
+
+  protected clearFilters(): void {
+    this.activeFilters.set([]);
+    this.page.set(0);
+    this.load();
+  }
+
   protected onMostrarTodosChange(mostrarTodos: boolean): void {
     this.mostrarTodosLosContactos.set(mostrarTodos);
     this.page.set(0);
@@ -168,13 +212,17 @@ export class AgregarDocumentoModalComponent {
     this.ref.close(null);
   }
 
-  /** Arma el `ListQuery` con el filtro por contacto (salvo "todos") + orden + página. */
+  /**
+   * Arma el `ListQuery`: contacto (salvo "todos") + filtros del usuario + orden
+   * + página. Los de la familia de cartera los antepone el servicio.
+   */
   private buildQuery(): ListQuery {
     const filters: FilterCondition[] = [];
     const contactoId = this.data?.contactoId;
     if (contactoId != null && !this.mostrarTodosLosContactos()) {
       filters.push({ field: 'contacto_id', operator: 'eq', value: contactoId });
     }
+    filters.push(...this.activeFilters());
     // Sin orden del usuario, cae al orden por defecto (más recientes primero).
     const sort = this.sort().length > 0 ? [...this.sort()] : [...DEFAULT_SORT];
     return { filters, sort, page: this.page(), pageSize: this.pageSize() };

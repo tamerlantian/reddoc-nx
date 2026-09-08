@@ -6,55 +6,57 @@
  * (pago/egreso): cada documento elegido se vuelve una línea con
  * `documento_afectado`, `valor = pendiente` y la cuenta/naturaleza del cruce.
  *
- * ⚠️ Contrato **supuesto** a partir del ERP legacy (`serializador=adicionar`
- * sobre `general/documento/`): nombres de campos y tipos sin confirmar con
- * backend. Todo el riesgo queda aislado en este archivo y en el mapper
- * (`documentoPendienteToFormValue`).
+ * ⚠️ Hueco del backend (verificado el 2026-09-08): la consulta responde con el
+ * serializer por defecto de `documento/lista/`, así que llegan el documento, el
+ * tercero y los montos, pero **faltan las dos cosas que definen la línea del
+ * cruce**: la cuenta y la operación del tipo. Mientras tanto la línea nace sin
+ * cuenta y el usuario la elige.
  *
- * 💡 Propuesta para backend (reemplaza el hack legacy del tipo 22, donde la
- * cuenta salía del documento y no del tipo): que el serializador `adicionar`
- * devuelva la **cuenta de cruce ya resuelta** por documento —
- * `cuenta_cruce_id` + `cuenta_cruce_codigo` (y opcionalmente la `naturaleza`) —
- * en vez de exponer `documento_tipo__cuenta_cobrar_*`/`_pagar_*` y dejar que el
- * front derive con casos especiales por tipo. Cuando exista, el mapper cambia
- * en un solo lugar.
+ * 💡 Pedido al backend: devolver por documento la cuenta de cruce ya resuelta
+ * (`cuenta_cruce_id` + `cuenta_cruce_codigo`, la de CxC o CxP según la familia)
+ * y `documento_tipo_operacion`. Resolverla en el servidor se lleva puesto de
+ * paso el caso de seguridad social —cuenta en el documento y no en el tipo—,
+ * que el ERP anterior parchaba con un `if` por id de tipo.
  */
 
 /** Familia de cartera que alimenta el modal: cuentas por cobrar o por pagar. */
 export type CarteraTipo = 'cobrar' | 'pagar';
 
 /**
- * Fila cruda de `POST /general/documento/lista/?serializador=adicionar` para el
- * cruce de cartera. Montos como `string` con cola de decimales
- * (`"120600.000000"`); fechas como `string` `yyyy-MM-dd`.
+ * Fila cruda de `POST /general/documento/lista/` para el cruce de cartera.
+ *
+ * Subconjunto de `DocumentoListRowBase` (`@reddoc/core`): nombres planos con un
+ * guion bajo, montos como `string` con cola de decimales (`"17475000.000000"`) y
+ * fechas `yyyy-MM-dd`.
+ *
+ * `afectado` y `pendiente` no están en el tipo compartido y sí llegan acá; se
+ * declaran local hasta confirmar si los trae cualquier `lista/`.
  */
 export interface DocumentoPendienteApi {
   /** Id del documento (cabecera) → futuro `documento_afectado` de la línea. */
   readonly id: number;
-  readonly numero: number | null;
-  readonly fecha: string;
+  readonly numero: number | string | null;
+  readonly fecha: string | null;
   readonly fecha_vence: string | null;
+  readonly documento_tipo_nombre: string | null;
   /** FK del tercero del documento. */
-  readonly contacto: number;
-  readonly contacto__nombre_corto: string;
-  readonly subtotal: string;
-  readonly impuesto: string;
-  readonly total: string;
+  readonly contacto: number | null;
+  readonly contacto_nombre_corto: string | null;
+  readonly contacto_numero_identificacion: string | null;
+  readonly total: string | null;
   /** Valor ya cruzado por otros documentos. */
-  readonly afectado: string;
-  /** Valor pendiente de cruce = total − afectado. Siempre > 0 acá. */
-  readonly pendiente: string;
-  readonly documento_tipo: number;
-  readonly documento_tipo__nombre: string;
-  /**
-   * Operación del tipo (`1` suma cartera, `-1` la resta — p. ej. nota crédito).
-   * Define la naturaleza de la línea de cruce (ver mapper).
-   */
-  readonly documento_tipo_operacion: number;
-  /** Cuenta de cruce del tipo (CxC). Presente cuando `carteraTipo = 'cobrar'`. */
+  readonly afectado: string | null;
+  /** Valor pendiente de cruce (`total − afectado`). Siempre > 0 acá. */
+  readonly pendiente: string | null;
+
+  // ── Lo que el cruce necesita y el backend todavía NO manda (ver `cruce.rules.ts`)
+
+  /** Operación del tipo: `1` suma cartera, `-1` la resta (p. ej. nota crédito). */
+  readonly documento_tipo_operacion?: number | null;
+  /** Cuenta de cruce del tipo, CxC. */
   readonly documento_tipo__cuenta_cobrar_id?: number | null;
   readonly documento_tipo__cuenta_cobrar__codigo?: string | null;
-  /** Cuenta de cruce del tipo (CxP). Presente cuando `carteraTipo = 'pagar'`. */
+  /** Cuenta de cruce del tipo, CxP. */
   readonly documento_tipo__cuenta_pagar_id?: number | null;
   readonly documento_tipo__cuenta_pagar__codigo?: string | null;
 }

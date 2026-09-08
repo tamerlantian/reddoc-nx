@@ -24,8 +24,6 @@ import {
 } from 'rxjs';
 import { FormArray, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { SplitButtonModule } from 'primeng/splitbutton';
-import type { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -90,7 +88,6 @@ const BASE_COLUMN_COUNT = 5;
   imports: [
     ReactiveFormsModule,
     ButtonModule,
-    SplitButtonModule,
     InputNumberModule,
     InputTextModule,
     SelectModule,
@@ -168,9 +165,9 @@ export class ContableDocumentoDetallesComponent {
   readonly showDescuadre = input<boolean>(false);
 
   /**
-   * Habilita el "agregar documento" (cruce de cartera): el botón de agregar se
-   * vuelve SplitButton con la opción de traer documentos pendientes como líneas
-   * enlazadas. Lo prende cada documento que cruza cartera (pago, futuro egreso).
+   * Habilita el "agregar documento" (cruce de cartera): suma a la barra un botón
+   * propio que trae documentos pendientes como líneas enlazadas. Lo prende cada
+   * documento que cruza cartera (pago, egreso).
    */
   readonly agregarDocumentoEnabled = input<boolean>(false);
 
@@ -182,7 +179,7 @@ export class ContableDocumentoDetallesComponent {
 
   /**
    * Contacto de la cabecera (id). Acota los documentos pendientes del modal a
-   * ese tercero; sin contacto la opción se deshabilita.
+   * ese tercero; sin contacto el botón queda deshabilitado con su tooltip.
    */
   readonly contactoId = input<number | null>(null);
 
@@ -212,22 +209,11 @@ export class ContableDocumentoDetallesComponent {
       ].filter(Boolean).length,
   );
 
-  /** Cruce en curso (modal abierto resolviendo o `masivo/` en vuelo); bloquea reentradas. */
-  protected readonly addingDocumentos = signal(false);
-
   /**
-   * Acciones del dropdown del botón "Agregar línea" (SplitButton, solo con
-   * `agregarDocumentoEnabled`). Hoy solo "agregar documento"; se deshabilita
-   * sin contacto (los pendientes se acotan al tercero de la cabecera).
+   * Cruce en curso (modal abierto resolviendo o `masivo/` en vuelo); bloquea
+   * reentradas y pone el botón en loading.
    */
-  protected readonly addLineMenu = computed<MenuItem[]>(() => [
-    {
-      label: this.t().documentAdd.buttonLabel,
-      icon: 'pi pi-file-plus',
-      disabled: this.contactoId() === null,
-      command: () => this.openAgregarDocumento(),
-    },
-  ]);
+  protected readonly addingDocumentos = signal(false);
 
   /** Opciones del select de naturaleza (D/C), con etiquetas i18n. */
   protected readonly naturalezaOptions = computed(() => [
@@ -287,7 +273,7 @@ export class ContableDocumentoDetallesComponent {
         switchMap(({ AgregarDocumentoModalComponent }) => {
           const ref = this.dialog.open(AgregarDocumentoModalComponent, {
             ...ENTITY_ACTION_DIALOG_DEFAULTS,
-            width: '68rem',
+            width: '82rem',
             data,
           });
           return ref ? ref.onClose : EMPTY;

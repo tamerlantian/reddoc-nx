@@ -21,24 +21,32 @@
       />
     }
     @if (agregarDocumentoEnabled()) {
-      <p-splitbutton
-        [label]="t().entities.cuentaDetalle.addLine"
-        icon="pi pi-plus"
-        [outlined]="true"
-        size="small"
-        [model]="addLineMenu()"
-        (onClick)="addLinea()"
-      />
-    } @else {
-      <p-button
-        type="button"
-        size="small"
-        icon="pi pi-plus"
-        [label]="t().entities.cuentaDetalle.addLine"
-        [outlined]="true"
-        (onClick)="addLinea()"
-      />
+      <!-- El tooltip vive en el span: un botón deshabilitado no emite eventos de
+           mouse, así que colgado del botón nunca se vería. -->
+      <span
+        [pTooltip]="contactoId() === null ? t().documentAdd.needsContacto : ''"
+        tooltipPosition="top"
+      >
+        <p-button
+          type="button"
+          size="small"
+          icon="pi pi-file-plus"
+          [label]="t().documentAdd.buttonLabel"
+          [outlined]="true"
+          [loading]="addingDocumentos()"
+          [disabled]="contactoId() === null || addingDocumentos()"
+          (onClick)="openAgregarDocumento()"
+        />
+      </span>
     }
+    <p-button
+      type="button"
+      size="small"
+      icon="pi pi-plus"
+      [label]="t().entities.cuentaDetalle.addLine"
+      [outlined]="true"
+      (onClick)="addLinea()"
+    />
   </div>
 
   <div class="max-h-[30rem] overflow-auto rounded-xl border border-[rgba(20,48,73,0.12)]">

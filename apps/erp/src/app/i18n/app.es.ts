@@ -503,6 +503,7 @@ export const es: AppDict = {
   },
   documentAdd: {
     buttonLabel: 'Agregar documento',
+    needsContacto: 'Selecciona primero el contacto del documento',
     modalHeader: 'Agregar documento',
     modalSubtitle: 'Selecciona los documentos pendientes que quieres cruzar',
     showAllContacts: 'Mostrar todos los contactos',
@@ -519,6 +520,11 @@ export const es: AppDict = {
       total: 'Total',
       afectado: 'Afectado',
       pendiente: 'Pendiente',
+    },
+    filters: {
+      id: 'ID',
+      documentoTipoId: 'Tipo de documento (ID)',
+      identificacion: 'Identificación del contacto',
     },
     toasts: {
       loadError: {

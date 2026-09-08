@@ -12,13 +12,6 @@ import type { CarteraTipo, DocumentoPendienteApi } from './agregar-documento.typ
 /** Endpoint genérico de documentos (mismo `lista/` que usa el framework camino A). */
 const DOCUMENTO_LISTA_ENDPOINT = '/general/documento/lista/';
 
-/**
- * Serializador liviano del backend para el cruce: devuelve `pendiente` y la
- * cuenta de cruce del tipo. ⚠️ Asumido: que `lista/` acepte el query param
- * `serializador` igual que el GET del legacy.
- */
-const SERIALIZADOR_ADICIONAR = 'adicionar';
-
 /** Respuesta paginada cruda del backend (Django REST). */
 interface DocumentoPendienteApiResponse {
   readonly count: number;
@@ -48,14 +41,17 @@ function carteraFilter(carteraTipo: CarteraTipo): FilterCondition {
  * "agregar documento" (pago/egreso). Usa la misma convención de listas del ERP
  * (body `{ filtros, ordenamientos }` + paginación por query params) con los
  * helpers autoritativos de `@reddoc/core`, espejo de `ImportarDocumentoService`.
+ *
+ * No pide `?serializador=adicionar` como el ERP anterior: `lista/` lo ignora y
+ * responde con su serializer por defecto (`DocumentoListRowBase`), que es contra
+ * el que están escritos el contrato y las columnas.
  */
 @Injectable({ providedIn: 'root' })
 export class AgregarDocumentoService extends BaseHttpService {
   /**
-   * Lista documentos con saldo pendiente de la familia indicada.
-   * `POST /general/documento/lista/?serializador=adicionar` con los filtros
-   * base (`documento_tipo__cobrar|pagar = true`, `pendiente > 0`) antepuestos a
-   * los del `query` → traduce `count` a `totalCount`.
+   * Lista documentos con saldo pendiente de la familia indicada: antepone los
+   * filtros base (`documento_tipo__cobrar|pagar`, `pendiente > 0`) a los del
+   * `query` y traduce `count` a `totalCount`.
    */
   listarPendientes(
     carteraTipo: CarteraTipo,
@@ -68,7 +64,7 @@ export class AgregarDocumentoService extends BaseHttpService {
     return this.post<DocumentoPendienteApiResponse>(
       DOCUMENTO_LISTA_ENDPOINT,
       buildListBody(query, { baseFilters }),
-      { ...buildListParams(query), serializador: SERIALIZADOR_ADICIONAR },
+      buildListParams(query),
     ).pipe(map((res) => ({ results: res.results, totalCount: res.count })));
   }
 }

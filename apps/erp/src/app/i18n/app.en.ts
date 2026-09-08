@@ -503,6 +503,7 @@ export const en: AppDict = {
   },
   documentAdd: {
     buttonLabel: 'Add document',
+    needsContacto: 'Select the document contact first',
     modalHeader: 'Add document',
     modalSubtitle: 'Select the pending documents you want to settle',
     showAllContacts: 'Show all contacts',
@@ -519,6 +520,11 @@ export const en: AppDict = {
       total: 'Total',
       afectado: 'Applied',
       pendiente: 'Pending',
+    },
+    filters: {
+      id: 'ID',
+      documentoTipoId: 'Document type (ID)',
+      identificacion: 'Contact ID number',
     },
     toasts: {
       loadError: {
