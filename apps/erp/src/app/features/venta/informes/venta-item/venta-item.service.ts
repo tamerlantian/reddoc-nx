@@ -15,7 +15,7 @@ import type { VentaItem } from './venta-item.model';
  */
 export const VENTA_ITEM_INFORME = 'venta_item';
 
-/** Endpoint del informe (acciones: `lista/`, `exportar/`). */
+/** Endpoint del informe (acciones: `lista/`, `excel/`). */
 export const VENTA_ITEM_ENDPOINT = '/general/documento-detalle-informe/';
 
 /**
@@ -33,7 +33,7 @@ export class VentaItemService extends BaseHttpService {
   private readonly resourcePath = VENTA_ITEM_ENDPOINT;
 
   /** URL absoluta de la acción de exportar (la usa `FileDownloadService`). */
-  readonly exportUrl = `${VENTA_ITEM_ENDPOINT}exportar/`;
+  readonly exportUrl = `${VENTA_ITEM_ENDPOINT}excel/`;
 
   list(query: ListQuery): Observable<PaginatedResponse<VentaItem>> {
     return this.post<PaginatedResponse<VentaItem>>(
