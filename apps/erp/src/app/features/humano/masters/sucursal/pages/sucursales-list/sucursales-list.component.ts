@@ -156,10 +156,6 @@ export class SucursalesListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateTo('detalle', (row as Sucursal).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

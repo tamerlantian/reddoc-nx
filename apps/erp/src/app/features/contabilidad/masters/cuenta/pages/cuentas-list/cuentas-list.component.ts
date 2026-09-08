@@ -170,10 +170,6 @@ export class CuentasListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateTo('detalle', (row as Cuenta).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

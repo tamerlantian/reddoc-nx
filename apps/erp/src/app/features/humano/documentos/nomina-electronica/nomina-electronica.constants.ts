@@ -1,4 +1,5 @@
 import type { ColumnDef, FilterField } from '@reddoc/core';
+import type { RowAction } from '@reddoc/feature-base';
 
 /** Prefijo i18n del documento — evita repetir la ruta en cada columna. */
 const I18N = 'entities.nominaElectronica';
@@ -123,6 +124,14 @@ export const NOMINA_ELECTRONICA_FILTERS: readonly FilterField[] = [
  * componen el consolidado. Se omite el FK crudo del contacto que pintaba el
  * legacy (redundante con la identificación y el nombre que van al lado).
  */
+/**
+ * Única acción del tab «origen»: abrir la nómina de la que sale el consolidado.
+ * Va en el ojo, no en el click de la fila —como en todas las tablas.
+ */
+export const NOMINA_ELECTRONICA_ORIGEN_ROW_ACTIONS: readonly RowAction[] = [
+  { id: 'view', labelKey: 'common.actions.view', iconClass: 'pi pi-eye', inline: true },
+];
+
 export const NOMINA_ELECTRONICA_ORIGEN_COLUMNS: readonly ColumnDef[] = [
   { field: 'id', headerKey: `${I18N}.origen.id`, type: 'number', width: '80px', align: 'right' },
   { field: 'numero', headerKey: `${I18N}.origen.numero`, type: 'text', width: '100px' },

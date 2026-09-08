@@ -158,10 +158,6 @@ export class ResolucionesListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.nav.ir('detalle', (row as Resolucion).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

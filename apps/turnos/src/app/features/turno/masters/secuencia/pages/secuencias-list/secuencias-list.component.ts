@@ -179,10 +179,6 @@ export class SecuenciasListComponent {
     }
   }
 
-  protected onRowClick(row: unknown): void {
-    this.navigateToDetail((row as Secuencia).id);
-  }
-
   protected onToolbarAction(actionId: string): void {
     switch (actionId) {
       case 'new':

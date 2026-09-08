@@ -53,9 +53,9 @@
   </ng-template>
 
   <ng-template pTemplate="body" let-row>
-    <tr [class.lib-data-table__row--clickable]="isRowClickable(row)" (click)="onRowClicked(row)">
+    <tr>
       @if (hasSelection()) {
-        <td class="lib-data-table__select-col" (click)="$event.stopPropagation()">
+        <td class="lib-data-table__select-col">
           <!-- Fila no seleccionable → celda vacía (no un checkbox gris que nunca sirve). -->
           @if (isRowSelectable(row)) {
             <p-tableCheckbox [value]="row" />
@@ -113,7 +113,7 @@
         </td>
       }
       @for (action of inlineActions(); track action.id) {
-        <td class="lib-data-table__inline-action-col" (click)="$event.stopPropagation()">
+        <td class="lib-data-table__inline-action-col">
           @if (isActionVisible(action, row)) {
             <button
               type="button"
@@ -130,7 +130,7 @@
         </td>
       }
       @if (menuActions().length > 0) {
-        <td class="lib-data-table__actions-col" (click)="$event.stopPropagation()">
+        <td class="lib-data-table__actions-col">
           <!-- La celda queda (alineación de columnas); el botón solo si hay algo que abrir. -->
           @if (hasMenuActionsFor(row)) {
             <button

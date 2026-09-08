@@ -76,17 +76,6 @@ export class DataTableComponent {
   readonly sort = input<readonly SortSpec[]>([]);
   readonly rowActions = input<readonly RowAction[]>([]);
   /**
-   * Habilita el click sobre la fila (cursor + emisión de `rowClick`). Por
-   * defecto `false` para no insinuar interactividad en tablas que no navegan.
-   */
-  readonly rowClickable = input<boolean>(false);
-  /**
-   * Predicado opcional que decide si una fila concreta responde al click
-   * (cursor + `rowClick`). Solo aplica con `rowClickable` activo. Default:
-   * todas las filas.
-   */
-  readonly rowClickableFor = input<((row: unknown) => boolean) | undefined>(undefined);
-  /**
    * Predicado opcional que decide si una fila concreta es seleccionable. Las
    * filas excluidas no pintan checkbox y quedan fuera del "seleccionar todo"
    * del header (vía `rowSelectable` de PrimeNG). Default: todas las filas.
@@ -102,7 +91,6 @@ export class DataTableComponent {
   readonly sortChange = output<readonly SortSpec[]>();
   readonly selectionChange = output<unknown[]>();
   readonly rowActionInvoked = output<RowActionInvokedEvent>();
-  readonly rowClick = output<unknown>();
 
   // ── Colaboradores ─────────────────────────────────────────────────────────
   private readonly i18n = inject<I18nService<unknown>>(I18nService);
@@ -281,11 +269,6 @@ export class DataTableComponent {
     this.selectionChange.emit(Array.isArray(rows) ? rows : [rows]);
   }
 
-  /** ¿Esta fila responde al click? (global `rowClickable` + predicado por fila). */
-  protected isRowClickable(row: unknown): boolean {
-    return this.rowClickable() && (this.rowClickableFor()?.(row) ?? true);
-  }
-
   /** ¿Esta fila es seleccionable? (predicado por fila; sin predicado, todas). */
   protected isRowSelectable(row: unknown): boolean {
     return this.selectableFor()?.(row) ?? true;
@@ -297,17 +280,6 @@ export class DataTableComponent {
    */
   protected readonly primeRowSelectable = (event: { data: unknown }): boolean =>
     this.isRowSelectable(event.data);
-
-  /**
-   * Click sobre una fila. Solo emite si `rowClickable` está activo y la fila
-   * pasa `rowClickableFor`. Las celdas de selección y de acciones detienen la
-   * propagación en el template, así que usar el checkbox o el menú no dispara
-   * la navegación.
-   */
-  protected onRowClicked(row: unknown): void {
-    if (!this.isRowClickable(row)) return;
-    this.rowClick.emit(row);
-  }
 
   /**
    * Traduce el evento de ordenamiento multi-columna de PrimeNG

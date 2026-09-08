@@ -175,8 +175,8 @@
               [totalCount]="origen().length"
               [pageSize]="origen().length || 1"
               [currentPage]="0"
-              [rowClickable]="true"
-              (rowClick)="onOrigenClick($event)"
+              [rowActions]="origenRowActions"
+              (rowActionInvoked)="onOrigenAction($event)"
             />
           </p-tabpanel>
           <p-tabpanel value="detalle">
