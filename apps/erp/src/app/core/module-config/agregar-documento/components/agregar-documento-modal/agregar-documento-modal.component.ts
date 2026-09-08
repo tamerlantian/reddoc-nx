@@ -16,7 +16,6 @@ import {
   ToastService,
   formatCop,
   toFiniteNumber,
-  type ColumnDef,
   type FilterCondition,
   type ListQuery,
   type SortSpec,
@@ -29,65 +28,15 @@ import {
 } from '@reddoc/feature-base';
 import type { AppDict } from '@erp/i18n';
 import { AgregarDocumentoService } from '../../agregar-documento.service';
-import { AGREGAR_DOCUMENTO_FILTER_FIELDS } from '../../agregar-documento.constants';
+import {
+  AGREGAR_DOCUMENTO_COLUMNS,
+  AGREGAR_DOCUMENTO_DEFAULT_SORT,
+  AGREGAR_DOCUMENTO_FILTER_FIELDS,
+} from '../../agregar-documento.constants';
 import type {
   AgregarDocumentoModalData,
   DocumentoPendienteApi,
 } from '../../agregar-documento.types';
-
-/**
- * Columnas de la tabla de documentos pendientes (solo lectura, selección
- * múltiple). La identificación del tercero va antes que su nombre, como en el
- * resto de los listados. De los montos solo van los tres que deciden un cruce:
- * cuánto es, cuánto se cruzó y cuánto queda.
- */
-const AGREGAR_DOCUMENTO_COLUMNS: readonly ColumnDef[] = [
-  {
-    field: 'documento_tipo_nombre',
-    headerKey: 'documentAdd.columns.tipo',
-    type: 'text',
-    width: '11rem',
-  },
-  { field: 'numero', headerKey: 'documentAdd.columns.numero', type: 'number', width: '7rem' },
-  { field: 'fecha', headerKey: 'documentAdd.columns.fecha', type: 'date', width: '8rem' },
-  {
-    field: 'fecha_vence',
-    headerKey: 'documentAdd.columns.fechaVence',
-    type: 'date',
-    width: '8rem',
-  },
-  {
-    field: 'contacto_numero_identificacion',
-    headerKey: 'documentAdd.filters.identificacion',
-    type: 'text',
-    width: '9rem',
-  },
-  { field: 'contacto_nombre_corto', headerKey: 'documentAdd.columns.contacto', type: 'text' },
-  {
-    field: 'total',
-    headerKey: 'documentAdd.columns.total',
-    type: 'currency',
-    align: 'right',
-    width: '9rem',
-  },
-  {
-    field: 'afectado',
-    headerKey: 'documentAdd.columns.afectado',
-    type: 'currency',
-    align: 'right',
-    width: '9rem',
-  },
-  {
-    field: 'pendiente',
-    headerKey: 'documentAdd.columns.pendiente',
-    type: 'currency',
-    align: 'right',
-    width: '9rem',
-  },
-];
-
-/** Orden por defecto: documentos más recientes primero. */
-const DEFAULT_SORT: readonly SortSpec[] = [{ field: 'fecha', direction: 'desc' }];
 
 /**
  * Modal de **agregar documento** (cruce de cartera): lista los documentos con
@@ -224,7 +173,7 @@ export class AgregarDocumentoModalComponent {
     }
     filters.push(...this.activeFilters());
     // Sin orden del usuario, cae al orden por defecto (más recientes primero).
-    const sort = this.sort().length > 0 ? [...this.sort()] : [...DEFAULT_SORT];
+    const sort = this.sort().length > 0 ? [...this.sort()] : [...AGREGAR_DOCUMENTO_DEFAULT_SORT];
     return { filters, sort, page: this.page(), pageSize: this.pageSize() };
   }
 
