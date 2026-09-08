@@ -422,6 +422,7 @@ export interface AppDict
   };
   documentAdd: {
     buttonLabel: string;
+    needsContacto: string;
     modalHeader: string;
     modalSubtitle: string;
     showAllContacts: string;
@@ -438,6 +439,11 @@ export interface AppDict
       total: string;
       afectado: string;
       pendiente: string;
+    };
+    filters: {
+      id: string;
+      documentoTipoId: string;
+      identificacion: string;
     };
     toasts: {
       loadError: { title: string; desc: string };

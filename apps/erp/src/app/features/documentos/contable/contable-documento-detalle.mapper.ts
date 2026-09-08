@@ -1,4 +1,5 @@
 import { redondearMoneda, toFiniteNumber } from '@reddoc/core';
+import { resolverCruce } from '@erp/core/module-config';
 import type { CarteraTipo, DocumentoPendienteApi } from '@erp/core/module-config';
 import type { CuentaDetalleRead, CuentaDetallePayload } from './contable-documento-detalle.model';
 import type {
@@ -59,51 +60,26 @@ export function cuentaDetalleToPayload(raw: CuentaDetalleFormRawValue): CuentaDe
 }
 
 /**
- * Naturaleza de la línea de cruce según la operación del tipo de documento.
- *
- * En un **recaudo** (CxC) una factura (operación `1`) se abona con **crédito**
- * y una nota crédito (operación `-1`) descuenta con **débito**. En un pago a
- * proveedor (CxP) es el espejo. Reglas tomadas del legacy (pago/egreso).
- */
-function naturalezaDeCruce(operacion: number, carteraTipo: CarteraTipo): NaturalezaCuenta {
-  if (carteraTipo === 'cobrar') return operacion === -1 ? 'D' : 'C';
-  return operacion === 1 ? 'D' : 'C';
-}
-
-/** Cuenta de cruce del tipo de documento según la familia de cartera. */
-function cuentaDeCruce(
-  doc: DocumentoPendienteApi,
-  carteraTipo: CarteraTipo,
-): { id: number; codigo: string } | null {
-  const id =
-    carteraTipo === 'cobrar'
-      ? doc.documento_tipo__cuenta_cobrar_id
-      : doc.documento_tipo__cuenta_pagar_id;
-  if (id == null) return null;
-  const codigo =
-    (carteraTipo === 'cobrar'
-      ? doc.documento_tipo__cuenta_cobrar__codigo
-      : doc.documento_tipo__cuenta_pagar__codigo) ?? '';
-  return { id, codigo };
-}
-
-/**
  * Documento pendiente (fila del modal "agregar documento") → valores de una
  * línea contable **enlazada**: `documento_afectado` apunta al documento
  * cruzado, `valor` nace en su `pendiente` (editable: abonos parciales) y la
  * cuenta/naturaleza las fija el cruce (el form las deshabilita).
+ *
+ * Qué cuenta y qué naturaleza le tocan lo decide `resolverCruce`
+ * (`cruce.rules.ts`); acá solo se traduce a los campos del `FormGroup`.
  */
 export function documentoPendienteToFormValue(
   doc: DocumentoPendienteApi,
   carteraTipo: CarteraTipo,
 ): CuentaDetalleFormRawValue {
-  const cuenta = cuentaDeCruce(doc, carteraTipo);
+  const { cuenta, naturaleza } = resolverCruce(doc, carteraTipo);
   return {
     id: null,
     cuenta: cuenta ? { id: cuenta.id, nombre: cuenta.codigo } : null,
-    naturaleza: naturalezaDeCruce(doc.documento_tipo_operacion, carteraTipo),
+    naturaleza,
     valor: toFiniteNumber(doc.pendiente) ?? 0,
-    contacto: { id: doc.contacto, nombre: doc.contacto__nombre_corto },
+    contacto:
+      doc.contacto != null ? { id: doc.contacto, nombre: doc.contacto_nombre_corto ?? '' } : null,
     centro_costo: null,
     base: 0,
     // El cruce de cartera no imputa número ni glosa: los pone el usuario en un
@@ -112,7 +88,7 @@ export function documentoPendienteToFormValue(
     detalle: null,
     documento_afectado: doc.id,
     documento_afectado_numero: doc.numero != null ? String(doc.numero) : null,
-    documento_afectado_tipo: doc.documento_tipo__nombre,
+    documento_afectado_tipo: doc.documento_tipo_nombre,
   };
 }
 

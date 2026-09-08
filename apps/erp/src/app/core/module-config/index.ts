@@ -75,6 +75,10 @@ export type {
   DocumentoPendienteApi,
   AgregarDocumentoModalData,
 } from './agregar-documento/agregar-documento.types';
+export { AGREGAR_DOCUMENTO_FILTER_FIELDS } from './agregar-documento/agregar-documento.constants';
+// Reglas del cruce (cuenta + naturaleza de la línea enlazada). Módulo puro.
+export { resolverCruce } from './agregar-documento/cruce.rules';
+export type { CruceResuelto, CuentaCruce, NaturalezaCruce } from './agregar-documento/cruce.rules';
 
 // Acciones extra (Strategy + registro)
 // NOTA: se exportan SOLO el contrato, el token y los providers. Los strategies
