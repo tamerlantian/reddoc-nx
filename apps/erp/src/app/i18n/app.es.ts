@@ -3929,8 +3929,10 @@ export const es: AppDict = {
       naturaleza: { debito: 'Débito', credito: 'Crédito' },
       columns: {
         linea: '#',
+        id: 'Id',
         numero: 'Número',
         documento: 'Documento',
+        documentoTipo: 'Documento tipo',
         cuenta: 'Cuenta',
         contacto: 'Contacto',
         naturaleza: 'Naturaleza',

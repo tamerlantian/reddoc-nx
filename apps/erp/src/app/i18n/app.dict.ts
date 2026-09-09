@@ -2982,8 +2982,10 @@ export interface AppDict
       naturaleza: { debito: string; credito: string };
       columns: {
         linea: string;
+        id: string;
         numero: string;
         documento: string;
+        documentoTipo: string;
         cuenta: string;
         contacto: string;
         naturaleza: string;
