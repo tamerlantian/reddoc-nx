@@ -32,13 +32,9 @@ export interface CruceResuelto {
  * una nota crédito (operación `-1`) descuenta con **débito**; en un pago a
  * proveedor (CxP) es el espejo.
  *
- * Sin `documento_tipo_operacion` cae al caso normal (operación `1`), que queda
- * mal en las notas: por eso la naturaleza sigue editable en la línea.
+ * Un tipo sin operación declarada cae al caso normal (`1`), el de la factura.
  */
-function naturalezaDeCruce(
-  operacion: number | null | undefined,
-  carteraTipo: CarteraTipo,
-): NaturalezaCruce {
+function naturalezaDeCruce(operacion: number | null, carteraTipo: CarteraTipo): NaturalezaCruce {
   if (carteraTipo === 'cobrar') return operacion === -1 ? 'D' : 'C';
   return operacion === -1 ? 'C' : 'D';
 }

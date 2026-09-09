@@ -6,14 +6,11 @@
  * (pago/egreso): cada documento elegido se vuelve una línea con
  * `documento_afectado`, `valor = pendiente` y la cuenta/naturaleza del cruce.
  *
- * El serializer de `documento/lista/` trae la **cuenta de cruce del tipo** ya
- * resuelta —id, código y nombre, la de CxC o la de CxP— así que la línea nace
- * con su cuenta puesta sin consultar el catálogo de cuentas.
- *
- * ⚠️ Hueco del backend (verificado el 2026-09-09): sigue sin llegar
- * `documento_tipo_operacion`, la que decide si el documento suma o resta
- * cartera. Sin ella la naturaleza cae al caso normal y queda al revés en las
- * notas, por eso el campo sigue editable en la línea.
+ * El serializer de `documento/lista/` trae ya resuelto todo lo que necesita el
+ * cruce: la **cuenta del tipo** —id, código y nombre, la de CxC o la de CxP— y
+ * la **operación del tipo**, la que decide si el documento suma o resta
+ * cartera. Con las dos, la línea nace con su cuenta y su naturaleza puestas sin
+ * consultar ningún catálogo.
  */
 
 /** Familia de cartera que alimenta el modal: cuentas por cobrar o por pagar. */
@@ -52,11 +49,8 @@ export interface DocumentoPendienteApi {
   readonly documento_tipo_cuenta_pagar_codigo: string | null;
   readonly documento_tipo_cuenta_pagar_nombre: string | null;
 
-  /**
-   * Operación del tipo: `1` suma cartera, `-1` la resta (p. ej. nota crédito).
-   * Opcional: el backend todavía no la manda (ver la nota de arriba).
-   */
-  readonly documento_tipo_operacion?: number | null;
+  /** Operación del tipo: `1` suma cartera, `-1` la resta (p. ej. nota crédito). */
+  readonly documento_tipo_operacion: number | null;
 }
 
 /**
