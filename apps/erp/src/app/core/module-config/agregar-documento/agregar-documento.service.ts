@@ -43,8 +43,8 @@ function carteraFilter(carteraTipo: CarteraTipo): FilterCondition {
  * helpers autoritativos de `@reddoc/core`, espejo de `ImportarDocumentoService`.
  *
  * No pide `?serializador=adicionar` como el ERP anterior: `lista/` lo ignora y
- * responde con su serializer por defecto (`DocumentoListRowBase`), que es contra
- * el que están escritos el contrato y las columnas.
+ * responde con su serializer por defecto (`GenDocumento`), que es contra el que
+ * están escritos el contrato y las columnas.
  */
 @Injectable({ providedIn: 'root' })
 export class AgregarDocumentoService extends BaseHttpService {

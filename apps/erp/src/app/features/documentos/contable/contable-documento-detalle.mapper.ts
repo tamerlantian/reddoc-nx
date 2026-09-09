@@ -66,7 +66,10 @@ export function cuentaDetalleToPayload(raw: CuentaDetalleFormRawValue): CuentaDe
  * cuenta/naturaleza las fija el cruce (el form las deshabilita).
  *
  * Qué cuenta y qué naturaleza le tocan lo decide `resolverCruce`
- * (`cruce.rules.ts`); acá solo se traduce a los campos del `FormGroup`.
+ * (`cruce.rules.ts`); acá solo se traduce a los campos del `FormGroup`. La
+ * cuenta se arma con la misma etiqueta `código - nombre` que produce
+ * `<app-cuenta-select>`, para que una sembrada por el cruce y una elegida a mano
+ * se vean igual en el control.
  */
 export function documentoPendienteToFormValue(
   doc: DocumentoPendienteApi,
@@ -75,7 +78,13 @@ export function documentoPendienteToFormValue(
   const { cuenta, naturaleza } = resolverCruce(doc, carteraTipo);
   return {
     id: null,
-    cuenta: cuenta ? { id: cuenta.id, nombre: cuenta.codigo } : null,
+    cuenta: cuenta
+      ? {
+          id: cuenta.id,
+          nombre: [cuenta.codigo, cuenta.nombre].filter(Boolean).join(' - '),
+          codigo: cuenta.codigo,
+        }
+      : null,
     naturaleza,
     valor: toFiniteNumber(doc.pendiente) ?? 0,
     contacto:

@@ -28,10 +28,15 @@
 
       <p-tabpanels>
         <p-tabpanel value="general">
-          <app-general-config />
+          <!-- El aire bajo la tira vive aquí (pt-7): el padding de .p-tabpanels no es confiable. -->
+          <div class="pt-7">
+            <app-general-config />
+          </div>
         </p-tabpanel>
         <p-tabpanel value="humano">
-          <app-humano-config />
+          <div class="pt-7">
+            <app-humano-config />
+          </div>
         </p-tabpanel>
       </p-tabpanels>
     </p-tabs>

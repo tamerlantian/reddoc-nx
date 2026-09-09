@@ -17,11 +17,12 @@ export type NaturalezaCruce = 'D' | 'C';
 export interface CuentaCruce {
   readonly id: number;
   readonly codigo: string;
+  readonly nombre: string;
 }
 
 /** Cuenta y naturaleza resueltas para un documento cruzado. */
 export interface CruceResuelto {
-  /** `null` cuando no se pudo resolver: la línea nace sin cuenta y la elige el usuario. */
+  /** `null` cuando el tipo no declara cuenta: la línea nace sin ella. */
   readonly cuenta: CuentaCruce | null;
   readonly naturaleza: NaturalezaCruce;
 }
@@ -31,13 +32,9 @@ export interface CruceResuelto {
  * una nota crédito (operación `-1`) descuenta con **débito**; en un pago a
  * proveedor (CxP) es el espejo.
  *
- * Sin `documento_tipo_operacion` cae al caso normal (operación `1`), que queda
- * mal en las notas: por eso la naturaleza sigue editable en la línea.
+ * Un tipo sin operación declarada cae al caso normal (`1`), el de la factura.
  */
-function naturalezaDeCruce(
-  operacion: number | null | undefined,
-  carteraTipo: CarteraTipo,
-): NaturalezaCruce {
+function naturalezaDeCruce(operacion: number | null, carteraTipo: CarteraTipo): NaturalezaCruce {
   if (carteraTipo === 'cobrar') return operacion === -1 ? 'D' : 'C';
   return operacion === -1 ? 'C' : 'D';
 }
@@ -52,22 +49,26 @@ function naturalezaDeCruce(
  * así que como fallback imputaría una cuenta errónea en todo el cruce.
  */
 function cuentaDeCruce(doc: DocumentoPendienteApi, carteraTipo: CarteraTipo): CuentaCruce | null {
-  const id =
-    carteraTipo === 'cobrar'
-      ? doc.documento_tipo__cuenta_cobrar_id
-      : doc.documento_tipo__cuenta_pagar_id;
+  const esCobrar = carteraTipo === 'cobrar';
+  const id = esCobrar ? doc.documento_tipo_cuenta_cobrar_id : doc.documento_tipo_cuenta_pagar_id;
   if (id == null) return null;
-  const codigo =
-    (carteraTipo === 'cobrar'
-      ? doc.documento_tipo__cuenta_cobrar__codigo
-      : doc.documento_tipo__cuenta_pagar__codigo) ?? '';
-  return { id, codigo };
+  return {
+    id,
+    codigo:
+      (esCobrar
+        ? doc.documento_tipo_cuenta_cobrar_codigo
+        : doc.documento_tipo_cuenta_pagar_codigo) ?? '',
+    nombre:
+      (esCobrar
+        ? doc.documento_tipo_cuenta_cobrar_nombre
+        : doc.documento_tipo_cuenta_pagar_nombre) ?? '',
+  };
 }
 
 /**
  * Resuelve con qué cuenta y con qué naturaleza entra un documento pendiente como
- * línea del documento que lo cruza. Punto único de cambio: cuando el backend
- * mande la cuenta ya resuelta (ver `agregar-documento.types.ts`) se ajusta acá.
+ * línea del documento que lo cruza. Punto único de cambio si el backend mueve
+ * esos campos (ver `agregar-documento.types.ts`).
  */
 export function resolverCruce(doc: DocumentoPendienteApi, carteraTipo: CarteraTipo): CruceResuelto {
   return {

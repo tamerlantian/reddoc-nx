@@ -11,16 +11,23 @@ function optionFromId(id: number | null | undefined): ErpSelectOption | null {
 
 export interface GeneralConfigFormValue {
   readonly uvt: number | null;
+  readonly emitir_automaticamente: boolean;
 }
 
 export function configuracionToGeneralForm(
   config: Partial<ConfiguracionRead>,
 ): GeneralConfigFormValue {
-  return { uvt: toFiniteNumber(config.gen_uvt) };
+  return {
+    uvt: toFiniteNumber(config.gen_uvt),
+    emitir_automaticamente: config.gen_emitir_automaticamente ?? false,
+  };
 }
 
 export function generalFormToPayload(form: GeneralConfigFormValue): ConfiguracionPayload {
-  return { gen_uvt: form.uvt };
+  return {
+    gen_uvt: form.uvt,
+    gen_emitir_automaticamente: form.emitir_automaticamente,
+  };
 }
 
 // ── Área Humano ───────────────────────────────────────────────────────────────

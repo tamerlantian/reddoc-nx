@@ -6366,10 +6366,67 @@ export const es: AppDict = {
     unsavedChanges: 'Cambios sin guardar',
     actions: { save: 'Guardar' },
     general: {
+      parametros: {
+        title: 'Parámetros',
+        hint: 'Valores con los que el ERP calcula impuestos y emite documentos.',
+        groups: { fiscal: 'Tributario', emision: 'Documentos electrónicos' },
+      },
       uvt: {
-        title: 'UVT',
         hint: 'Unidad de valor tributario vigente; base de los cálculos fiscales.',
         label: 'Valor de la UVT',
+      },
+      emitirAutomaticamente: {
+        label: 'Emitir automáticamente',
+        hint: 'Al aprobar un documento se envía a la DIAN sin pasos adicionales.',
+      },
+      documentoTipo: {
+        title: 'Tipos de documento',
+        hint: 'Numeración y cuentas de cartera de cada tipo. El catálogo es fijo: no se crean ni se eliminan tipos.',
+        columns: {
+          id: 'ID',
+          nombre: 'Nombre',
+          consecutivo: 'Consecutivo',
+          resolucion: 'Resolución',
+          resolucionNumero: 'Número',
+          resolucionPrefijo: 'Prefijo',
+          venta: 'Venta',
+          compra: 'Compra',
+          cuentaCobrar: 'Cuenta por cobrar',
+          cuentaPagar: 'Cuenta por pagar',
+        },
+        fields: {
+          consecutivo: 'Consecutivo',
+          resolucion: 'Resolución',
+          resolucionPlaceholder: 'Sin resolución',
+          cuentaCobrar: 'Cuenta por cobrar',
+          cuentaPagar: 'Cuenta por pagar',
+        },
+        dialog: {
+          title: 'Editar tipo de documento',
+          groups: { numeracion: 'Numeración', cuentas: 'Cuentas de cartera' },
+        },
+        validation: {
+          required: 'Este campo es obligatorio',
+          consecutivoMin: 'El consecutivo debe ser mayor que cero',
+        },
+        empty: {
+          title: 'Sin tipos de documento',
+          sub: 'Todavía no hay tipos de documento configurados para esta empresa.',
+        },
+        toasts: {
+          saveSuccess: {
+            title: 'Tipo de documento guardado',
+            desc: 'Los cambios se guardaron correctamente.',
+          },
+          saveError: {
+            title: 'Error al guardar',
+            desc: 'No pudimos guardar el tipo de documento.',
+          },
+          loadError: {
+            title: 'Error al cargar',
+            desc: 'No pudimos traer los tipos de documento.',
+          },
+        },
       },
       validation: { required: 'Este campo es obligatorio' },
     },

@@ -9,7 +9,10 @@ import type { ConfiguracionCampo } from './configuracion.model';
 // ── Área General (UVT) ────────────────────────────────────────────────────────
 
 /** Campos que el área General lee y persiste (field-scoped). */
-export const GENERAL_CAMPOS = ['gen_uvt'] as const satisfies readonly ConfiguracionCampo[];
+export const GENERAL_CAMPOS = [
+  'gen_uvt',
+  'gen_emitir_automaticamente',
+] as const satisfies readonly ConfiguracionCampo[];
 
 // ── Área Humano ───────────────────────────────────────────────────────────────
 
