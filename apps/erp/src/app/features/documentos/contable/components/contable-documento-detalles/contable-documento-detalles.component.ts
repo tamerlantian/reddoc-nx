@@ -291,7 +291,8 @@ export class ContableDocumentoDetallesComponent {
   /**
    * Construye las líneas enlazadas desde los documentos seleccionados y bifurca
    * según el modo: alta → push al `FormArray`; edición → alta masiva + recarga
-   * del padre (`imported`).
+   * del padre (`imported`). La cuenta y la naturaleza del cruce salen de la
+   * propia fila: el listado ya las trae resueltas.
    */
   private resolveAndAddDocumentos(rows: readonly DocumentoPendienteApi[]): void {
     const formValues = rows.map((row) => documentoPendienteToFormValue(row, this.carteraTipo()));
