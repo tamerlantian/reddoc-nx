@@ -23,6 +23,13 @@ export interface ConfiguracionRead {
   readonly hum_auxilio_transporte: number | string | null;
   readonly hum_entidad_riesgo: number | null;
 
+  // Facturación electrónica (área General)
+  /**
+   * Si al aprobar un documento electrónico se emite a la DIAN sin intervención
+   * manual. El backend lo expone como booleano puro (nunca nulo).
+   */
+  readonly gen_emitir_automaticamente: boolean;
+
   // Datos de la empresa (área Empresa)
   /** La expone la API; hoy ningún formulario del ERP la escribe. */
   readonly gen_empresa_nombre_corto: string | null;

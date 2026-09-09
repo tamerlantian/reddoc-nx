@@ -4865,7 +4865,40 @@ export interface AppDict
     unsavedChanges: string;
     actions: { save: string };
     general: {
-      uvt: { title: string; hint: string; label: string };
+      parametros: { title: string; hint: string; groups: { fiscal: string; emision: string } };
+      uvt: { hint: string; label: string };
+      emitirAutomaticamente: { label: string; hint: string };
+      documentoTipo: {
+        title: string;
+        hint: string;
+        columns: {
+          id: string;
+          nombre: string;
+          consecutivo: string;
+          resolucion: string;
+          resolucionNumero: string;
+          resolucionPrefijo: string;
+          venta: string;
+          compra: string;
+          cuentaCobrar: string;
+          cuentaPagar: string;
+        };
+        fields: {
+          consecutivo: string;
+          resolucion: string;
+          resolucionPlaceholder: string;
+          cuentaCobrar: string;
+          cuentaPagar: string;
+        };
+        dialog: { title: string; groups: { numeracion: string; cuentas: string } };
+        validation: { required: string; consecutivoMin: string };
+        empty: { title: string; sub: string };
+        toasts: {
+          saveSuccess: { title: string; desc: string };
+          saveError: { title: string; desc: string };
+          loadError: { title: string; desc: string };
+        };
+      };
       validation: { required: string };
     };
     humano: {

@@ -6304,10 +6304,67 @@ export const en: AppDict = {
     unsavedChanges: 'Unsaved changes',
     actions: { save: 'Save' },
     general: {
+      parametros: {
+        title: 'Parameters',
+        hint: 'Values the ERP uses to compute taxes and issue documents.',
+        groups: { fiscal: 'Tax', emision: 'Electronic documents' },
+      },
       uvt: {
-        title: 'UVT',
         hint: 'Current tax value unit; the basis for fiscal calculations.',
         label: 'UVT value',
+      },
+      emitirAutomaticamente: {
+        label: 'Issue automatically',
+        hint: 'Approving a document sends it to DIAN with no extra steps.',
+      },
+      documentoTipo: {
+        title: 'Document types',
+        hint: 'Numbering and receivable accounts for each type. The catalog is fixed: types cannot be created or deleted.',
+        columns: {
+          id: 'ID',
+          nombre: 'Name',
+          consecutivo: 'Sequence',
+          resolucion: 'Resolution',
+          resolucionNumero: 'Number',
+          resolucionPrefijo: 'Prefix',
+          venta: 'Sales',
+          compra: 'Purchases',
+          cuentaCobrar: 'Receivable account',
+          cuentaPagar: 'Payable account',
+        },
+        fields: {
+          consecutivo: 'Sequence',
+          resolucion: 'Resolution',
+          resolucionPlaceholder: 'No resolution',
+          cuentaCobrar: 'Receivable account',
+          cuentaPagar: 'Payable account',
+        },
+        dialog: {
+          title: 'Edit document type',
+          groups: { numeracion: 'Numbering', cuentas: 'Receivable accounts' },
+        },
+        validation: {
+          required: 'This field is required',
+          consecutivoMin: 'The sequence must be greater than zero',
+        },
+        empty: {
+          title: 'No document types',
+          sub: 'There are no document types configured for this company yet.',
+        },
+        toasts: {
+          saveSuccess: {
+            title: 'Document type saved',
+            desc: 'Your changes were saved successfully.',
+          },
+          saveError: {
+            title: 'Could not save',
+            desc: 'We could not save the document type.',
+          },
+          loadError: {
+            title: 'Could not load',
+            desc: 'We could not load the document types.',
+          },
+        },
       },
       validation: { required: 'This field is required' },
     },

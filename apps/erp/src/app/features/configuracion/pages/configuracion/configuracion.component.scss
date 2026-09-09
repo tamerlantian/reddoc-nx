@@ -11,14 +11,12 @@
       background: transparent;
     }
 
-    // Aire entre la tira de tabs y la card del área: iguala la separación que hay
-    // en Seguridad entre la pestaña y el recuadro de la tabla (0.85rem de padding
-    // + la línea de hint + 0.75rem de gap). Acá el hueco va vacío, así que el
-    // valor viaja completo en el padding.
-    .p-tabpanels {
-      padding: 2.75rem 0 0;
-    }
-
+    // Solo se neutraliza el padding default de PrimeNG. **El aire bajo la tira
+    // NO va acá**: el padding de `.p-tabpanels` no es confiable —PrimeNG lo pisa
+    // sobre el host— y la card del área terminaba pegada a las pestañas. Vive en
+    // el template, como `pt-7` sobre el contenido de cada panel. Misma receta que
+    // el detalle de usuario en Seguridad, donde ya estaba documentado.
+    .p-tabpanels,
     .p-tabpanel {
       padding: 0;
     }

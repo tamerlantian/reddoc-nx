@@ -28,6 +28,7 @@ import { ErpSelectDataService, ErpSelectOption } from '@reddoc/core';
       [disabled]="disabled() || loading()"
       [invalid]="invalid()"
       [loading]="loading()"
+      [showClear]="showClear()"
       [filter]="showFilter()"
       [filterBy]="filterBy()"
       [filterPlaceholder]="filterPlaceholder()"
@@ -60,6 +61,14 @@ export class ErpApiSelectComponent implements ControlValueAccessor {
   readonly inputId = input<string>('');
   readonly placeholder = input<string>('Selecciona…');
   readonly invalid = input<boolean>(false);
+  /**
+   * Muestra la equis para vaciar el campo. Default `false`: en un campo
+   * obligatorio la equis ofrece un estado que el formulario va a rechazar, y en
+   * uno con `suggestedIndex` invita a borrar lo que el sistema acaba de sugerir.
+   * Se enciende donde **no elegir** es una respuesta válida y distinta de no
+   * haber contestado todavía (p. ej. un tipo de documento sin resolución).
+   */
+  readonly showClear = input<boolean>(false);
   /** Posición (0-based) a auto-seleccionar cuando cargan las opciones y el control está vacío. `null` lo desactiva. */
   readonly suggestedIndex = input<number | null>(null);
   /**
